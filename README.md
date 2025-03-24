@@ -1,4 +1,4 @@
-[![Default Lexicon](https://hosted.weblate.org/widget/modx-extras/imageplus/standard/svg-badge.svg)](https://hosted.weblate.org/projects/modx-extras/imageplus/standard/)
+[![Default Lexicon](https://hosted.weblate.org/widget/modx-extras/imageplus/svg-badge.svg)](https://hosted.weblate.org/projects/modx-extras/imageplus/)
 
 # Image+
 
