@@ -359,7 +359,8 @@ Ext.extend(ImagePlus.panel.input, MODx.Panel, {
                 return false;
             }
         })(this);
-        img.src = baseUrl + this.image.sourceImg.src;
+        srcTrim = this.image.sourceImg.src.replace(new RegExp('^(' + baseUrl + ')+'), '');
+        img.src = baseUrl + srcTrim;
     },
     // Update the component display on state change
     updateDisplay: function () {
