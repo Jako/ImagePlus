@@ -79,7 +79,7 @@ abstract class Snippet
             $parts = explode('::', $key);
             $key = ($this->propertyPrefix && !in_array('noPrefix', $parts)) ? $this->propertyPrefix . ucfirst($parts[0]) : $parts[0];
             $skipEmpty = true;
-            if ($parts[1] == 'allowEmpty') {
+            if (isset($parts[1]) && $parts[1] == 'allowEmpty') {
                 $skipEmpty = false;
                 array_pop($parts);
             }
