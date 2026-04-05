@@ -1,0 +1,3452 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for Image+, the advanced image template variable for MODX.">
+      
+      
+        <meta name="author" content="Treehill Studio">
+      
+      
+        <link rel="canonical" href="https://jako.github.io/ImagePlus/changelog/">
+      
+      
+        <link rel="prev" href="../examples/">
+      
+      
+        <link rel="next" href="../contributors/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.png">
+      <meta name="generator" content="zensical-0.0.27">
+    
+    
+      
+        <title>Changelog - Image+</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.50057488.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+
+    
+      <link rel="stylesheet" href="../assets/stylesheets/treehillstudio.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+  
+
+
+  <script type="text/javascript">
+    var _paq = window._paq = window._paq || [];
+    _paq.push(['setDocumentTitle', 'Image+' + '/' + document.title.replace(' - Image+', '')]);
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+        var u="//matomo.treehillstudio.com/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', 40]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    })();
+</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#changelog" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+    
+        <div class="ths-header__above">
+  <div class="md-header__inner md-grid">
+    <div class="px-2 sm:px-6 lg:px-8 ths-header">
+      <div class="flex h-24 items-center justify-between relative ths-header__outer">
+        <div class="flex flex-1 items-center justify-center md:items-stretch md:justify-start ths-header__inner">
+          <div class="flex flex-shrink-0 items-center ths-header__icon">
+            <a href="https://treehillstudio.com/">
+              <img alt="Treehill Studio" class="block h-12 lg:hidden w-auto ths-header__icon-mark" src="../assets/images/treehill-studio-mark.svg">
+              <img alt="Treehill Studio" class="h-16 hidden lg:block w-auto ths-header__icon-default" src="../assets/images/treehill-studio-invers.svg">
+            </a>
+          </div>
+          <div class="flex-grow hidden md:block md:ml-6 ths-header__menu-outer">
+            <div class="flex justify-end mt-6 space-x-4 ths-header__menu-inner">
+              
+              <a class="border-b border-green border-opacity-0 font-bold hover:border-opacity-100 hover:text-white text-gray-300 text-sm uppercase ths-header__menu-item" href="https://treehillstudio.com/documentation.html">Documentation</a>
+              <a class="border-b border-green border-opacity-0 font-bold hover:border-opacity-100 hover:text-white text-gray-300 text-sm uppercase ths-header__menu-item" href="https://treehillstudio.com/about.html">About Treehill Studio</a>
+              
+              <a class="border-b border-green border-opacity-0 font-bold hover:border-opacity-100 hover:text-white text-gray-300 text-sm uppercase ths-header__menu-item" href="https://treehillstudio.com/donate.html">Donate</a>
+              
+              <a class="border-b border-green border-opacity-0 font-bold hover:border-opacity-100 hover:text-white text-gray-300 text-sm uppercase ths-header__menu-item" href="https://treehillstudio.com/imprint.html">Imprint</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="./.." title="Image+" class="md-header__button md-logo" aria-label="Image+" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Image+
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Changelog
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="green" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Jako/ImagePlus/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Jako/ImagePlus
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="Image+" class="md-nav__button md-logo" aria-label="Image+" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    Image+
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Jako/ImagePlus/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Jako/ImagePlus
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Image+
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#295-2023-09-07" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.9.5] - 2023-09-07
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.9.5] - 2023-09-07">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#294-2023-03-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.9.4] - 2023-03-13
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.9.4] - 2023-03-13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#293-2022-10-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.9.3] - 2022-10-10
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.9.3] - 2022-10-10">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#292-2022-08-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.9.2] - 2022-08-01
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.9.2] - 2022-08-01">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#291-2022-06-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.9.1] - 2022-06-16
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.9.1] - 2022-06-16">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#290-2022-06-08" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.9.0] - 2022-06-08
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.9.0] - 2022-06-08">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#289-2022-03-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.9] - 2022-03-23
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.9] - 2022-03-23">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#288-2022-02-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.8] - 2022-02-16
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.8] - 2022-02-16">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#287-2022-02-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.7] - 2022-02-12
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.7] - 2022-02-12">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#286-2022-02-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.6] - 2022-02-05
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.6] - 2022-02-05">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#285-2021-12-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.5] - 2021-12-30
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.5] - 2021-12-30">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#284-2021-12-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.4] - 2021-12-20
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.4] - 2021-12-20">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#283-2021-03-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.3] - 2021-03-06
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.3] - 2021-03-06">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#282-2021-01-19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.2] - 2021-01-19
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.2] - 2021-01-19">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#281-2020-01-04" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.1] - 2020-01-04
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.1] - 2020-01-04">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#280-2018-11-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.0] - 2018-11-15
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.0] - 2018-11-15">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#270-2017-11-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.7.0] - 2017-11-13
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.7.0] - 2017-11-13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#263-2017-06-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.6.3] - 2017-06-01
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.6.3] - 2017-06-01">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#262-2017-02-21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.6.2] - 2017-02-21
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.6.2] - 2017-02-21">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#261-2017-02-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.6.1] - 2017-02-03
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.6.1] - 2017-02-03">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#260-2017-02-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.6.0] - 2017-02-01
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.6.0] - 2017-02-01">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#250-2016-12-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.5.0] - 2016-12-17
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.5.0] - 2016-12-17">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#245-2016-07-29" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.4.5] - 2016-07-29
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.4.5] - 2016-07-29">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#244-2016-06-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.4.4] - 2016-06-15
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.4.4] - 2016-06-15">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#243-2016-03-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.4.3] - 2016-03-03
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.4.3] - 2016-03-03">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#242-2016-01-18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.4.2] - 2016-01-18
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.4.2] - 2016-01-18">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#241-2016-01-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.4.1] - 2016-01-16
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.4.1] - 2016-01-16">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#240-2016-01-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.4.0] - 2016-01-15
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.4.0] - 2016-01-15">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#234-2015-08-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.3.4] - 2015-08-06
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.3.4] - 2015-08-06">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#233-2015-07-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.3.3] - 2015-07-05
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.3.3] - 2015-07-05">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#232-2015-06-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.3.2] - 2015-06-06
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.3.2] - 2015-06-06">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#231-2015-06-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.3.1] - 2015-06-05
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.3.1] - 2015-06-05">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#230-2015-05-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.3.0] - 2015-05-24
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.3.0] - 2015-05-24">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#22x-2013-11-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.2.x] - 2013-11-02
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.2.x] - 2013-11-02">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#21x-2012-12-09" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.1.x] - 2012-12-09
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.1.x] - 2012-12-09">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#20x-2012-12-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.0.x] - 2012-12-01
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.0.x] - 2012-12-01">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#295-2023-09-07" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.9.5] - 2023-09-07
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.9.5] - 2023-09-07">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#294-2023-03-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.9.4] - 2023-03-13
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.9.4] - 2023-03-13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#293-2022-10-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.9.3] - 2022-10-10
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.9.3] - 2022-10-10">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#292-2022-08-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.9.2] - 2022-08-01
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.9.2] - 2022-08-01">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#291-2022-06-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.9.1] - 2022-06-16
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.9.1] - 2022-06-16">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#290-2022-06-08" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.9.0] - 2022-06-08
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.9.0] - 2022-06-08">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#289-2022-03-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.9] - 2022-03-23
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.9] - 2022-03-23">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#288-2022-02-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.8] - 2022-02-16
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.8] - 2022-02-16">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#287-2022-02-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.7] - 2022-02-12
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.7] - 2022-02-12">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#286-2022-02-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.6] - 2022-02-05
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.6] - 2022-02-05">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#285-2021-12-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.5] - 2021-12-30
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.5] - 2021-12-30">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#284-2021-12-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.4] - 2021-12-20
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.4] - 2021-12-20">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#283-2021-03-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.3] - 2021-03-06
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.3] - 2021-03-06">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#282-2021-01-19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.2] - 2021-01-19
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.2] - 2021-01-19">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#281-2020-01-04" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.1] - 2020-01-04
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.1] - 2020-01-04">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#280-2018-11-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.8.0] - 2018-11-15
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.8.0] - 2018-11-15">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#270-2017-11-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.7.0] - 2017-11-13
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.7.0] - 2017-11-13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#263-2017-06-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.6.3] - 2017-06-01
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.6.3] - 2017-06-01">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#262-2017-02-21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.6.2] - 2017-02-21
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.6.2] - 2017-02-21">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#261-2017-02-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.6.1] - 2017-02-03
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.6.1] - 2017-02-03">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#260-2017-02-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.6.0] - 2017-02-01
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.6.0] - 2017-02-01">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#250-2016-12-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.5.0] - 2016-12-17
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.5.0] - 2016-12-17">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#245-2016-07-29" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.4.5] - 2016-07-29
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.4.5] - 2016-07-29">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#244-2016-06-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.4.4] - 2016-06-15
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.4.4] - 2016-06-15">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#243-2016-03-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.4.3] - 2016-03-03
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.4.3] - 2016-03-03">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#242-2016-01-18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.4.2] - 2016-01-18
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.4.2] - 2016-01-18">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#241-2016-01-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.4.1] - 2016-01-16
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.4.1] - 2016-01-16">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#240-2016-01-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.4.0] - 2016-01-15
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.4.0] - 2016-01-15">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#234-2015-08-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.3.4] - 2015-08-06
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.3.4] - 2015-08-06">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#233-2015-07-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.3.3] - 2015-07-05
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.3.3] - 2015-07-05">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#232-2015-06-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.3.2] - 2015-06-06
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.3.2] - 2015-06-06">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#231-2015-06-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.3.1] - 2015-06-05
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.3.1] - 2015-06-05">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#230-2015-05-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.3.0] - 2015-05-24
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.3.0] - 2015-05-24">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#22x-2013-11-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.2.x] - 2013-11-02
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.2.x] - 2013-11-02">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#21x-2012-12-09" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.1.x] - 2012-12-09
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.1.x] - 2012-12-09">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#20x-2012-12-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        [2.0.x] - 2012-12-01
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="[2.0.x] - 2012-12-01">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+  
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+  
+
+
+<h1 id="changelog">Changelog</h1>
+<p>All notable changes to this project will be documented in this file.</p>
+<p>The format is based on <a href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a>,
+and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
+<h2 id="295-2023-09-07">[2.9.5] - 2023-09-07</h2>
+<h3 id="fixed">Fixed</h3>
+<ul>
+<li>Don't check the mediasource policy in the frontend</li>
+</ul>
+<h2 id="294-2023-03-13">[2.9.4] - 2023-03-13</h2>
+<h3 id="fixed_1">Fixed</h3>
+<ul>
+<li>Fix PHP warning: Undefined array key targetHeight &amp; targetWidth [#115]</li>
+<li>Fix reset the TV value to a default value [#116]</li>
+</ul>
+<h2 id="293-2022-10-10">[2.9.3] - 2022-10-10</h2>
+<h3 id="fixed_2">Fixed</h3>
+<ul>
+<li>Fix a swapped ratio for the displayed image, when no crop is created after selecting an image</li>
+<li>Fix chunk getlist processor not found in MODX 3.x [#113]</li>
+</ul>
+<h2 id="292-2022-08-01">[2.9.2] - 2022-08-01</h2>
+<h3 id="changed">Changed</h3>
+<ul>
+<li>Add an initial crop, when the editor image is closed without selecting a crop</li>
+</ul>
+<h3 id="fixed_3">Fixed</h3>
+<ul>
+<li>Fix the random use of the wrong crop for images larger than the editor window</li>
+</ul>
+<h2 id="291-2022-06-16">[2.9.1] - 2022-06-16</h2>
+<h3 id="fixed_4">Fixed</h3>
+<ul>
+<li>Fix showing small initial crops for large images</li>
+</ul>
+<h3 id="changed_1">Changed</h3>
+<ul>
+<li>Update jCrop to v0.9.15</li>
+</ul>
+<h2 id="290-2022-06-08">[2.9.0] - 2022-06-08</h2>
+<h3 id="fixed_5">Fixed</h3>
+<ul>
+<li>Fix showing invalid size message for large images</li>
+<li>Fix some scrollbar glitches</li>
+<li>Fix editing template variable properties in MODX 3.0.1</li>
+</ul>
+<h2 id="289-2022-03-23">[2.8.9] - 2022-03-23</h2>
+<h3 id="fixed_6">Fixed</h3>
+<ul>
+<li>Fix removing plugin events</li>
+</ul>
+<h2 id="288-2022-02-16">[2.8.8] - 2022-02-16</h2>
+<h3 id="fixed_7">Fixed</h3>
+<ul>
+<li>Fix OnDocFormRender was not found!</li>
+</ul>
+<h2 id="287-2022-02-12">[2.8.7] - 2022-02-12</h2>
+<h3 id="fixed_8">Fixed</h3>
+<ul>
+<li>Fix options property of ImagePlus snippet [#107]</li>
+</ul>
+<h2 id="286-2022-02-05">[2.8.6] - 2022-02-05</h2>
+<h3 id="changed_2">Changed</h3>
+<ul>
+<li>Code refactoring</li>
+</ul>
+<h3 id="fixed_9">Fixed</h3>
+<ul>
+<li>Fix OnDocFormRender was not found!</li>
+</ul>
+<h2 id="285-2021-12-30">[2.8.5] - 2021-12-30</h2>
+<h3 id="fixed_10">Fixed</h3>
+<ul>
+<li>Fix styling issues in MODX 3 backend</li>
+</ul>
+<h2 id="284-2021-12-20">[2.8.4] - 2021-12-20</h2>
+<h3 id="fixed_11">Fixed</h3>
+<ul>
+<li>Fix for PHP 8 warnings</li>
+</ul>
+<h2 id="283-2021-03-06">[2.8.3] - 2021-03-06</h2>
+<h3 id="changed_3">Changed</h3>
+<ul>
+<li>Compatibility with MODX 3</li>
+</ul>
+<h2 id="282-2021-01-19">[2.8.2] - 2021-01-19</h2>
+<h3 id="fixed_12">Fixed</h3>
+<ul>
+<li>Fix the ImagePlus.MIGX_Renderer to show normal images too</li>
+</ul>
+<h2 id="281-2020-01-04">[2.8.1] - 2020-01-04</h2>
+<h3 id="fixed_13">Fixed</h3>
+<ul>
+<li>Prevent an error, when $modx-&gt;resource is not set</li>
+</ul>
+<h2 id="280-2018-11-15">[2.8.0] - 2018-11-15</h2>
+<h3 id="changed_4">Changed</h3>
+<ul>
+<li>Updated jQuery</li>
+</ul>
+<h3 id="fixed_14">Fixed</h3>
+<ul>
+<li>Fixing a jQuery issue with ContentBlocks and other extras that use jQuery inside [#60]</li>
+<li>Fixing cannot read property 'destroy' of undefined issue</li>
+<li>Fixing Undefined property issue [#71]</li>
+<li>Fixing a window issue with tiny images [#53]</li>
+</ul>
+<h3 id="removed">Removed</h3>
+<ul>
+<li>Some IE &lt; 9 CSS rules</li>
+</ul>
+<h2 id="270-2017-11-13">[2.7.0] - 2017-11-13</h2>
+<h3 id="changed_5">Changed</h3>
+<ul>
+<li>Improved check for the allowBlank TV option</li>
+</ul>
+<h3 id="fixed_15">Fixed</h3>
+<ul>
+<li>Bugfix for using a wrong plugin event name in special circumstances</li>
+</ul>
+<h3 id="added">Added</h3>
+<ul>
+<li>phpThumbOn crop engine</li>
+<li>Warning in the TV output options for the right usage of the Generate Thumb URL property</li>
+</ul>
+<h2 id="263-2017-06-01">[2.6.3] - 2017-06-01</h2>
+<h3 id="fixed_16">Fixed</h3>
+<ul>
+<li>Bugfix a full server path in the url placeholder</li>
+</ul>
+<h2 id="262-2017-02-21">[2.6.2] - 2017-02-21</h2>
+<h3 id="fixed_17">Fixed</h3>
+<ul>
+<li>Bugfix for disabled option 'Generate Thumbnail URL' and an empty url placeholder</li>
+</ul>
+<h2 id="261-2017-02-03">[2.6.1] - 2017-02-03</h2>
+<h3 id="fixed_18">Fixed</h3>
+<ul>
+<li>Bugfix for an empty select_config system setting</li>
+</ul>
+<h2 id="260-2017-02-01">[2.6.0] - 2017-02-01</h2>
+<h3 id="fixed_19">Fixed</h3>
+<ul>
+<li>Fixed a missing realpath issue</li>
+</ul>
+<h3 id="added_1">Added</h3>
+<ul>
+<li>System-wide predefined crop sizes/aspect ratios, selectable in the TV options</li>
+<li>Context/system settings that supercede the TV options</li>
+</ul>
+<h3 id="removed_1">Removed</h3>
+<ul>
+<li>MODX 2.2 compatibility</li>
+</ul>
+<h2 id="250-2016-12-17">[2.5.0] - 2016-12-17</h2>
+<h3 id="fixed_20">Fixed</h3>
+<ul>
+<li>Fix showing a full server path, when the image is not found [#41]</li>
+</ul>
+<h3 id="added_2">Added</h3>
+<ul>
+<li>Optional caption and credits fields below of the image</li>
+</ul>
+<h2 id="245-2016-07-29">[2.4.5] - 2016-07-29</h2>
+<h3 id="fixed_21">Fixed</h3>
+<ul>
+<li>Solved an installation issue on Windows machines</li>
+</ul>
+<h2 id="244-2016-06-15">[2.4.4] - 2016-06-15</h2>
+<h3 id="changed_6">Changed</h3>
+<ul>
+<li>Don't try to get an Image+ url with an empty template variable value</li>
+<li>Change the image by typing the filename</li>
+<li>Correcting typos, refactored code</li>
+</ul>
+<h3 id="added_3">Added</h3>
+<ul>
+<li>Add assets files on manager pages (i.e. for MIGX)</li>
+<li>Log invalid JSON only if imageplus.debug system setting is active</li>
+<li>Use only uglified/minified scripts in package code</li>
+</ul>
+<h2 id="243-2016-03-03">[2.4.3] - 2016-03-03</h2>
+<h3 id="fixed_22">Fixed</h3>
+<ul>
+<li>Fixed not found image in combined/minified css file</li>
+</ul>
+<h3 id="added_4">Added</h3>
+<ul>
+<li>The alt text field could contain special chars</li>
+<li>Debug system setting for enabling not combined and minified/uglified css/js files</li>
+</ul>
+<h2 id="242-2016-01-18">[2.4.2] - 2016-01-18</h2>
+<h3 id="added_5">Added</h3>
+<ul>
+<li>The snippet could use inherited values</li>
+</ul>
+<h2 id="241-2016-01-16">[2.4.1] - 2016-01-16</h2>
+<h3 id="changed_7">Changed</h3>
+<ul>
+<li>Change the image by typing the filename</li>
+</ul>
+<h3 id="fixed_23">Fixed</h3>
+<ul>
+<li>Fixing recoverable errors</li>
+</ul>
+<h3 id="added_6">Added</h3>
+<p>Translated error messages</p>
+<h2 id="240-2016-01-15">[2.4.0] - 2016-01-15</h2>
+<h3 id="changed_8">Changed</h3>
+<ul>
+<li>Improved error logging</li>
+<li>Resolved issues with apostrophes in language strings</li>
+</ul>
+<h3 id="added_7">Added</h3>
+<ul>
+<li>Retain the value of a MODX TV as source image for the Image+ TV</li>
+<li>Fill output chunk placeholders with script properties</li>
+</ul>
+<h2 id="234-2015-08-06">[2.3.4] - 2015-08-06</h2>
+<h3 id="changed_9">Changed</h3>
+<ul>
+<li>Open crop window automatic after selecting a new image</li>
+<li>Bugfix for media source issue in MIGX</li>
+</ul>
+<h2 id="233-2015-07-05">[2.3.3] - 2015-07-05</h2>
+<h3 id="changed_10">Changed</h3>
+<ul>
+<li>Run jQuery in noConflict mode</li>
+</ul>
+<h2 id="232-2015-06-06">[2.3.2] - 2015-06-06</h2>
+<h3 id="added_8">Added</h3>
+<ul>
+<li>'value' parameter in the ImagePlus Snippet</li>
+</ul>
+<h2 id="231-2015-06-05">[2.3.1] - 2015-06-05</h2>
+<h3 id="changed_11">Changed</h3>
+<ul>
+<li>Use default_media_source if the media source of the TV is not set (i.e. if it used in a MIGX configuration)</li>
+<li>Don't show the crop window if the image size is invalid</li>
+</ul>
+<h3 id="added_9">Added</h3>
+<ul>
+<li>Enable property sets for the ImagePlus Snippet</li>
+</ul>
+<h2 id="230-2015-05-24">[2.3.0] - 2015-05-24</h2>
+<h3 id="changed_12">Changed</h3>
+<ul>
+<li>Updated Jcrop plugin and jQuery</li>
+<li>Updated Czech translation (@bartholomej)</li>
+<li>Updated Dutch translation (@Mark-H)</li>
+<li>Updated French translation (@AmaZili)</li>
+<li>Updated Russian translation (@Alroniks, serimarda)</li>
+</ul>
+<h3 id="fixed_24">Fixed</h3>
+<ul>
+<li>Bugfix for fireResourceFormChange issue</li>
+<li>Bugfix for a Firefox display issue</li>
+</ul>
+<h3 id="added_10">Added</h3>
+<ul>
+<li>MODX 2.3 compatibility</li>
+<li>Inline Trigger fields</li>
+<li>Some better backend styling</li>
+<li>Set thumbnail width in template variable panel</li>
+<li>Set crop aspect ratio in template variable input options</li>
+<li>Respect context settings for media sources</li>
+<li>Center the crop window in the viewport</li>
+</ul>
+<h2 id="22x-2013-11-02">[2.2.x] - 2013-11-02</h2>
+<h3 id="changed_13">Changed</h3>
+<ul>
+<li>Refactored to allow changing of crop engines</li>
+<li>Confirmed to work with Articles [#21]</li>
+<li>Now works with MIGX [#15]</li>
+<li>TV Default Value is now output if TV is empty</li>
+<li>TV Reset button now works [#22]</li>
+</ul>
+<h3 id="added_11">Added</h3>
+<ul>
+<li>GUI warning of missing dependencies</li>
+<li>phpThumbsUp crop engine</li>
+<li>grid renderer for MIGX backend</li>
+<li>image preloader to accurately get image size on upload. This is because MODX File Manager will not report accurate image size for images above 800x600 [#8]</li>
+<li>option to put an icon on TV input 'crop' button [#16]</li>
+<li>Create a system setting called imageplus.crop_icon and populate it with the url to the desired icon png</li>
+<li>system setting override for core_path and assets_url [#25]</li>
+<li>Czech translation (@TheBoxer)</li>
+<li>Danish translation (@Flygenring)</li>
+<li>German translation (@KristianP)</li>
+<li>Spanish translation (Nico Telfer)</li>
+<li>French translation (@rtripault)</li>
+<li>Hungarian translation (Kristof Kotai)</li>
+<li>Italian translation (@tillilab)</li>
+<li>Dutch translation (@Mark-H)</li>
+<li>Russian translation (@Alroniks)</li>
+<li>French translation (@Alroniks)</li>
+</ul>
+<h2 id="21x-2012-12-09">[2.1.x] - 2012-12-09</h2>
+<h3 id="changed_14">Changed</h3>
+<ul>
+<li>Fixed bug with non-default media sources</li>
+</ul>
+<h3 id="added_12">Added</h3>
+<ul>
+<li>Field for additional phpThumb parameters to output renderer</li>
+<li>Option to specify a chunk for output formatting (fields: url,alt,width,height)</li>
+</ul>
+<h2 id="20x-2012-12-01">[2.0.x] - 2012-12-01</h2>
+<h3 id="added_13">Added</h3>
+<ul>
+<li>Complete rewrite</li>
+</ul>
+
+  
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+  
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2012-2014 <a href="https://github.com/alanpich">Alan Pich</a>, 2015-2026 <a href="https://treehillstudio.com">Treehill Studio</a>
+
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+        
+  
+  <div class="md-social">
+    
+      
+      
+      
+      
+      <a href="https://github.com/Jako" target="_blank" rel="noopener" title="Jako on GitHub" class="md-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+      </a>
+    
+  </div>
+
+
+
+    <div class="md-footer-logo">
+    <a href="https://treehillstudio.com" class="md-footer-logo__link">
+        <img src="../assets/images/treehill-studio-invers.svg">
+    </a>
+</div>
+
+
+
+
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.5fd3284f.min.js"></script>
+      
+    
+  </body>
+</html>
