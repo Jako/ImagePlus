@@ -1,6 +1,6 @@
 # Image+
 
-Image+ is an advanced image template for MODx Revolution. The dimensions for the
+Image+ is an advanced image template variable for MODX. The dimensions for the
 uploaded image can be configured (optionally) to restrict a minimum width and/or
 height. Image cropping can be forced to stay within a preset ratio. A graphical
 tool can be used to resize the image to the desired dimensions/proportions.
