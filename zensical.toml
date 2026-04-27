@@ -73,6 +73,8 @@ emoji_generator = "zensical.extensions.emoji.to_svg"
 
 [project.markdown_extensions.footnotes]
 
+[project.markdown_extensions.zensical.extensions.glightbox]
+
 [project.markdown_extensions.pymdownx.highlight]
 anchor_linenums = true
 line_spans = "__span"
