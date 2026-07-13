@@ -55,7 +55,7 @@
         }, {
             layout: 'column',
             items: [{
-                columnWidth: .5,
+                columnWidth: 0.5,
                 layout: 'form',
                 labelAlign: 'top',
                 items: [{
@@ -90,7 +90,7 @@
                     cls: 'desc-under'
                 }]
             }, {
-                columnWidth: .5,
+                columnWidth: 0.5,
                 layout: 'form',
                 labelAlign: 'top',
                 items: [{
@@ -127,7 +127,7 @@
         }, {
             layout: 'column',
             items: [{
-                columnWidth: .33,
+                columnWidth: 0.33,
                 layout: 'form',
                 labelAlign: 'top',
                 items: [{
@@ -148,7 +148,7 @@
                     cls: 'desc-under'
                 }]
             }, {
-                columnWidth: .33,
+                columnWidth: 0.33,
                 layout: 'form',
                 labelAlign: 'top',
                 items: [{
@@ -169,7 +169,7 @@
                     cls: 'desc-under'
                 }]
             }, {
-                columnWidth: .34,
+                columnWidth: 0.34,
                 layout: 'form',
                 labelAlign: 'top',
                 items: [{
