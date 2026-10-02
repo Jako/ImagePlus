@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
 const { minify } = require('terser');
 const sass = require('sass');
@@ -29,49 +29,42 @@ let versionRelease = versionParts[1] || 'pl';
 let versionFull = versionNumber + '-' + versionRelease;
 
 // Helper: Replace string/regex in a file
-function replaceInFile(filePath, replacements, message = 'file') {
-    if (!fs.existsSync(filePath)) {
-        console.warn(`⚠ File not found: ${filePath}`);
-        return;
+async function replaceInFile(filePath, replacements, message = 'file') {
+    try {
+        let content = await fs.readFile(filePath, 'utf8');
+        replacements.forEach(({ search, replace }) => {
+            content = content.replace(search, replace);
+        });
+        await fs.writeFile(filePath, content, 'utf8');
+        console.log(`✓ Updated ${message}: ${filePath}`);
+    } catch (e) {
+        console.warn(`⚠ Error updating ${filePath}`);
     }
-    let content = String(fs.readFileSync(filePath, 'utf8'));
-    replacements.forEach(({ search, replace }) => {
-        content = content.replace(search, replace);
-    });
-    fs.writeFileSync(filePath, content, 'utf8');
-    console.log(`✓ Updated ${message}: ${filePath}`);
 }
 
 // Helper: Ensure directory structure exists
-function ensureDirExists(dirPath) {
-    if (!fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath, { recursive: true });
-    }
+async function ensureDirExists(dirPath) {
+    await fs.mkdir(path.dirname(dirPath), { recursive: true });
 }
 
 // Helper: Copy a file
-function copyFile(src, dest) {
-    const fullSource = path.resolve(__dirname, src);
-    const fullTarget = path.resolve(__dirname, dest);
-    if (!fs.existsSync(fullSource)) {
-        console.warn(`⚠ Source file not found for copy: ${src}`);
-        return;
+async function copyFile(src, dest) {
+    try {
+        const fullSource = path.resolve(__dirname, src);
+        const fullTarget = path.resolve(__dirname, dest);
+        const targetDir = path.dirname(fullTarget);
+        await ensureDirExists(targetDir);
+        await fs.copyFile(fullSource, fullTarget);
+        console.log(`✓ Copied: ${src} -> ${dest}`);
+    } catch (e) {
+        console.warn(`⚠ Error copying ${src} -> ${dest}`);
     }
-    const targetDir = path.dirname(fullTarget);
-    ensureDirExists(targetDir);
-    fs.copyFileSync(fullSource, fullTarget);
-    console.log(`✓ Copied: ${src} -> ${dest}`);
 }
 
 // Helper: Copy folders recursively with an optional filter function
 async function copyFolderRecursive(src, dest, filterFn = (fileName) => true) {
-    if (!fs.existsSync(src)) {
-        console.warn(`⚠ Source file not found for copy: ${src}`);
-        return;
-    }
-    ensureDirExists(dest);
-    const entries = fs.readdirSync(src, { withFileTypes: true });
-
+    await ensureDirExists(dest);
+    const entries = await fs.readdir(src, { withFileTypes: true });
     for (let entry of entries) {
         const srcPath = path.join(src, entry.name);
         const destPath = path.join(dest, entry.name);
@@ -79,8 +72,12 @@ async function copyFolderRecursive(src, dest, filterFn = (fileName) => true) {
         if (entry.isDirectory()) {
             await copyFolderRecursive(srcPath, destPath, filterFn);
         } else if (filterFn(entry.name)) {
-            fs.copyFileSync(srcPath, destPath);
-            console.log(`✓ Copied: ${srcPath} -> ${destPath}`);
+            try {
+                await fs.copyFile(srcPath, destPath);
+                console.log(`✓ Copied: ${srcPath} -> ${destPath}`);
+            } catch (e) {
+                console.warn(`⚠ Error copying ${srcPath} -> ${destPath}`);
+            }
         }
     }
 }
@@ -88,9 +85,10 @@ async function copyFolderRecursive(src, dest, filterFn = (fileName) => true) {
 // Helper function to compile scripts
 async function compileScripts(files, dest, filename) {
     console.log('Compiling scripts...');
-    let combinedCode = files.map(f => fs.readFileSync(f, 'utf8'))
-        .join('\n');
-    const minified = await minify(combinedCode, {
+    const fileContents = await Promise.all(
+        files.map(f => fs.readFile(f, 'utf8'))
+    );
+    const minified = await minify(fileContents.join('\n'), {
         mangle: true,
         compress: true,
         format: {
@@ -98,26 +96,35 @@ async function compileScripts(files, dest, filename) {
         },
     });
     const finalCode = banner + minified.code;
-    ensureDirExists(dest);
+    await ensureDirExists(dest);
     filename = filename.replace(/(\.\w+)$/i, '.min$1');
-    fs.writeFileSync(path.join(dest, filename), finalCode, 'utf8');
+    await fs.writeFile(path.join(dest, filename), finalCode, 'utf8');
 }
 
 // Helper function to compile, autoprefix and minify Sass
-async function compileSass(src, intermediate, dest, filename) {
+async function compileSass(files, intermediate, dest, filename) {
     console.log('Compiling Sass & processing CSS...');
-    const sassResult = sass.compile(src, { style: 'expanded' });
-    ensureDirExists(intermediate);
-    fs.writeFileSync(path.join(intermediate, filename), sassResult.css, 'utf8');
+    let concatenatedCss = '';
+    for (const file of files) {
+        const sassResult = await sass.compile(file, { style: 'expanded' });
+        const postcssResult = await postcss([
+            autoprefixer()
+        ])
+            .process(sassResult.css, { from: undefined });
+        concatenatedCss += postcssResult.css + '\n';
+    }
+    concatenatedCss = concatenatedCss.replace(/\/\*[\s\(\S\)]*?\*\/\n*/g, '');
+    await ensureDirExists(intermediate);
+    await fs.writeFile(path.join(intermediate, filename), concatenatedCss, 'utf8');
     const postcssResult = await postcss([
         autoprefixer(),
         cssnano({ preset: ['default', { discardComments: { removeAll: true } }] })
     ])
-        .process(sassResult.css, { from: undefined });
+        .process(concatenatedCss, { from: undefined });
     const finalCss = postcssResult.css + '\n' + banner;
-    ensureDirExists(dest);
+    await ensureDirExists(dest);
     filename = filename.replace(/(\.\w+)$/i, '.min$1');
-    fs.writeFileSync(path.join(dest, filename), finalCss, 'utf8');
+    await fs.writeFile(path.join(dest, filename), finalCss, 'utf8');
 }
 
 async function taskBump() {
@@ -126,43 +133,43 @@ async function taskBump() {
         'core/components/imageplus/model/imageplus/imageplus.class.php',
         'core/components/imageplus/src/ImagePlus.php',
     ];
-    copyrightFiles.forEach(file => {
-        replaceInFile(file, [{
+    for (const file of copyrightFiles) {
+        await replaceInFile(file, [{
             search: copyrightRegex,
             replace: copyrightReplace
         }], 'copyright in');
-    });
-    replaceInFile('core/components/imageplus/src/ImagePlus.php', [{
+    }
+    await replaceInFile('core/components/imageplus/src/ImagePlus.php', [{
         search: /version = '\d+\.\d+\.\d+-?[0-9a-z]*'/ig,
         replace: `version = '${version}'`
     }], 'version in');
-    const optionsFiles = [
+    const optionFiles = [
         'core/components/imageplus/elements/tv/input/tpl/imageplus.options.tpl',
         'core/components/imageplus/elements/tv/output/tpl/imageplus.options.tpl',
     ];
-    optionsFiles.forEach(file => {
-        replaceInFile(file, [{
+    for (const file of optionFiles) {
+        await replaceInFile(file, [{
             search: apiRegex,
             replace: apiReplace
         }], 'daterange in');
-    });
+    }
     const docFiles = [
         'zensical.toml',
     ];
-    docFiles.forEach(file => {
-        replaceInFile(file, [{
+    for (const file of docFiles) {
+        await replaceInFile(file, [{
             search: apiRegex,
             replace: apiReplace
         }], 'daterange in');
-    });
-    replaceInFile('docs/index.md', [{
+    }
+    await replaceInFile('docs/index.md', [{
         search: /[*-] MODX Revolution \d.\d.*/g,
         replace: '* MODX Revolution ' + modxversion + '+'
     }, {
         search: /[*-] PHP (v)?\d.\d.*/g,
         replace: '* PHP ' + phpversion + '+'
     }], 'requirements in');
-    replaceInFile('core/components/imageplus/composer.json', [{
+    await replaceInFile('core/components/imageplus/composer.json', [{
         search: /"php": "\d.\d.*?"/g,
         replace: '"php": "' + phpversion + '"'
     }, {
@@ -173,12 +180,12 @@ async function taskBump() {
         '_build/config.json',
         'core/components/imageplus/composer.json',
     ];
-    buildFiles.forEach(file => {
-        replaceInFile(file, [{
+    for (const file of buildFiles) {
+        await replaceInFile(file, [{
             search: /"version": "\d+\.\d+\.\d+-?[0-9a-z]*"/ig,
             replace: `"version": "${version}"`
         }], 'version in');
-    });
+    }
 }
 
 async function taskScripts() {
@@ -196,12 +203,9 @@ async function taskScripts() {
 }
 
 async function taskSass() {
-    await compileSass(
-        'source/sass/mgr/imageplus.scss',
-        'source/css/mgr/',
-        'assets/components/imageplus/css/mgr/',
-        'imageplus.css',
-    );
+    await compileSass([
+        'source/sass/mgr/imageplus.scss'
+    ], 'source/css/mgr/', 'assets/components/imageplus/css/mgr/', 'imageplus.css');
 }
 
 async function taskImages() {
