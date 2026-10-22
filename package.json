@@ -17,10 +17,9 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.6.1",
-    "chokidar-cli": "^3.0.0",
-    "cssnano": "^9.1.2",
-    "postcss": "^8.5.28",
-    "sass": "^1.105.1",
+    "cssnano": "^9.9.0",
+    "postcss": "^8.5.31",
+    "sass": "^1.106.1",
     "terser": "^5.51.2"
   },
   "dependencies": {
