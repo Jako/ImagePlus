@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Upload images directly in the template variable
+- Multiple image crops per image with the new image crops input option
+- Crop window based on Cropper.js (ported from Agenda), the image crops are saved as files in the media source
+- Upload path and crop path system settings
+- Image crop output option/snippet property and crop.url placeholder
+- Minimal image width/height input options, smaller selected or uploaded images are rejected
+- Show all images in one line input option, to show the image crops and the original image also in one line, when the template variable panel is at least 700 pixels wide
+
+### Changed
+
+- The template variable input and the image preview fill the width of the template variable panel, the image with its crops and the alt text, caption and credits fields are shown in one line if the panel is at least 700px wide
+- Replace the thumbnail width input option/system setting with a thumbnail height input option/system setting
+- New template variable value format, values of previous versions are converted on the fly and saved in the new format with the next resource save
+- Replace Jcrop and jQuery with Cropper.js
+- The media source is not saved in the template variable value anymore, the media source of the template variable is used. A migration removes it from existing values, values with a different media source are logged in core/cache/logs/imageplus_migration.log
+
+### Removed
+
+- Target width, target height and target aspect ratio input options/system/context settings, the target width/height are converted to the minimal image width/height input options (the lowest value of all contexts) and their aspect ratio or the target aspect ratio to the image crops input option during the update. MIGX configs have to be changed manually
+- Predefined crop sizes/aspect ratios system settings (select_config and force_config)
+
 ## [2.9.5] - 2023-09-07
 
 ### Fixed

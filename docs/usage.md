@@ -1,33 +1,45 @@
 ## Input Options
 
 In *Image+* you can control the final size and aspect ratio of selected
-images. For an *Image+* TV, several advanced input options are available:
+images. The image can be selected in the media browser, uploaded or entered as
+path. After selecting an image, the crop window opens and the image crops can
+be created. For an *Image+* TV, several advanced input options are available:
 
-#### Target Height/Width
+#### Image Crops
 
-Images can be constrained to a minimum height and/or width with **Target
-Height** and **Target Width**. If both values are set, the target aspect ratio
-of the output image will be calculated with these values. Both fields must be
-filled with an integer value.
+A JSON encoded object with the image crops of the image. Each crop has a key, a
+name and one of the following constraints:
 
-#### Target Aspect Ratio
+| Constraint | Description                                     | Example     |
+|------------|-------------------------------------------------|-------------|
+| size       | The target size of the crop (width x height)    | `1000x500`  |
+| proportion | The aspect ratio of the crop (width x height)   | `16x9`      |
+| width      | The target width of the crop                    | `800`       |
+| height     | The target height of the crop                   | `600`       |
 
-The aspect ratio for the output image can be restricted with **Target aspect
-ratio**. If target height and target width are specified, this value is ignored
-and the calculated aspect ratio of target height and target width is used. The
-field must be filled with a float value.
+```json
+{
+    "desktop": {"name": "Desktop", "size": "1600x800"},
+    "mobile": {"name": "Mobile", "proportion": "4x3"}
+}
+```
 
-If you specify only a value for **Target Height** or **Target Width** and leave
-**Target Aspect Ratio** blank, the size of the crop is not constrained to any
-aspect ratio.
+If this option is empty, one image crop without constraints is created.
 
-!!! note "How to calculate the aspect ratio"
+#### Minimal Image Width/Height
 
-    The aspect ratio contains a floating point value: this value can be easily
-    determined by dividing any width with the desired aspect ratio by the
-    corresponding height. For example, suppose you want all your crops to have the
-    same aspect ratio as an image of size "1600x1000", then simply divide "1600" by
-    "1000", which gives the value "1.6". This is the value for your aspect ratio.
+The selected or uploaded image must have at least this width and/or height in
+pixels. Smaller images are rejected with an error message.
+
+#### Thumbnail Height
+
+The height of the preview image in the template variable panel. The default is
+250 pixels.
+
+#### Show All Images in One Line
+
+Show the image crops and the original image also in one line, when the
+template variable panel is at least 700 pixels wide. The default is enabled.
 
 #### Show Alt Tag Field
 
@@ -77,13 +89,14 @@ created before they can be used.
 | imageplus.allow_alt_tag   | Show Alt Tag Field                        | Allow user to enter a title/alt-tag for the image.                                              | No      |
 | imageplus.allow_caption   | Show Caption Field                        | Allow user to enter a caption for the image.                                                    | No      |
 | imageplus.allow_credits   | Show Credits Field                        | Allow user to enter a credit for the image.                                                     | No      |
+| imageplus.crop_path       | Crop Path                                 | The path in the media source for the image crop files.                                          | crop/   |
 | imageplus.debug           | Debug                                     | Log debug information in the MODX error log.                                                    | No      |
-| imageplus.force_config    | Force predefined crop sizes/aspect ratios | Force the usage of predefined crop size/aspect ratios.                                          | No      |
-| imageplus.select_config   | Predefined crop sizes/aspect ratios       | Create predefined crop size/aspect ratios that are selectable in the template variable options. | []      |
-| imageplus.target_height   | Target Height                             | Constrain the target images to a minimal height.                                                | -       |
-| imageplus.target_ratio    | Target Aspect Ratio                       | Restrict the target images to a aspect ratio.                                                   | -       |
-| imageplus.target_width    | Target Width                              | Constrain the target images to a minimal width.                                                 | -       |
-| imageplus.thumbnail_width | Thumbnail Width                           | The thumbnail width of the image in the template variable panel.                                | -       |
+| imageplus.thumbnail_height | Thumbnail Height                         | The thumbnail height of the image in the template variable panel.                               | 250     |
+| imageplus.upload_path     | Upload Path                               | The path in the media source for uploaded images.                                               | -       |
+
+The upload path and the crop path can contain the placeholders `[[+year]]`,
+`[[+month]]`, `[[+day]]`, `[[+user]]`, `[[+username]]`, `[[+resource_id]]` and
+`[[+tv_id]]`.
 
 The global context/system settings have the prefix `imageplus.` and the
 individual TV context/system settings have the prefix `imageplus.{tvname}.`.
@@ -96,11 +109,6 @@ The order for these settings is [^1].
 - context setting
 - system setting
 
-In the `imageplus.select_config` system setting, you can create predefined
-internal forces/aspect ratios with an auxiliary grid. To force the use of the
-predefined sizes/ratios, you can activate the system setting
-`imageplus.force_config`.
-
 ## Output Options
 
 Several advanced output options are available for an *Image+* TV:
@@ -111,6 +119,11 @@ By default, an *Image+* TV returns a relative URL to a cropped (and possibly
 constrained) image scaled by phpThumb. This output option allows you to assign
 several additional phpThumb parameters that will be generated to create the
 thumbnail image.
+
+#### Image Crop
+
+The key of the image crop that is used for the output. If it is empty, the first
+image crop is used.
 
 #### Output Chunk
 
@@ -123,6 +136,7 @@ possible in this chunk to customize the output:
 | alt           | Alt text                                                       |
 | crop.height   | Crop height of the thumbnail image                             |
 | crop.options  | Crop engine crop option string to generate the thumbnail image |
+| crop.url      | URL of the image crop file created in the manager              |
 | crop.width    | Crop width of the thumbnail image                              |
 | crop.x        | Crop x position of the thumbnail image                         |
 | crop.y        | Crop y position of the thumbnail image                         |
@@ -163,6 +177,7 @@ following properties can be set in the snippet call:
 
 | Property | Description                                                                           | Default         |
 |----------|---------------------------------------------------------------------------------------|-----------------|
+| crop     | Key of the image crop used for the output. The first image crop is used by default.   | -               |
 | docid    | Resource where the Image+ TV value is received from.                                  | -               |
 | options  | Extended phpThumb options for the image.                                              | -               |
 | tpl      | Template chunk for the snippet output.                                                | ImagePlus.image |

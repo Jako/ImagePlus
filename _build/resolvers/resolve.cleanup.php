@@ -134,6 +134,20 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
             cleanupFolders($modx, $corePath, $assetsPath, $cleanup, 'ImagePlus', '2.8.8');
             cleanupPluginEvents($modx, 'ImagePlus', ['OnDocFormRender']);
         }
+        if ($oldPackage && $oldPackage->compareVersion('3.0.0-pl', '>')) {
+            $cleanup = [
+                'assets' => [
+                    'components/imageplus/img/mgr/jcrop.gif'
+                ]
+            ];
+            cleanupFolders($modx, $corePath, $assetsPath, $cleanup, 'ImagePlus', '3.0.0');
+            // The thumbnail fills the width of the template variable panel, its height is set by imageplus.thumbnail_height
+            /** @var modSystemSetting $setting */
+            $setting = $modx->getObject('modSystemSetting', ['key' => 'imageplus.thumbnail_width']);
+            if ($setting && $setting->remove()) {
+                $modx->log(xPDO::LOG_LEVEL_INFO, 'Removed the imageplus.thumbnail_width system setting.');
+            }
+        }
         $success = true;
         break;
     case xPDOTransport::ACTION_UNINSTALL:

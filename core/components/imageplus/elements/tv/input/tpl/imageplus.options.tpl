@@ -36,22 +36,50 @@
                 _('imageplus.input_section') + '</label><label class="desc-under" style="">' +
                 _('imageplus.input_section_desc') + '</label>'
         }, {
-            xtype: 'sizes-ratio-combo',
-            fieldLabel: {/literal}{if $forceconfig}_('imageplus.selectConfigForce'){else}_('imageplus.selectConfig'){/if}{literal},
-            description: MODx.expandHelp ? '' : {/literal}{if $forceconfig}_('imageplus.selectConfigForce_desc'){else}_('imageplus.selectConfig_desc'){/if}{literal},
-            name: 'inopt_selectConfig',
-            id: 'inopt_selectConfig{/literal}{$tv}{literal}',
-            tvId: '{/literal}{$tv}{literal}',
-            labelAlign: 'left',
-            data: {/literal}{$selectconfig}{literal},
-            hidden: {/literal}{$hide}{literal},
-            anchor: '100%',
-            listeners: oc
-        }, {
-            xtype: MODx.expandHelp ? 'label' : 'hidden',
-            forId: 'inopt_selectConfig{/literal}{$tv}{literal}',
-            html: {/literal}{if $forceconfig}_('imageplus.selectConfigForce_desc'){else}_('imageplus.selectConfig_desc'){/if}{literal},
-            cls: 'desc-under'
+            layout: 'column',
+            items: [{
+                columnWidth: 0.5,
+                layout: 'form',
+                labelAlign: 'top',
+                items: [{
+                    xtype: 'numberfield',
+                    fieldLabel: _('imageplus.minWidth'),
+                    description: MODx.expandHelp ? '' : _('imageplus.minWidth_desc'),
+                    name: 'inopt_minWidth',
+                    id: 'inopt_minWidth{/literal}{$tv}{literal}',
+                    value: params['minWidth'] || '',
+                    allowDecimals: false,
+                    allowNegative: false,
+                    anchor: '100%',
+                    listeners: oc
+                }, {
+                    xtype: MODx.expandHelp ? 'label' : 'hidden',
+                    forId: 'inopt_minWidth{/literal}{$tv}{literal}',
+                    html: _('imageplus.minWidth_desc'),
+                    cls: 'desc-under'
+                }]
+            }, {
+                columnWidth: 0.5,
+                layout: 'form',
+                labelAlign: 'top',
+                items: [{
+                    xtype: 'numberfield',
+                    fieldLabel: _('imageplus.minHeight'),
+                    description: MODx.expandHelp ? '' : _('imageplus.minHeight_desc'),
+                    name: 'inopt_minHeight',
+                    id: 'inopt_minHeight{/literal}{$tv}{literal}',
+                    value: params['minHeight'] || '',
+                    allowDecimals: false,
+                    allowNegative: false,
+                    anchor: '100%',
+                    listeners: oc
+                }, {
+                    xtype: MODx.expandHelp ? 'label' : 'hidden',
+                    forId: 'inopt_minHeight{/literal}{$tv}{literal}',
+                    html: _('imageplus.minHeight_desc'),
+                    cls: 'desc-under'
+                }]
+            }]
         }, {
             layout: 'column',
             items: [{
@@ -60,33 +88,17 @@
                 labelAlign: 'top',
                 items: [{
                     xtype: 'textfield',
-                    fieldLabel: _('imageplus.targetwidth'),
-                    description: MODx.expandHelp ? '' : _('imageplus.targetwidth_desc'),
-                    name: 'inopt_targetWidth',
-                    id: 'inopt_targetWidth{/literal}{$tv}{literal}',
-                    value: params['targetWidth'] || '',
-                    readOnly: {/literal}{if $forceconfig}true{else}false{/if}{literal},
+                    fieldLabel: _('imageplus.thumbnailHeight'),
+                    description: MODx.expandHelp ? '' : _('imageplus.thumbnailHeight_desc'),
+                    name: 'inopt_thumbnailHeight',
+                    id: 'inopt_thumbnailHeight{/literal}{$tv}{literal}',
+                    value: params['thumbnailHeight'] || '',
                     anchor: '100%',
                     listeners: oc
                 }, {
                     xtype: MODx.expandHelp ? 'label' : 'hidden',
-                    forId: 'inopt_targetWidth{/literal}{$tv}{literal}',
-                    html: _('imageplus.targetwidth_desc'),
-                    cls: 'desc-under'
-                }, {
-                    xtype: 'textfield',
-                    fieldLabel: _('imageplus.targetheight'),
-                    description: MODx.expandHelp ? '' : _('imageplus.targetheight_desc'),
-                    name: 'inopt_targetHeight',
-                    id: 'inopt_targetHeight{/literal}{$tv}{literal}',
-                    value: params['targetHeight'] || '',
-                    readOnly: {/literal}{if $forceconfig}true{else}false{/if}{literal},
-                    anchor: '100%',
-                    listeners: oc
-                }, {
-                    xtype: MODx.expandHelp ? 'label' : 'hidden',
-                    forId: 'inopt_targetHeight{/literal}{$tv}{literal}',
-                    html: _('imageplus.targetheight_desc'),
+                    forId: 'inopt_thumbnailHeight{/literal}{$tv}{literal}',
+                    html: _('imageplus.thumbnailHeight_desc'),
                     cls: 'desc-under'
                 }]
             }, {
@@ -94,36 +106,37 @@
                 layout: 'form',
                 labelAlign: 'top',
                 items: [{
-                    xtype: 'textfield',
-                    fieldLabel: _('imageplus.targetRatio'),
-                    description: MODx.expandHelp ? '' : _('imageplus.targetRatio_desc'),
-                    name: 'inopt_targetRatio',
-                    id: 'inopt_targetRatio{/literal}{$tv}{literal}',
-                    value: params['targetRatio'] || '',
-                    readOnly: {/literal}{if $forceconfig}true{else}false{/if}{literal},
+                    xtype: 'combo-boolean',
+                    fieldLabel: _('imageplus.inlinePreview'),
+                    description: MODx.expandHelp ? '' : _('imageplus.inlinePreview_desc'),
+                    name: 'inopt_inlinePreview',
+                    hiddenName: 'inopt_inlinePreview',
+                    id: 'inopt_inlinePreview{/literal}{$tv}{literal}',
+                    value: !(params['inlinePreview'] === 0 || params['inlinePreview'] === 'false'),
                     anchor: '100%',
                     listeners: oc
                 }, {
                     xtype: MODx.expandHelp ? 'label' : 'hidden',
-                    forId: 'inopt_targetRatio{/literal}{$tv}{literal}',
-                    html: _('imageplus.targetRatio_desc'),
-                    cls: 'desc-under'
-                }, {
-                    xtype: 'textfield',
-                    fieldLabel: _('imageplus.thumbnailWidth'),
-                    description: MODx.expandHelp ? '' : _('imageplus.thumbnailWidth_desc'),
-                    name: 'inopt_thumbnailWidth',
-                    id: 'inopt_thumbnailWidth{/literal}{$tv}{literal}',
-                    value: params['thumbnailWidth'] || '',
-                    anchor: '100%',
-                    listeners: oc
-                }, {
-                    xtype: MODx.expandHelp ? 'label' : 'hidden',
-                    forId: 'inopt_thumbnailWidth{/literal}{$tv}{literal}',
-                    html: _('imageplus.thumbnailWidth_desc'),
+                    forId: 'inopt_inlinePreview{/literal}{$tv}{literal}',
+                    html: _('imageplus.inlinePreview_desc'),
                     cls: 'desc-under'
                 }]
             }]
+        }, {
+            xtype: 'textarea',
+            fieldLabel: _('imageplus.sizes'),
+            description: MODx.expandHelp ? '' : _('imageplus.sizes_desc'),
+            name: 'inopt_sizes',
+            id: 'inopt_sizes{/literal}{$tv}{literal}',
+            value: params['sizes'] || '',
+            anchor: '100%',
+            grow: true,
+            listeners: oc
+        }, {
+            xtype: MODx.expandHelp ? 'label' : 'hidden',
+            forId: 'inopt_sizes{/literal}{$tv}{literal}',
+            html: _('imageplus.sizes_desc'),
+            cls: 'desc-under'
         }, {
             layout: 'column',
             items: [{
@@ -198,7 +211,7 @@
                     component.getEl().select('img').on('click', function () {
                         var msg = '<span style="display: inline-block; text-align: center;">&copy; 2013-2015 by Alan Pich <a href="https://github.com/alanpich" target="_blank">github.com/alanpich</a><br>' +
                             '<img src="' + ImagePlus.config.assetsUrl + 'img/mgr/treehill-studio.png" srcset="' + ImagePlus.config.assetsUrl + 'img/mgr/treehill-studio@2x.png 2x" alt="Treehill Studio" style="margin-top: 10px"><br>' +
-                            '&copy; 2015-2023 by <a href="https://treehillstudio.com" target="_blank">treehillstudio.com</a></span>';
+                            '&copy; 2015-2026 by <a href="https://treehillstudio.com" target="_blank">treehillstudio.com</a></span>';
                         Ext.Msg.show({
                             title: _('imageplus') + ' ' + ImagePlus.config.version,
                             msg: msg,

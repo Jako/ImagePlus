@@ -14,10 +14,11 @@ field. The following properties are possible:
 
 ```json
 {
-    "targetWidth":"",
-    "targetHeight":"",
-    "targetRatio":"",
-    "thumbnailWidth":"",
+    "sizes":"",
+    "minWidth":"",
+    "minHeight":"",
+    "thumbnailHeight":"",
+    "inlinePreview":"",
     "allowAltTag":"",
     "allowCaption":"",
     "allowCredits":""

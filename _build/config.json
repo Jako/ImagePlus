@@ -3,7 +3,7 @@
   "lowCaseName": "imageplus",
   "description": "Advanced Image Template Variable",
   "author": "Alan Pich, Thomas Jakobi",
-  "version": "2.9.5",
+  "version": "3.0.0-b1",
   "package": {
     "elements": {
       "chunks": [
@@ -70,22 +70,7 @@
         "value": "0"
       },
       {
-        "key": "target_width",
-        "area": "imageplus",
-        "value": ""
-      },
-      {
-        "key": "target_height",
-        "area": "imageplus",
-        "value": ""
-      },
-      {
-        "key": "target_ratio",
-        "area": "imageplus",
-        "value": ""
-      },
-      {
-        "key": "thumbnail_width",
+        "key": "thumbnail_height",
         "area": "imageplus",
         "value": ""
       },
@@ -108,16 +93,14 @@
         "value": "0"
       },
       {
-        "key": "select_config",
-        "type": "sizes-ratio-grid",
+        "key": "upload_path",
         "area": "imageplus",
-        "value": "[]"
+        "value": ""
       },
       {
-        "key": "force_config",
-        "type": "combo-boolean",
+        "key": "crop_path",
         "area": "imageplus",
-        "value": "0"
+        "value": "crop/"
       }
     ]
   },
@@ -141,6 +124,7 @@
     "resolver": {
       "after": [
         "resolve.cleanup.php",
+        "resolve.migration.php",
         "resolve.treehillstudio.php"
       ]
     }

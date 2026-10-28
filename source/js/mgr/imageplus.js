@@ -11,7 +11,7 @@ var imagePlus = function (config) {
 };
 
 Ext.extend(imagePlus, Ext.Component, {
-    page: {}, window: {}, grid: {}, tree: {}, panel: {}, combo: {}, config: {}, jquery: {}, form: {},
+    page: {}, window: {}, grid: {}, tree: {}, panel: {}, combo: {}, config: {}, form: {}, util: {},
 
     generateThumbUrl: function (params) {
         return this.generatePhpThumbUrl(params);

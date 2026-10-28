@@ -3,7 +3,7 @@
  * Image+
  *
  * Copyright 2013-2015 by Alan Pich <alan.pich@gmail.com>
- * Copyright 2015-2023 by Thomas Jakobi <office@treehillstudio.com>
+ * Copyright 2015-2026 by Thomas Jakobi <office@treehillstudio.com>
  *
  * @package imageplus
  * @subpackage classfile
@@ -45,7 +45,7 @@ class ImagePlus
      * The version
      * @var string $version
      */
-    public $version = '2.9.5';
+    public $version = '3.0.0-b1';
 
     /**
      * The class options
@@ -178,21 +178,18 @@ class ImagePlus
         $assetsUrl = $this->getOption('assetsUrl');
         $jsUrl = $this->getOption('jsUrl') . 'mgr/';
         $jsSourceUrl = $assetsUrl . '../../../source/js/mgr/';
-        $jsVendorUrl = $assetsUrl . '../../../source/vendor/';
         $cssUrl = $this->getOption('cssUrl') . 'mgr/';
         $cssSourceUrl = $assetsUrl . '../../../source/css/mgr/';
         $nodeUrl = $assetsUrl . '../../../node_modules/';
 
         if ($this->getOption('debug') && $assetsUrl != MODX_ASSETS_URL . 'components/imageplus/') {
             $this->modx->controller->addJavascript($jsSourceUrl . 'imageplus.js?v=v' . $this->version);
+            $this->modx->controller->addJavascript($jsSourceUrl . 'imageplus.util.js?v=v' . $this->version);
+            $this->modx->controller->addJavascript($jsSourceUrl . 'imageplus.uploadbrowser.js?v=v' . $this->version);
+            $this->modx->controller->addJavascript($jsSourceUrl . 'imageplus.uploadcropbrowser.js?v=v' . $this->version);
             $this->modx->controller->addJavascript($jsSourceUrl . 'imageplus.panel.input.js?v=v' . $this->version);
-            $this->modx->controller->addJavascript($jsSourceUrl . 'imageplus.window.editor.js?v=v' . $this->version);
             $this->modx->controller->addJavascript($jsSourceUrl . 'imageplus.migx_renderer.js?v=v' . $this->version);
-            $this->modx->controller->addJavascript($jsSourceUrl . 'tools/JSON2.js?v=v' . $this->version);
-            $this->modx->controller->addJavascript($nodeUrl . 'jquery/dist/jquery.slim.min.js?v=v' . $this->version);
-            $this->modx->controller->addJavascript($jsVendorUrl . 'jcrop/js/jquery.Jcrop.min.js?v=v' . $this->version);
-            $this->modx->controller->addJavascript($jsSourceUrl . 'imageplus.jquery.imagecrop.js?v=v' . $this->version);
-            $this->modx->controller->addJavascript($jsSourceUrl . 'imageplus.grid.js?v=v' . $this->version);
+            $this->modx->controller->addJavascript($nodeUrl . 'cropperjs/dist/cropper.js?v=v' . $this->version);
             $this->modx->controller->addCss($cssSourceUrl . 'imageplus.css?v=v' . $this->version);
         } else {
             $this->modx->controller->addJavascript($jsUrl . 'imageplus.min.js?v=v' . $this->version);
@@ -231,11 +228,60 @@ class ImagePlus
         }
 
         $json = $this->prepareTvValue($json, $opts, $tv);
+        $source = $this->getTvSource($tv);
+        $json = $this->getCropEngineValue($json, $opts, ($source) ? $source->get('id') : $this->modx->getOption('default_media_source'));
         return $cropEngine->getImageUrl($json, $opts, $tv);
     }
 
     /**
-     * Prepare a JSON encoded object and return a valid JSON encoded Image+ object
+     * Get the value of the selected image crop in the format of the crop engines
+     *
+     * @param string $json JSON value prepared by prepareTvValue
+     * @param array $opts The crop option selects the image crop, the first one is used by default. The url of the
+     * crop file is added as crop.url option.
+     * @param int $sourceId The media source of the template variable
+     * @return string
+     */
+    public function getCropEngineValue($json, &$opts = [], $sourceId = 0)
+    {
+        $data = json_decode($json, true);
+        if (!is_array($data) || empty($data['image'])) {
+            return '';
+        }
+        $sizes = (isset($data['sizes']) && is_array($data['sizes'])) ? $data['sizes'] : [];
+        $key = $opts['crop'] ?? '';
+        $size = ($key !== '' && isset($sizes[$key])) ? $sizes[$key] : (reset($sizes) ?: []);
+        $opts['crop.url'] = $size['baseUrl'] ?? '';
+
+        return json_encode([
+            'sourceImg' => [
+                'src' => $data['image'],
+                'source' => $sourceId ?: $this->modx->getOption('default_media_source'),
+                'width' => (int)($size['originalWidth'] ?? 0),
+                'height' => (int)($size['originalHeight'] ?? 0),
+            ],
+            'crop' => [
+                'x' => (int)($size['x'] ?? 0),
+                'y' => (int)($size['y'] ?? 0),
+                'width' => (int)($size['cropWidth'] ?? 0),
+                'height' => (int)($size['cropHeight'] ?? 0),
+            ],
+            'targetWidth' => (int)($size['targetWidth'] ?? 0),
+            'targetHeight' => (int)($size['targetHeight'] ?? 0),
+            'altTag' => $data['altTag'] ?? '',
+            'caption' => $data['caption'] ?? '',
+            'credits' => $data['credits'] ?? '',
+        ], JSON_UNESCAPED_SLASHES);
+    }
+
+    /**
+     * Prepare a value and return a valid JSON encoded Image+ object
+     *
+     * The Image+ object contains the image path, the image crops and the alt/caption/credits text:
+     * {"image": "", "baseUrl": "", "sizes": {"<key>": {"x": 0, "y": 0, "cropWidth": 0, "cropHeight": 0, ...}}, "altTag": "", "caption": "", "credits": ""}
+     * An image path and an Image+ object before 3.0 is converted to that format. The crop is used as image crop
+     * with the key in the crop option. The media source is not part of the value, the media source of the template
+     * variable is used.
      *
      * @param string $json JSON value to prepare
      * @param array $opts
@@ -244,55 +290,147 @@ class ImagePlus
      */
     public function prepareTvValue($json, $opts = [], $tv = null)
     {
-        // Prepare value
-        $decoded = json_decode($json);
-        if (!$decoded) {
-            // The variable does not contain an Image+ image object
-            if ($json != '') {
-                // Get Media Source
-                /** @var modMediaSource $source */
-                if ($tv) {
-                    $source = $tv->getSource(($this->modx->resource) ? $this->modx->resource->get('context_key') : 'mgr');
-                } else {
-                    $source = $this->modx->getObject('sources.modMediaSource', $this->modx->getOption('default_media_source'));
-                }
-                if (!$source) {
-                    $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Invalid Media Source', '', 'Image+');
-                    return '';
-                }
-                $source->setRequestProperties($_REQUEST);
-                $source->initialize();
-
-                // The variable contains a value and has to be converted to an Image+ image object
-                $imgPath = $source->getBasePath() . $json;
-                if (file_exists($imgPath)) {
-                    $size = getimagesize($imgPath);
-                } else {
-                    if ($this->getOption('debug')) {
-                        $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'The template variabe value does not contain an existing image', '', 'Image+');
-                    }
-                    $size = false;
-                }
-                $json = json_encode([
-                    'altTag' => '',
-                    'crop' => [
-                        'height' => ($size) ? $size[1] : 0,
-                        'width' => ($size) ? $size[0] : 0,
-                        'x' => 0,
-                        'y' => 0
-                    ],
-                    'sourceImg' => [
-                        'height' => ($size) ? $size[1] : 0,
-                        'width' => ($size) ? $size[0] : 0,
-                        'source' => $source->get('id'),
-                        'src' => $json
-                    ],
-                    'targetHeight' => (int)($opts['targetHeight'] ?? 0),
-                    'targetWidth' => (int)($opts['targetWidth'] ?? 0)
-                ]);
-            }
+        if ($json == '') {
+            return '';
         }
-        return $json;
+        $key = !empty($opts['crop']) ? $opts['crop'] : 'crop';
+        $data = json_decode($json, true);
+        if (!is_array($data)) {
+            // The variable does not contain an Image+ image object and has to be converted to an Image+ image object
+            $source = $this->getTvSource($tv);
+            if (!$source) {
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Invalid Media Source', '', 'Image+');
+                return '';
+            }
+            $source->setRequestProperties($_REQUEST);
+            $source->initialize();
+
+            $imgPath = $source->getBasePath() . $json;
+            if (file_exists($imgPath)) {
+                $size = getimagesize($imgPath);
+            } else {
+                if ($this->getOption('debug')) {
+                    $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'The template variabe value does not contain an existing image', '', 'Image+');
+                }
+                $size = false;
+            }
+            $data = [
+                'image' => $json,
+                'sizes' => ($size) ? [
+                    $key => $this->getCropSize(0, 0, $size[0], $size[1], $size[0], $size[1], $opts['targetWidth'] ?? 0, $opts['targetHeight'] ?? 0)
+                ] : [],
+            ];
+        } elseif (isset($data['sourceImg'])) {
+            // The variable contains an Image+ image object before 3.0
+            $sourceImg = (array)$data['sourceImg'];
+            $crop = (isset($data['crop'])) ? (array)$data['crop'] : [];
+            $data = [
+                'image' => $sourceImg['src'] ?? '',
+                'sizes' => (!empty($crop['width']) && !empty($crop['height'])) ? [
+                    $key => $this->getCropSize($crop['x'] ?? 0, $crop['y'] ?? 0, $crop['width'], $crop['height'], $sourceImg['width'] ?? 0, $sourceImg['height'] ?? 0, $data['targetWidth'] ?? 0, $data['targetHeight'] ?? 0)
+                ] : [],
+                'altTag' => $data['altTag'] ?? '',
+                'caption' => $data['caption'] ?? '',
+                'credits' => $data['credits'] ?? '',
+            ];
+        }
+        if (empty($data['image'])) {
+            return '';
+        }
+        unset($data['source']);
+        return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    }
+
+    /**
+     * Get the media source of a template variable or the default media source
+     *
+     * @param modTemplateVar|null $tv
+     * @return modMediaSource|null
+     */
+    public function getTvSource($tv = null)
+    {
+        if ($tv) {
+            return $tv->getSource(($this->modx->resource) ? $this->modx->resource->get('context_key') : 'mgr');
+        }
+        return $this->modx->getObject('sources.modMediaSource', $this->modx->getOption('default_media_source'));
+    }
+
+    /**
+     * Get the data of an image crop
+     *
+     * @param int $x
+     * @param int $y
+     * @param int $cropWidth
+     * @param int $cropHeight
+     * @param int $originalWidth
+     * @param int $originalHeight
+     * @param int $targetWidth
+     * @param int $targetHeight
+     * @return array
+     */
+    private function getCropSize($x, $y, $cropWidth, $cropHeight, $originalWidth, $originalHeight, $targetWidth, $targetHeight)
+    {
+        return [
+            'x' => (int)$x,
+            'y' => (int)$y,
+            'cropWidth' => (int)$cropWidth,
+            'cropHeight' => (int)$cropHeight,
+            'originalWidth' => (int)$originalWidth,
+            'originalHeight' => (int)$originalHeight,
+            'targetWidth' => (int)$targetWidth ?: null,
+            'targetHeight' => (int)$targetHeight ?: null,
+            'scaleX' => 1,
+            'scaleY' => 1,
+        ];
+    }
+
+    /**
+     * Get the image crop configuration, that is used without the image crops option: one image crop without constraints
+     *
+     * @return array
+     */
+    public function getDefaultCropSizes()
+    {
+        return ['crop' => ['name' => $this->modx->lexicon('imageplus.cropimage.crop')]];
+    }
+
+    /**
+     * Get the url of an object in a media source, that is usable in the manager
+     *
+     * @param modMediaSource $source
+     * @param string $path
+     * @return string
+     */
+    public function getSourceObjectUrl($source, $path)
+    {
+        $url = $source->getObjectUrl($path);
+        if (!preg_match('#^(https?:)?//#', $url) && strpos($url, '/') !== 0) {
+            $url = $this->modx->getOption('base_url') . $url;
+        }
+        return $url;
+    }
+
+    /**
+     * Replace the placeholders in an upload/crop path
+     *
+     * @param string $path
+     * @param int $resourceId
+     * @param int $tvId
+     * @return string
+     */
+    public function parsePathPlaceholders($path, $resourceId = 0, $tvId = 0)
+    {
+        $user = $this->modx->getUser();
+        $placeholders = [
+            '[[+year]]' => date('Y'),
+            '[[+month]]' => date('m'),
+            '[[+day]]' => date('d'),
+            '[[+user]]' => $user ? $user->get('id') : 0,
+            '[[+username]]' => $user ? $user->get('username') : '',
+            '[[+resource_id]]' => (int)$resourceId,
+            '[[+tv_id]]' => (int)$tvId,
+        ];
+        return str_replace(array_keys($placeholders), array_values($placeholders), (string)$path);
     }
 }
 

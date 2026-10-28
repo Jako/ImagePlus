@@ -191,14 +191,12 @@ async function taskBump() {
 async function taskScripts() {
     await compileScripts([
         'source/js/mgr/imageplus.js',
+        'source/js/mgr/imageplus.util.js',
+        'source/js/mgr/imageplus.uploadbrowser.js',
+        'source/js/mgr/imageplus.uploadcropbrowser.js',
         'source/js/mgr/imageplus.panel.input.js',
-        'source/js/mgr/imageplus.window.editor.js',
         'source/js/mgr/imageplus.migx_renderer.js',
-        'source/js/mgr/tools/JSON2.js',
-        'node_modules/jquery/dist/jquery.slim.min.js',
-        'source/vendor/jcrop/js/jquery.Jcrop.min.js',
-        'source/js/mgr/imageplus.jquery.imagecrop.js',
-        'source/js/mgr/imageplus.grid.js'
+        'node_modules/cropperjs/dist/cropper.js'
     ], 'assets/components/imageplus/js/mgr/', 'imageplus.js');
 }
 

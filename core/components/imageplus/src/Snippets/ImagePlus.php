@@ -89,8 +89,8 @@ class ImagePlus extends Snippet
         // Render output
         switch ($type) {
             case 'check':
-                $data = json_decode($value);
-                $output = ($data && $data->sourceImg->src) ? 'image' : 'noimage';
+                $data = json_decode($value, true);
+                $output = ($data && (!empty($data['image']) || !empty($data['sourceImg']['src']))) ? 'image' : 'noimage';
                 break;
             case 'tpl':
                 $data = json_decode($value);

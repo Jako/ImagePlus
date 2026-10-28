@@ -4,9 +4,9 @@
   "description": "Advanced Image Template Variable",
   "author": "Thomas Jakobi <office@treehillstudio.com>",
   "private": true,
-  "version": "2.9.5",
-  "phpversion": "7.1",
-  "modxversion": "2.6",
+  "version": "3.0.0-b1",
+  "phpversion": "8.2",
+  "modxversion": "2.8",
   "startYear": "2015",
   "scripts": {
     "build": "node build.js",
@@ -23,7 +23,7 @@
     "terser": "^5.51.2"
   },
   "dependencies": {
-    "jquery": "^3.7.1"
+    "cropperjs": "^1.7.0"
   },
   "browserslist": [
     "> 1%",

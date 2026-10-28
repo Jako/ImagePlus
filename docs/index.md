@@ -7,8 +7,8 @@ tool can be used to resize the image to the desired dimensions/proportions.
 
 ### Requirements
 
-* MODX Revolution 2.6+
-* PHP 7.1+
+* MODX Revolution 2.8+
+* PHP 8.2+
 * MODX Cropping Engine i.e. [pThumb](https://modx.com/extras/package/pthumb)
 
 ### Features
