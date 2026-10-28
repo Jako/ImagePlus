@@ -4,7 +4,7 @@
 ### Collections
 
 You can display the *Image+* thumbnail in a column of the Collections grid by
-setting the column's renderer to *ImagePlus.MIGX_Renderer*.
+setting the column's renderer to *ImagePlus.ColumnRenderer*.
 
 ### MIGX
 
@@ -28,7 +28,7 @@ field. The following properties are possible:
 You also need to change the *Input TV Type* to `imageplus`.
 
 You can display the thumbnail in the grid column by setting the renderer to
-*ImagePlus.MIGX_Renderer*. In earlier versions of MIGX, you need to edit a MIGX
+*ImagePlus.ColumnRenderer*. In earlier versions of MIGX, you need to edit a MIGX
 configuration to do this.
 
 To use this *Image+* MIGX field in the frontend, call the *ImagePlus Snippet*

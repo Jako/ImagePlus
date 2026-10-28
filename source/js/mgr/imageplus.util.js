@@ -56,7 +56,7 @@ ImagePlus.util.sourceUrl = function (source) {
 };
 
 /**
- * Format a size like "1280x720" or a proportion like "16 x 9" with thin spaces around the x
+ * Format a size like "1280x720" or a proportion like "16x9" with spaces around the x
  */
 ImagePlus.util.formatDimensions = function (dimensions) {
     return (dimensions) ? String(dimensions).replace(/(\d)\s*x\s*(\d)/i, '$1 x $2') : '';
@@ -66,6 +66,33 @@ ImagePlus.util.formatDimensions = function (dimensions) {
  * Normalize the crop size configurations. "ratio" is accepted as alias of "proportion". It is removed,
  * because the crop window and the saved crops use "ratio" for the calculated aspect ratio.
  */
+/**
+ * Get the reduced proportion of a width and a height like "16 x 9"
+ */
+ImagePlus.util.formatProportion = function (width, height) {
+    var gcd = function (a, b) {
+        return b ? gcd(b, a % b) : a;
+    };
+    var divisor = gcd(width, height);
+    return (width / divisor) + ' x ' + (height / divisor);
+};
+
+/**
+ * Load an image and get its pixel dimensions. The promise is resolved with null, if the image can't be loaded.
+ */
+ImagePlus.util.loadImageDimensions = function (url) {
+    return new Promise(function (resolve) {
+        var image = new Image();
+        image.onload = function () {
+            resolve({width: image.naturalWidth, height: image.naturalHeight});
+        };
+        image.onerror = function () {
+            resolve(null);
+        };
+        image.src = url;
+    });
+};
+
 ImagePlus.util.normalizeCropSizes = function (sizes) {
     var normalized = {};
     Ext.iterate(sizes || {}, function (key, size) {
@@ -78,4 +105,3 @@ ImagePlus.util.normalizeCropSizes = function (sizes) {
     });
     return normalized;
 };
-

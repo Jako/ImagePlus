@@ -18,25 +18,12 @@ Ext.extend(imagePlus, Ext.Component, {
     },
 
     generatePhpThumbUrl: function (params) {
-        var url = MODx.config.connectors_url + 'system/phpthumb.php?';
-        var defaults = {
+        var query = new URLSearchParams(Ext.apply({
             wctx: 'mgr',
             w: 150,
             source: 1
-        };
-        for (var i in params) {
-            defaults[i] = params[i]
-        }
-        var qs = '';
-        for (i in defaults) {
-            qs += encodeURIComponent(i) + '=' + encodeURIComponent(defaults[i]) + '&';
-        }
-        if (qs.length > 0) {
-            qs = qs.substring(0, qs.length - 1);
-            url = url + "?" + qs;
-        }
-        return url;
-
+        }, params));
+        return MODx.config.connectors_url + 'system/phpthumb.php?' + query.toString();
     },
 
     warnAboutUnmetDependencies: function () {

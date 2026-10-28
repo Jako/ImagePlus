@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replace the thumbnail width input option/system setting with a thumbnail height input option/system setting
 - New template variable value format, values of previous versions are converted on the fly and saved in the new format with the next resource save
 - Replace Jcrop and jQuery with Cropper.js
+- Rename the grid column renderer ImagePlus.MIGX_Renderer to ImagePlus.ColumnRenderer, the previous name is deprecated
 - The media source is not saved in the template variable value anymore, the media source of the template variable is used. A migration removes it from existing values, values with a different media source are logged in core/cache/logs/imageplus_migration.log
 
 ### Removed

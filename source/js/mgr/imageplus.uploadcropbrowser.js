@@ -14,9 +14,6 @@ ImagePlus.combo.UploadCropBrowser = function (config) {
     if (typeof config.sizes === 'string') {
         config.sizes = Ext.decode(config.sizes);
     }
-    if (typeof config.preview === 'string') {
-        config.preview = config.preview === 'true';
-    }
     ImagePlus.util.applyDefaults(config, {
         triggerActions: ['clear', 'crop', 'upload', 'browse'],
         triggerClasses: {
@@ -96,33 +93,28 @@ Ext.extend(ImagePlus.combo.UploadCropBrowser, ImagePlus.combo.UploadBrowser, {
             callback.call(this);
             return;
         }
-        var check = function (width, height) {
+        var check = function (dimensions) {
             var error = '';
-            if (this.minWidth && width < this.minWidth) {
-                error = _('imageplus.cropimage.error_min_width', {width: width, min_width: this.minWidth});
-            } else if (this.minHeight && height < this.minHeight) {
-                error = _('imageplus.cropimage.error_min_height', {height: height, min_height: this.minHeight});
+            if (!dimensions) {
+                error = _('imageplus.cropimage.error_image_not_valid');
+            } else if (this.minWidth && dimensions.width < this.minWidth) {
+                error = _('imageplus.cropimage.error_min_width', {width: dimensions.width, min_width: this.minWidth});
+            } else if (this.minHeight && dimensions.height < this.minHeight) {
+                error = _('imageplus.cropimage.error_min_height', {height: dimensions.height, min_height: this.minHeight});
             }
             if (error) {
                 MODx.msg.alert(_('error'), error);
             } else {
                 callback.call(this);
             }
-        };
+        }.bind(this);
         var width = parseInt(data.image_width || data.width, 10);
         var height = parseInt(data.image_height || data.height, 10);
         if (width && height) {
-            check.call(this, width, height);
-            return;
+            check({width: width, height: height});
+        } else {
+            ImagePlus.util.loadImageDimensions(data.baseUrl || MODx.config.base_url + data.fullRelativeUrl).then(check);
         }
-        var image = new Image();
-        image.onload = function () {
-            check.call(this, image.naturalWidth, image.naturalHeight);
-        }.bind(this);
-        image.onerror = function () {
-            MODx.msg.alert(_('error'), _('imageplus.cropimage.error_image_not_valid'));
-        };
-        image.src = data.baseUrl || MODx.config.base_url + data.fullRelativeUrl;
     },
     encodeValue: function (value) {
         return value.image ? Ext.encode(value) : '';
@@ -144,8 +136,18 @@ Ext.extend(ImagePlus.combo.UploadCropBrowser, ImagePlus.combo.UploadBrowser, {
         if (Ext.isEmpty(value.image)) {
             return;
         }
-        // The crops are shown first in the order of the crop sizes, followed by the original image.
-        // The first image is the main preview image, the others are shown as thumbnails.
+        // The first image is the main preview image, the others are shown as thumbnails
+        var images = this.getPreviewImages(value);
+        var main = images.shift();
+        var mainImage = this.renderPreviewMain(main.image, main.name, main.key);
+        this.renderPreviewCropLink(mainImage, main.key);
+        this.renderPreviewBar(mainImage, main.name, main.dimensions, main.baseUrl);
+        this.renderPreviewThumbnails(images);
+    },
+    /**
+     * Get the crops in the order of the crop sizes, followed by the original image
+     */
+    getPreviewImages: function (value) {
         var images = [];
         Ext.iterate(this.sizes, function (key, size) {
             var crop = (value.sizes || {})[key];
@@ -160,17 +162,20 @@ Ext.extend(ImagePlus.combo.UploadCropBrowser, ImagePlus.combo.UploadBrowser, {
             baseUrl: value.baseUrl,
             dimensions: this.getOriginalDimensions(value)
         });
-        var main = images.shift();
-        var mainImage = this.renderPreviewMain(main.image, main.name, main.key);
-        mainImage.createChild({
+        return images;
+    },
+    /**
+     * Render a link above a preview image, that opens the crop window for the image
+     */
+    renderPreviewCropLink: function (item, key) {
+        item.createChild({
             tag: 'a',
-            cls: 'crop',
+            href: '#',
+            cls: 'crop'
         }).on('click', function (event) {
             event.preventDefault();
-            this.openCropWindow(main.key);
+            this.openCropWindow(key);
         }, this);
-        this.renderPreviewBar(mainImage, main.name, main.dimensions, main.baseUrl);
-        this.renderPreviewThumbnails(images);
     },
     /**
      * Render a bar below a preview image with the name, the pixel dimensions and the download link of the image
@@ -211,18 +216,10 @@ Ext.extend(ImagePlus.combo.UploadCropBrowser, ImagePlus.combo.UploadBrowser, {
         if (dimensions || !value.baseUrl) {
             return dimensions;
         }
+        // The image is loaded once for every preview update
         this.originalDimensions = this.originalDimensions || {};
         if (!this.originalDimensions[value.baseUrl]) {
-            this.originalDimensions[value.baseUrl] = new Promise(function (resolve) {
-                var image = new Image();
-                image.onload = function () {
-                    resolve({width: image.naturalWidth, height: image.naturalHeight});
-                };
-                image.onerror = function () {
-                    resolve(null);
-                };
-                image.src = value.baseUrl;
-            });
+            this.originalDimensions[value.baseUrl] = ImagePlus.util.loadImageDimensions(value.baseUrl);
         }
         return this.originalDimensions[value.baseUrl];
     },
@@ -271,14 +268,7 @@ Ext.extend(ImagePlus.combo.UploadCropBrowser, ImagePlus.combo.UploadBrowser, {
                 style: 'height: ' + height + 'px',
                 alt: image.name
             });
-            item.createChild({
-                tag: 'a',
-                href: '#',
-                cls: 'crop'
-            }).on('click', function (event) {
-                event.preventDefault();
-                this.openCropWindow(image.key);
-            }, this);
+            this.renderPreviewCropLink(item, image.key);
             this.renderPreviewBar(item, image.name, image.dimensions, image.baseUrl);
         }, this);
     }
@@ -329,7 +319,6 @@ ImagePlus.window.CropImage = function (config) {
 Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
     onAfterRender: function () {
         this.renderCropperContent(Ext.getCmp(this.ident + '-cropimage').body.dom);
-        this.cropperImage = Ext.get(this.ident + '-cropimage-cropper');
         this.cropperState = 'ready';
         this.cropperRecord = this.prepareCropperRecord();
         this.cropperSizes = this.prepareCropperSizes();
@@ -337,7 +326,7 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
         this.cropperSizeData = this.getCropperSizeData();
         this.renderCropperSets();
         if (this.cropperSizeData) {
-            this.cropper = new Cropper(document.getElementById(this.ident + '-cropimage-cropper'), {
+            this.cropper = new Cropper(this.getCropperEl('cropper'), {
                 data: this.cropperSizeData,
                 viewMode: 2,
                 dragMode: 'none',
@@ -346,20 +335,18 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
                 autoCropArea: 1,
                 // Keep the crop area when the browser window is resized
                 restore: true,
-                crop: (function (event) {
-                    this.updateCropperData(event.detail);
-                }).bind(this),
-                cropstart: (function () {
-                    this.setCropperState('start');
-                }).bind(this),
-                cropend: (function () {
-                    this.setCropperState('stop');
-                }).bind(this),
-                ready: (function () {
-                    this.resetCropperSize();
-                }).bind(this),
+                crop: this.updateCropperData.bind(this),
+                cropstart: this.setCropperState.bind(this, 'start'),
+                cropend: this.setCropperState.bind(this, 'stop'),
+                ready: this.resetCropperSize.bind(this)
             });
         }
+    },
+    /**
+     * Get an element of the crop window by the suffix of its id
+     */
+    getCropperEl: function (suffix) {
+        return document.getElementById(this.ident + '-cropimage-' + suffix);
     },
     createDomElement: function (tag, attributes, children) {
         var el = document.createElement(tag);
@@ -390,6 +377,12 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
         input.addEventListener('blur', function () {
             input.classList.remove('x-form-focus');
         });
+        // The editable crop fields change the crop area
+        if (input.dataset.key) {
+            input.addEventListener('change', function () {
+                this.setCropperSize(input.dataset.key, parseInt(input.value, 10) || 0);
+            }.bind(this));
+        }
         return this.createDomElement('div', {class: 'imageplus-cropimage-field'}, [
             this.createDomElement('label', {for: input.id, text: label}),
             input
@@ -400,33 +393,20 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
             this.createDomElement('legend', {text: legend})
         ].concat(fields));
     },
+    createCropperButton: function (cls, text, handler) {
+        var button = this.createDomElement('button', {type: 'button', class: 'imageplus-cropimage-button ' + cls, text: text});
+        button.addEventListener('click', handler.bind(this));
+        return button;
+    },
     renderCropperContent: function (container) {
-        var resetButton = this.createDomElement('button', {type: 'button', class: 'imageplus-cropimage-button', text: _('imageplus.cropimage.reset')});
-        resetButton.addEventListener('click', this.resetCropperSize.bind(this));
-        var saveButton = this.createDomElement('button', {type: 'button', class: 'imageplus-cropimage-button imageplus-cropimage-button-primary', text: _('imageplus.cropimage.save')});
-        saveButton.addEventListener('click', this.updateCropperRecord.bind(this));
-
-        var cropFields = [
-            this.createCropperField('crop-x', _('imageplus.cropimage.crop.x'), {min: 0, 'data-key': 'x'}),
-            this.createCropperField('crop-y', _('imageplus.cropimage.crop.y'), {min: 0, 'data-key': 'y'}),
-            this.createCropperField('crop-width', _('imageplus.cropimage.crop.width'), {min: 1, 'data-key': 'cropWidth'}),
-            this.createCropperField('crop-height', _('imageplus.cropimage.crop.height'), {min: 1, 'data-key': 'cropHeight'}),
-            this.createCropperField('proportion', _('imageplus.cropimage.crop.proportion'), {type: 'text', disabled: true})
-        ];
-        cropFields.forEach((function (field) {
-            var input = field.querySelector('input[data-key]');
-            if (input) {
-                input.addEventListener('change', (function () {
-                    this.setCropperSize(input.dataset.key, parseInt(input.value, 10) || 0);
-                }).bind(this));
-            }
-        }).bind(this));
-
         container.appendChild(this.createDomElement('div', {class: 'imageplus-cropimage'}, [
             this.createDomElement('div', {class: 'imageplus-cropimage-sidebar'}, [
                 this.createDomElement('div', {class: 'imageplus-cropimage-title', text: _('imageplus.cropimage.sets')}),
                 this.createDomElement('div', {class: 'imageplus-cropimage-sets', id: this.ident + '-cropimage-sizes'}),
-                this.createDomElement('div', {class: 'imageplus-cropimage-toolbar'}, [resetButton, saveButton]),
+                this.createDomElement('div', {class: 'imageplus-cropimage-toolbar'}, [
+                    this.createCropperButton('', _('imageplus.cropimage.reset'), this.resetCropperSize),
+                    this.createCropperButton('imageplus-cropimage-button-primary', _('imageplus.cropimage.save'), this.updateCropperRecord)
+                ]),
                 this.createDomElement('div', {class: 'imageplus-cropimage-state', id: this.ident + '-cropimage-state', hidden: true})
             ]),
             this.createDomElement('div', {class: 'imageplus-cropimage-main'}, [
@@ -442,13 +422,19 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
                         this.createCropperField('target-width', _('imageplus.cropimage.target.width'), {disabled: true}),
                         this.createCropperField('target-height', _('imageplus.cropimage.target.height'), {disabled: true})
                     ]),
-                    this.createCropperFieldset('crop', _('imageplus.cropimage.crop') + ':', cropFields)
+                    this.createCropperFieldset('crop', _('imageplus.cropimage.crop') + ':', [
+                        this.createCropperField('crop-x', _('imageplus.cropimage.crop.x'), {min: 0, 'data-key': 'x'}),
+                        this.createCropperField('crop-y', _('imageplus.cropimage.crop.y'), {min: 0, 'data-key': 'y'}),
+                        this.createCropperField('crop-width', _('imageplus.cropimage.crop.width'), {min: 1, 'data-key': 'cropWidth'}),
+                        this.createCropperField('crop-height', _('imageplus.cropimage.crop.height'), {min: 1, 'data-key': 'cropHeight'}),
+                        this.createCropperField('proportion', _('imageplus.cropimage.crop.proportion'), {type: 'text', disabled: true})
+                    ])
                 ])
             ])
         ]));
     },
     renderCropperSets: function () {
-        var container = document.getElementById(this.ident + '-cropimage-sizes');
+        var container = this.getCropperEl('sizes');
         Ext.iterate(this.cropperSizes, function (key, size) {
             var input = this.createDomElement('input', {
                 type: 'radio',
@@ -519,11 +505,7 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
             baseUrl: this.record.baseUrl || '',
             sizes: this.record.sizes || {}
         };
-        if (Ext.isEmpty(record.baseUrl)) {
-            this.cropperImage.dom.src = Ext.BLANK_IMAGE_URL;
-        } else {
-            this.cropperImage.dom.src = record.baseUrl;
-        }
+        this.getCropperEl('cropper').src = record.baseUrl || Ext.BLANK_IMAGE_URL;
         return record;
     },
     prepareCropperSizes: function () {
@@ -549,35 +531,44 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
             }
             width = parseInt(match[1], 10) || NaN;
             height = parseInt(match[2], 10) || NaN;
-            return {
-                key: key,
-                targetWidth: width,
-                targetHeight: height,
-                ratio: (width && height) ? Ext.util.Format.round(width / height, 10) : NaN,
-                proportion: (width && height) ? this.getRatio(width, height) : ''
-            };
+            // A size without both values has no proportion
+            return Ext.apply({key: key, targetWidth: width, targetHeight: height, proportion: ''}, this.getCropperRatio(width, height));
         } else if (data.proportion) {
             match = String(data.proportion).match(/^([0-9]+)\s*x\s*([0-9]+)$/);
             if (!match) {
                 return null;
             }
-            width = parseInt(match[1], 10);
-            height = parseInt(match[2], 10);
-            return {
+            // A proportion has an aspect ratio, but no target size
+            return Ext.apply(this.getCropperRatio(parseInt(match[1], 10), parseInt(match[2], 10)), {
                 key: key,
                 targetWidth: NaN,
-                targetHeight: NaN,
-                ratio: (height) ? Ext.util.Format.round(width / height, 10) : NaN,
-                proportion: this.getRatio(width, height)
-            };
-        } else if (data.width) {
-            match = String(data.width).match(/^([0-9]+)$/);
-            return (match) ? {key: key, targetWidth: parseInt(match[1], 10), targetHeight: NaN, ratio: NaN} : null;
-        } else if (data.height) {
-            match = String(data.height).match(/^([0-9]+)$/);
-            return (match) ? {key: key, targetWidth: NaN, targetHeight: parseInt(match[1], 10), ratio: NaN} : null;
+                targetHeight: NaN
+            });
+        } else if (data.width || data.height) {
+            match = String(data.width || data.height).match(/^([0-9]+)$/);
+            if (!match) {
+                return null;
+            }
+            width = data.width ? parseInt(match[1], 10) : NaN;
+            height = data.width ? NaN : parseInt(match[1], 10);
         }
-        return {key: key, targetWidth: NaN, targetHeight: NaN, ratio: NaN};
+        return Ext.apply(this.getCropperRatio(width, height), {
+            key: key,
+            targetWidth: width || NaN,
+            targetHeight: height || NaN
+        });
+    },
+    /**
+     * Get the aspect ratio and the proportion of a width and a height, if both are set
+     */
+    getCropperRatio: function (width, height) {
+        if (!width || !height) {
+            return {ratio: NaN};
+        }
+        return {
+            ratio: Ext.util.Format.round(width / height, 10),
+            proportion: ImagePlus.util.formatProportion(width, height)
+        };
     },
     prepareCropperDefaultSize: function () {
         if (this.cropperSize === 'default' || !this.cropperSizes[this.cropperSize]) {
@@ -609,191 +600,151 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
             proportion: sizeData.proportion,
         };
     },
+    /**
+     * Set a value of the crop fields, a changed crop size keeps the center of the crop area
+     */
     setCropperSize: function (key, value) {
-        if (this.cropper) {
-            var data = this.getCropperCanvasData();
-            var cropperData = {
-                rotate: 0,
-                scaleX: 1,
-                scaleY: 1,
-            };
-            var ratio, top, left;
-            switch (key) {
-                case 'x':
-                    cropperData.x = value;
-                    break;
-                case 'y':
-                    cropperData.y = value;
-                    break;
-                case 'cropWidth':
-                    ratio = data.cropWidth / data.cropHeight;
-                    left = Math.floor((value - data.cropWidth) / 2);
-                    top = left / ratio;
-                    cropperData.x = data.x - left;
-                    cropperData.y = data.y - top;
-                    cropperData.width = value;
-                    break;
-                case 'cropHeight':
-                    ratio = data.cropWidth / data.cropHeight;
-                    top = Math.floor((value - data.cropHeight) / 2);
-                    left = top / ratio;
-                    cropperData.x = data.x - left;
-                    cropperData.y = data.y - top;
-                    cropperData.height = value;
-                    break;
-            }
-            this.cropper.setData(cropperData);
-            this.setCropperState('start');
+        if (!this.cropper) {
+            return;
         }
+        var data = this.getCropperCanvasData();
+        var cropperData = {rotate: 0, scaleX: 1, scaleY: 1};
+        if (key === 'x' || key === 'y') {
+            cropperData[key] = value;
+        } else if (key === 'cropWidth' || key === 'cropHeight') {
+            // With an aspect ratio, the other side of the crop area changes too
+            var ratio = this.getCropperSizeData().ratio;
+            var width = (key === 'cropWidth') ? value : (ratio ? value * ratio : data.cropWidth);
+            var height = (key === 'cropHeight') ? value : (ratio ? value / ratio : data.cropHeight);
+            cropperData.x = data.x - Math.floor((width - data.cropWidth) / 2);
+            cropperData.y = data.y - Math.floor((height - data.cropHeight) / 2);
+            cropperData.width = width;
+            cropperData.height = height;
+        }
+        this.cropper.setData(cropperData);
+        this.setCropperState('start');
     },
     setCropperState: function (state, content) {
-        if (this.cropper) {
-            this.cropperState = state;
-            var stateEl = document.getElementById(this.ident + '-cropimage-state');
-            stateEl.classList.remove('red', 'green', 'loading');
-            stateEl.hidden = false;
-            if (state === 'start' || state === 'stop') {
-                stateEl.classList.add('red');
-                stateEl.textContent = _('imageplus.cropimage.changes_unsaved');
-            } else if (state === 'saved') {
-                stateEl.classList.add('green');
-                stateEl.textContent = _('imageplus.cropimage.changes_saved');
-            } else if (state === 'saving') {
-                stateEl.classList.add('loading');
-                stateEl.textContent = _('imageplus.cropimage.saving');
-            } else if (state === 'failure') {
-                stateEl.classList.add('red');
-                stateEl.textContent = content;
-            } else {
-                stateEl.hidden = true;
-            }
-            var enableAll = this.cropperState === 'saved' || this.cropperState === 'ready';
-            document.querySelectorAll('#' + this.ident + '-cropimage-sizes input').forEach((function (input) {
-                input.disabled = !enableAll && input.value !== this.cropperSize;
-            }).bind(this));
+        if (!this.cropper) {
+            return;
         }
+        this.cropperState = state;
+        // The css class and the text of the state message
+        var messages = {
+            start: ['red', _('imageplus.cropimage.changes_unsaved')],
+            stop: ['red', _('imageplus.cropimage.changes_unsaved')],
+            saved: ['green', _('imageplus.cropimage.changes_saved')],
+            saving: ['loading', _('imageplus.cropimage.saving')],
+            failure: ['red', content]
+        };
+        var stateEl = this.getCropperEl('state');
+        stateEl.classList.remove('red', 'green', 'loading');
+        stateEl.hidden = !messages[state];
+        if (messages[state]) {
+            stateEl.classList.add(messages[state][0]);
+            stateEl.textContent = messages[state][1];
+        }
+        // Another size can only be selected, if the changes are saved
+        var enableAll = state === 'saved' || state === 'ready';
+        this.getCropperEl('sizes').querySelectorAll('input').forEach(function (input) {
+            input.disabled = !enableAll && input.value !== this.cropperSize;
+        }, this);
     },
     setCropperField: function (key, value) {
-        var input = document.getElementById(this.ident + '-cropimage-property-' + key);
+        var input = this.getCropperEl('property-' + key);
         if (input) {
             input.value = (typeof value === 'undefined' || value === null || (typeof value === 'number' && isNaN(value))) ? '' : value;
         }
     },
-    updateCropperData: function (event) {
-        if (this.cropper) {
-            var data = this.getCropperCanvasData(event);
-            if (data) {
-                this.setCropperField('original-width', data.originalWidth);
-                this.setCropperField('original-height', data.originalHeight);
-                this.setCropperField('target-width', data.targetWidth);
-                this.setCropperField('target-height', data.targetHeight);
-                this.setCropperField('crop-x', data.x);
-                this.setCropperField('crop-y', data.y);
-                this.setCropperField('crop-width', data.cropWidth);
-                this.setCropperField('crop-height', data.cropHeight);
-                this.setCropperField('proportion', ImagePlus.util.formatDimensions(data.proportion));
-            }
+    updateCropperData: function () {
+        if (!this.cropper) {
+            return;
         }
+        var data = this.getCropperCanvasData();
+        Ext.iterate({
+            'original-width': data.originalWidth,
+            'original-height': data.originalHeight,
+            'target-width': data.targetWidth,
+            'target-height': data.targetHeight,
+            'crop-x': data.x,
+            'crop-y': data.y,
+            'crop-width': data.cropWidth,
+            'crop-height': data.cropHeight,
+            'proportion': ImagePlus.util.formatDimensions(data.proportion)
+        }, this.setCropperField, this);
     },
     updateCropperImage: function () {
-        if (this.cropper) {
-            var previewImage = document.getElementById(this.ident + '-cropimage-preview-' + this.cropperSize);
-            if (previewImage) {
-                previewImage.src = this.cropperSizes[this.cropperSize].baseUrl;
-            }
+        var previewImage = this.getCropperEl('preview-' + this.cropperSize);
+        if (previewImage) {
+            previewImage.src = this.cropperSizes[this.cropperSize].baseUrl;
         }
     },
     selectCropperSize: function (key) {
-        if (this.cropper) {
-            if (key) {
-                this.cropperSize = key;
-                this.resetCropperSize();
-            }
+        if (this.cropper && key) {
+            this.cropperSize = key;
+            this.resetCropperSize();
         }
     },
     resetCropperSize: function () {
-        if (this.cropper) {
-            var data = this.getCropperSizeData();
-            var cropperData = {
-                rotate: 0,
-                scaleX: 1,
-                scaleY: 1,
-            };
-            if (data) {
-                this.cropper.setAspectRatio((data.ratio) ? data.ratio : NaN);
-                if (data.cropWidth && data.cropHeight) {
-                    cropperData.x = data.x;
-                    cropperData.y = data.y;
-                    cropperData.width = data.cropWidth;
-                    cropperData.height = data.cropHeight;
-                } else {
-                    cropperData.width = data.originalWidth;
-                    cropperData.height = data.originalHeight;
-                }
-                this.cropper.setData(cropperData);
-                this.setCropperState('ready');
-            }
+        if (!this.cropper) {
+            return;
         }
+        var data = this.getCropperSizeData();
+        var cropperData = {rotate: 0, scaleX: 1, scaleY: 1};
+        this.cropper.setAspectRatio((data.ratio) ? data.ratio : NaN);
+        if (data.cropWidth && data.cropHeight) {
+            Ext.apply(cropperData, {x: data.x, y: data.y, width: data.cropWidth, height: data.cropHeight});
+        } else {
+            Ext.apply(cropperData, {width: data.originalWidth, height: data.originalHeight});
+        }
+        this.cropper.setData(cropperData);
+        this.setCropperState('ready');
     },
     updateCropperRecord: function () {
-        if (this.cropper) {
-            var data = {};
-            Ext.apply(data, this.getCropperSizeData());
-            Ext.apply(data, this.getCropperCanvasData());
-            MODx.Ajax.request({
-                url: ImagePlus.config.connectorUrl,
-                params: {
-                    action: 'mgr/image/crop',
-                    resource_id: this.resourceId,
-                    tv_id: this.tvId,
-                    wctx: this.wctx,
-                    source: this.source,
-                    image: this.cropperRecord.image,
-                    originalWidth: data.originalWidth,
-                    originalHeight: data.originalHeight,
-                    cropWidth: data.cropWidth,
-                    cropHeight: data.cropHeight,
-                    targetWidth: data.targetWidth,
-                    targetHeight: data.targetHeight,
-                    scaleX: data.scaleX,
-                    scaleY: data.scaleY,
-                    x: data.x,
-                    y: data.y
-                },
-                listeners: {
-                    success: {
-                        fn: function (result) {
-                            data.image = result.object.image;
-                            data.baseUrl = result.object.baseUrl;
-                            this.setCropperSizeData(data);
-                            this.updateCropperImage();
-                            this.setCropperState('saved');
-                        },
-                        scope: this
+        if (!this.cropper) {
+            return;
+        }
+        var data = Ext.apply(Ext.apply({}, this.getCropperSizeData()), this.getCropperCanvasData());
+        MODx.Ajax.request({
+            url: ImagePlus.config.connectorUrl,
+            params: {
+                action: 'mgr/image/crop',
+                resource_id: this.resourceId,
+                tv_id: this.tvId,
+                wctx: this.wctx,
+                source: this.source,
+                image: this.cropperRecord.image,
+                originalWidth: data.originalWidth,
+                originalHeight: data.originalHeight,
+                cropWidth: data.cropWidth,
+                cropHeight: data.cropHeight,
+                targetWidth: data.targetWidth,
+                targetHeight: data.targetHeight,
+                scaleX: data.scaleX,
+                scaleY: data.scaleY,
+                x: data.x,
+                y: data.y
+            },
+            listeners: {
+                success: {
+                    fn: function (result) {
+                        data.image = result.object.image;
+                        data.baseUrl = result.object.baseUrl;
+                        this.setCropperSizeData(data);
+                        this.updateCropperImage();
+                        this.setCropperState('saved');
                     },
-                    failure: {
-                        fn: function (result) {
-                            this.setCropperState('failure', result.message);
-                        },
-                        scope: this
-                    }
+                    scope: this
+                },
+                failure: {
+                    fn: function (result) {
+                        this.setCropperState('failure', result.message);
+                    },
+                    scope: this
                 }
-            });
-            this.setCropperState('saving');
-        }
-    },
-    getGCD: function (u, v) {
-        var t;
-        while (v) {
-            t = v;
-            v = u % v;
-            u = t;
-        }
-        return u;
-    },
-    getRatio: function (w, h) {
-        var d = this.getGCD(w, h);
-        return (w / d) + ' x ' + (h / d);
+            }
+        });
+        this.setCropperState('saving');
     }
 });
 Ext.reg('imageplus-window-crop-image', ImagePlus.window.CropImage);

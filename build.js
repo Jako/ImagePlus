@@ -195,7 +195,7 @@ async function taskScripts() {
         'source/js/mgr/imageplus.uploadbrowser.js',
         'source/js/mgr/imageplus.uploadcropbrowser.js',
         'source/js/mgr/imageplus.panel.input.js',
-        'source/js/mgr/imageplus.migx_renderer.js',
+        'source/js/mgr/imageplus.columnrenderer.js',
         'node_modules/cropperjs/dist/cropper.js'
     ], 'assets/components/imageplus/js/mgr/', 'imageplus.js');
 }

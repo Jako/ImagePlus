@@ -188,7 +188,7 @@ class ImagePlus
             $this->modx->controller->addJavascript($jsSourceUrl . 'imageplus.uploadbrowser.js?v=v' . $this->version);
             $this->modx->controller->addJavascript($jsSourceUrl . 'imageplus.uploadcropbrowser.js?v=v' . $this->version);
             $this->modx->controller->addJavascript($jsSourceUrl . 'imageplus.panel.input.js?v=v' . $this->version);
-            $this->modx->controller->addJavascript($jsSourceUrl . 'imageplus.migx_renderer.js?v=v' . $this->version);
+            $this->modx->controller->addJavascript($jsSourceUrl . 'imageplus.columnrenderer.js?v=v' . $this->version);
             $this->modx->controller->addJavascript($nodeUrl . 'cropperjs/dist/cropper.js?v=v' . $this->version);
             $this->modx->controller->addCss($cssSourceUrl . 'imageplus.css?v=v' . $this->version);
         } else {

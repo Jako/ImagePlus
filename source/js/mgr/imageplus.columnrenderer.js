@@ -1,13 +1,16 @@
 /**
- * Image+ MIGX Renderer
+ * Image+ Column Renderer
  *
  * @package imageplus
  * @subpackage script
  * @return {string}
  */
 
-ImagePlus.MIGX_Renderer = function (json) {
-    if (typeof (json) === 'undefined' || json === null || !json.length) {
+/**
+ * Render the thumbnail of an Image+ value in a grid column, i.e. in MIGX or Collections
+ */
+ImagePlus.ColumnRenderer = function (json) {
+    if (!json) {
         return '';
     }
     var data = ImagePlus.util.parseFileValue(json);
@@ -34,3 +37,6 @@ ImagePlus.MIGX_Renderer = function (json) {
     }
     return '<img class="' + cls + '" src="' + Ext.util.Format.htmlEncode(url) + '" style="max-width:100%; height:auto;" />';
 };
+
+// Deprecated, the previous name is kept for existing MIGX and Collections configurations
+ImagePlus.MIGX_Renderer = ImagePlus.ColumnRenderer;

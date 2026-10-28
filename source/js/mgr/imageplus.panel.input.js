@@ -17,7 +17,7 @@ ImagePlus.panel.input = function (config) {
 
     // Warn if it has no dependencies
     if (ImagePlus.config.hasUnmetDependencies) {
-        ImagePlus.warnAboutUnmetDependencies()
+        ImagePlus.warnAboutUnmetDependencies();
     }
 
     Ext.apply(config, {
@@ -37,11 +37,7 @@ ImagePlus.panel.input = function (config) {
             this.fieldsPanel = new Ext.Panel({
                 cls: 'imageplus-image-fields',
                 border: false,
-                items: [
-                    this.altTextField,
-                    this.captionField,
-                    this.creditsField
-                ]
+                items: this.textFields
             })
         ],
         listeners: {
@@ -80,7 +76,7 @@ Ext.extend(ImagePlus.panel.input, MODx.Panel, {
                 this.fieldWidth = width;
                 this.imageBrowser.setWidth(width);
                 // The enabled text fields are shown in one line, if the panel is wide enough
-                var fields = [this.altTextField, this.captionField, this.creditsField].filter(function (field) {
+                var fields = this.textFields.filter(function (field) {
                     return !field.hidden;
                 });
                 var inline = fields.length > 1 && width >= this.inlineFieldsWidth;
@@ -112,10 +108,9 @@ Ext.extend(ImagePlus.panel.input, MODx.Panel, {
     },
     // Create the image upload/crop/browser field
     createImageBrowser: function () {
-        // Generate opento path
-        var openToPath = (this.image.image || '').split('/');
-        openToPath.pop();
-        openToPath = openToPath.join('/');
+        // The media browser opens the folder of the image
+        var image = this.image.image || '';
+        var openToPath = image.substring(0, Math.max(0, image.lastIndexOf('/')));
 
         this.imageBrowser = MODx.load({
             xtype: 'imageplus-combo-upload-crop-browser',
@@ -147,9 +142,11 @@ Ext.extend(ImagePlus.panel.input, MODx.Panel, {
     },
     // Create fields for alt-text, caption and credits input
     createTextFields: function () {
-        this.altTextField = this.createTextField('altTag', this.options.altTagOn, 'imageplus.alt_text', 'icon-code');
-        this.captionField = this.createTextField('caption', this.options.captionOn, 'imageplus.caption', 'icon-header');
-        this.creditsField = this.createTextField('credits', this.options.creditsOn, 'imageplus.credits', 'icon-copyright');
+        this.textFields = [
+            this.createTextField('altTag', this.options.altTagOn, 'imageplus.alt_text', 'icon-code'),
+            this.createTextField('caption', this.options.captionOn, 'imageplus.caption', 'icon-header'),
+            this.createTextField('credits', this.options.creditsOn, 'imageplus.credits', 'icon-copyright')
+        ];
     },
     createTextField: function (key, enabled, lexicon, icon) {
         return MODx.load({
@@ -205,13 +202,25 @@ Ext.extend(ImagePlus.panel.input, MODx.Panel, {
         this.image.sizes = value.sizes || {};
         this.updateValue();
     },
-    // Get the value of the browser field
-    getBrowserValue: function () {
-        return (this.image.image) ? Ext.encode({
+    // Get the image data, optionally with the texts of the text fields
+    getImageData: function (withTexts) {
+        var data = {
             image: this.image.image,
             baseUrl: this.image.baseUrl || '',
             sizes: this.image.sizes || {}
-        }) : '';
+        };
+        if (withTexts) {
+            Ext.apply(data, {
+                altTag: this.image.altTag || '',
+                caption: this.image.caption || '',
+                credits: this.image.credits || ''
+            });
+        }
+        return data;
+    },
+    // Get the value of the browser field
+    getBrowserValue: function () {
+        return (this.image.image) ? Ext.encode(this.getImageData(false)) : '';
     },
     // Get hidden field value
     getValue: function () {
@@ -220,17 +229,7 @@ Ext.extend(ImagePlus.panel.input, MODx.Panel, {
     // Update hidden field value
     updateValue: function () {
         var hiddenField = document.getElementById(this.hiddenField);
-        var newValue = '';
-        if (this.image.image) {
-            newValue = JSON.stringify({
-                image: this.image.image,
-                baseUrl: this.image.baseUrl || '',
-                sizes: this.image.sizes || {},
-                altTag: this.image.altTag || '',
-                caption: this.image.caption || '',
-                credits: this.image.credits || ''
-            }, null, '  ');
-        }
+        var newValue = (this.image.image) ? JSON.stringify(this.getImageData(true), null, '  ') : '';
         if (hiddenField && hiddenField.value !== newValue) {
             hiddenField.value = newValue;
 
