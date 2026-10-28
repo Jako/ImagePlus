@@ -108,8 +108,11 @@ Ext.extend(ImagePlus.combo.UploadCropBrowser, ImagePlus.combo.UploadBrowser, {
                 callback.call(this);
             }
         }.bind(this);
-        var width = parseInt(data.image_width || data.width, 10);
-        var height = parseInt(data.image_height || data.height, 10);
+        // The media browser of MODX 3 sends the original size, image_width/image_height are the size of its preview there.
+        // The media browser of MODX 2 sends the original size as image_width/image_height, the upload processor as width/height.
+        var original = 'original_width' in data;
+        var width = parseInt(original ? data.original_width : (data.image_width || data.width), 10);
+        var height = parseInt(original ? data.original_height : (data.image_height || data.height), 10);
         if (width && height) {
             check({width: width, height: height});
         } else {
