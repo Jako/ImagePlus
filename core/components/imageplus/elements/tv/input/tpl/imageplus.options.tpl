@@ -21,6 +21,17 @@
         labelAlign: 'top',
         listeners: {
             afterrender: function (component) {
+                // The input option values are not used by Image+
+                var elements = Ext.getCmp('modx-tv-elements');
+                if (elements) {
+                    elements.hide().nextSibling().hide();
+                    if (ImagePlus.config.modxversion === '2') {
+                        // MODX 2 shows only the field again, when another type is selected
+                        Ext.getCmp('modx-tv-type').on('select', function () {
+                            elements.nextSibling().show();
+                        }, null, {single: true});
+                    }
+                }
                 var tvTabId = (ImagePlus.config.modxversion === '2') ? 'modx-tv-tabs' : 'modx-tv-editor-tabs';
                 Ext.getCmp('modx-panel-tv-input-properties').addListener('resize', function () {
                     component.setWidth(Ext.getCmp('modx-input-props').getWidth()).doLayout();
