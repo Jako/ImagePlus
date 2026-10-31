@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Image crop output option/snippet property and crop.url placeholder
 - Minimal image width/height input options
 - Show all images in one line input option
+- Setup option to disable the migration of the Image+ 2.x template variables and settings
+- ImagePlusMigration snippet with a dryRun property to test the migration of the Image+ 2.x template variables and settings
 
 ### Changed
 

@@ -59,6 +59,18 @@
               "value": "ImagePlus.image"
             }
           ]
+        },
+        {
+          "name": "ImagePlusMigration",
+          "file": "imageplusmigration.snippet.php",
+          "description": "Snippet to migrate the Image+ 2.x template variables and settings",
+          "properties": [
+            {
+              "name": "dryRun",
+              "type": "combo-boolean",
+              "value": "1"
+            }
+          ]
         }
       ]
     },
