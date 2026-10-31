@@ -27,7 +27,7 @@ class ImagePlus extends Snippet
             'type' => '',
             'options' => '',
             'tpl' => 'ImagePlus.image',
-            'input::bool' => $this->imageplus->getOption('debug')
+            'debug::bool' => $this->imageplus->getOption('debug')
         ];
     }
 
@@ -66,7 +66,7 @@ class ImagePlus extends Snippet
                 // Get the raw content of the TV
                 $value = $tv->getValue($docid);
                 $value = $tv->processBindings($value, $docid);
-                $tvOutputProperties = $tv->get('output_properties');
+                $tvOutputProperties = (array)$tv->get('output_properties');
                 foreach ($tvOutputProperties as &$tvOutputProperty) {
                     switch ($tvOutputProperty) {
                         case 'true' :
@@ -89,8 +89,13 @@ class ImagePlus extends Snippet
         // Render output
         switch ($type) {
             case 'check':
-                $data = json_decode($value, true);
-                $output = ($data && (!empty($data['image']) || !empty($data['sourceImg']['src']))) ? 'image' : 'noimage';
+                // A value without an Image+ object is an image path
+                $data = json_decode((string)$value, true);
+                if (is_array($data)) {
+                    $output = (!empty($data['image']) || !empty($data['sourceImg']['src'])) ? 'image' : 'noimage';
+                } else {
+                    $output = (trim((string)$value) !== '') ? 'image' : 'noimage';
+                }
                 break;
             case 'tpl':
                 $data = json_decode($value);

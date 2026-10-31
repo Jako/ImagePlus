@@ -214,18 +214,18 @@ class ImagePlus
         // Check system settings for crop engine override
         $engineClass = $this->getOption('cropEngineClass');
 
+        // Check crop engine is usable
+        if ($this->getOption('hasUnmetDependencies') || !$engineClass) {
+            $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Requirements not met for crop engine.', '', 'Image+');
+            return 'Image+ error - requirements not met for crop engine.';
+        }
+
         /**
          * @var AbstractCropEngine $cropEngine
          */
         $cropEngine = new $engineClass($this->modx, [
             'core_path' => $this->getOption('corePath')
         ]);
-
-        // Check crop engine is usable
-        if ($this->getOption('hasUnmetDependencies')) {
-            $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Requirements not met for crop engine.', '', 'Image+');
-            return 'Image+ error - requirements not met for crop engine.';
-        }
 
         $json = $this->prepareTvValue($json, $opts, $tv);
         $source = $this->getTvSource($tv);

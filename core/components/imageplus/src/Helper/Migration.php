@@ -155,8 +155,9 @@ class Migration
      * Convert the Image+ template variable values before 3.0 to the Image+ 3.x value format and remove the media source
      * from the values, if it is the media source of the template variable.
      *
-     * The crop of a value before 3.0 is converted to the image crop with the key crop, that is also used for the
-     * converted target options in migrateTargets.
+     * The crop of a value before 3.0 is converted to the first image crop of the template variable. Without an image
+     * crops input option, this is the image crop with the key crop, that is also used for the converted target
+     * options in migrateTargets.
      *
      * @return void
      */
@@ -169,6 +170,14 @@ class Migration
         /** @var modTemplateVar[] $tvs */
         $tvs = $this->modx->getIterator('modTemplateVar', ['type' => 'imageplus']);
         foreach ($tvs as $tv) {
+            // The crop is converted to the first image crop of the template variable like in the template variable input
+            $properties = $tv->get('input_properties');
+            $sizes = json_decode((is_array($properties)) ? ($properties['sizes'] ?? '') : '', true);
+            if (!is_array($sizes) || empty($sizes)) {
+                $sizes = $this->imageplus->getDefaultCropSizes();
+            }
+            $cropKey = (string)array_keys($sizes)[0];
+
             $c = $this->modx->newQuery('modTemplateVarResource');
             $c->leftJoin('modResource', 'Resource', ['Resource.id = modTemplateVarResource.contentid']);
             $c->select($this->modx->getSelectColumns('modTemplateVarResource', 'modTemplateVarResource'));
@@ -207,7 +216,7 @@ class Migration
 
                 // A value without an image is cleared
                 $oldValue = $tvResource->get('value');
-                $newValue = $this->imageplus->prepareTvValue($oldValue, [], $tv);
+                $newValue = $this->imageplus->prepareTvValue($oldValue, ['crop' => $cropKey], $tv);
                 $tvResource->set('value', $newValue);
                 if ($this->dryRun || $tvResource->save()) {
                     $this->logChange(($newValue !== '') ? 'Would convert the value of ' . $tvName . ' to: ' . json_encode(json_decode($newValue, true), JSON_UNESCAPED_SLASHES) : 'Would clear the value of ' . $tvName . ', it does not contain an image. Value: ' . $oldValue);

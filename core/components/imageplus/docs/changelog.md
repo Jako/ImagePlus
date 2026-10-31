@@ -15,8 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Image crop output option/snippet property and crop.url placeholder
 - Minimal image width/height input options
 - Show all images in one line input option
-- Setup option to disable the migration of the Image+ 2.x template variables and settings
-- ImagePlusMigration snippet with a dryRun property to test the migration of the Image+ 2.x template variables and settings
+- Setup option to skip the 2.x migration and ImagePlusMigration snippet with a dry run
 
 ### Changed
 
@@ -28,8 +27,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- Target width/height/aspect ratio input options and settings, they are migrated to the minimal image size and image crops input options (MIGX configs have to be changed manually)
+- Target width/height/aspect ratio options and settings, migrated to the minimal image size and image crops options (MIGX configs have to be changed manually)
 - Predefined crop sizes system settings (select_config and force_config)
+
+### Fixed
+
+- Fatal error in the output without a crop engine
+- The ImagePlus snippet did not use the imageplus.debug system setting
+- PHP warning in the ImagePlus snippet for template variables without output options
+- The check type of the ImagePlus snippet returned noimage for image path values
 
 ## [2.9.5] - 2023-09-07
 
