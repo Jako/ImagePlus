@@ -90,9 +90,9 @@ class ImagePlusInputRender extends modTemplateVarInputRender
             'crop' => array_keys($sizes)[0]
         ]), $this->tv);
         $data = json_decode($value, true);
-        if ($data && empty($data['baseUrl'])) {
-            $data['baseUrl'] = $imageplus->getSourceObjectUrl($source, $data['image']);
-            $value = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        if (is_array($data)) {
+            // The stored urls are replaced, because they are outdated after a site move
+            $value = json_encode($imageplus->updateValueUrls($data, $source), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         }
         $this->tv->value = $value;
     }

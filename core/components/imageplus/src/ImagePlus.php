@@ -235,7 +235,10 @@ class ImagePlus
 
         $json = $this->prepareTvValue($json, $opts, $tv);
         $source = $this->getTvSource($tv, $opts['docid'] ?? 0);
-        $json = $this->getCropEngineValue($json, $opts, ($source) ? $source->get('id') : $this->modx->getOption('default_media_source'));
+        if ($source) {
+            $source->initialize();
+        }
+        $json = $this->getCropEngineValue($json, $opts, $source ?: $this->modx->getOption('default_media_source'));
         return $cropEngine->getImageUrl($json, $opts, $tv);
     }
 
@@ -245,11 +248,12 @@ class ImagePlus
      * @param string $json JSON value prepared by prepareTvValue
      * @param array $opts The crop option selects the image crop, the first one is used by default. The url of the
      * crop file is added as crop.url option.
-     * @param int $sourceId The media source of the template variable
+     * @param modMediaSource|int $source The (initialized) media source of the template variable or its id
      * @return string
      */
-    public function getCropEngineValue($json, &$opts = [], $sourceId = 0)
+    public function getCropEngineValue($json, &$opts = [], $source = 0)
     {
+        $sourceId = (is_object($source)) ? (int)$source->get('id') : (int)$source;
         $data = json_decode($json, true);
         if (!is_array($data) || empty($data['image'])) {
             return '';
@@ -257,7 +261,12 @@ class ImagePlus
         $sizes = (isset($data['sizes']) && is_array($data['sizes'])) ? $data['sizes'] : [];
         $key = $opts['crop'] ?? '';
         $size = ($key !== '' && isset($sizes[$key])) ? $sizes[$key] : (reset($sizes) ?: []);
-        $opts['crop.url'] = $size['baseUrl'] ?? '';
+        // The stored url is outdated after a site move, so the url is created with the media source, if possible
+        if (!empty($size['image']) && is_object($source)) {
+            $opts['crop.url'] = $this->getSourceObjectUrl($source, $size['image']);
+        } else {
+            $opts['crop.url'] = $size['baseUrl'] ?? '';
+        }
 
         return json_encode([
             'sourceImg' => [
@@ -427,6 +436,29 @@ class ImagePlus
     public function getDefaultCropSizes()
     {
         return ['crop' => ['name' => $this->modx->lexicon('imageplus.cropimage.crop')]];
+    }
+
+    /**
+     * Update the urls of the image and its crops in a value with the urls of the media source. The urls are stored in
+     * the value, but they are outdated after a site move or a changed media source url.
+     *
+     * @param array $data The decoded value
+     * @param modMediaSource $source The initialized media source of the template variable
+     * @return array
+     */
+    public function updateValueUrls(array $data, $source)
+    {
+        if (!empty($data['image'])) {
+            $data['baseUrl'] = $this->getSourceObjectUrl($source, $data['image']);
+        }
+        if (isset($data['sizes']) && is_array($data['sizes'])) {
+            foreach ($data['sizes'] as $key => $size) {
+                if (is_array($size) && !empty($size['image'])) {
+                    $data['sizes'][$key]['baseUrl'] = $this->getSourceObjectUrl($source, $size['image']);
+                }
+            }
+        }
+        return $data;
     }
 
     /**
