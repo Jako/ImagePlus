@@ -85,6 +85,15 @@ Ext.extend(ImagePlus.form.FileField, Ext.form.TextField, {
         var v = this.fileInput.dom.value;
         this.setValue(v);
         this.fireEvent('change', this, v);
+    },
+    /**
+     * Clear the chosen file, so that the change event is fired again, if the same file is chosen
+     */
+    clearFile: function () {
+        if (this.fileInput) {
+            this.fileInput.dom.value = '';
+        }
+        this.setValue('');
     }
 });
 Ext.reg('imageplus-form-filefield', ImagePlus.form.FileField);
@@ -221,6 +230,12 @@ Ext.extend(ImagePlus.combo.UploadBrowser, ImagePlus.form.MultiTriggerField, {
         this.uploadField = Ext.getCmp(this.ident + '-upload-filefield');
         this.uploadForm.form.el.dom.setAttribute('enctype', 'multipart/form-data');
         this.relayEvents(this.uploadForm.form, ['failure', 'submit']);
+        // The file is cleared after the upload, otherwise the same file can't be uploaded again
+        this.uploadForm.form.on({
+            actioncomplete: this.uploadField.clearFile,
+            actionfailed: this.uploadField.clearFile,
+            scope: this.uploadField
+        });
     },
     onUploadFileSelected: function () {
         this.uploadForm.form.baseParams.file = this.uploadField.getValue();
