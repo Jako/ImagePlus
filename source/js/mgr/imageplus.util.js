@@ -52,6 +52,17 @@ ImagePlus.util.thumbUrl = function (src, source, size) {
  */
 ImagePlus.util.sourceUrl = function (source) {
     var url = (ImagePlus.config.sources && ImagePlus.config.sources[source]) ? ImagePlus.config.sources[source].url : '';
+    return ImagePlus.util.sourceObjectUrl(url) || MODx.config.base_url;
+};
+
+/**
+ * Get the url of a media source object, that can be used in the manager. Root relative and absolute urls are used
+ * as they are, other urls are relative to the base url.
+ */
+ImagePlus.util.sourceObjectUrl = function (url) {
+    if (!url) {
+        return '';
+    }
     return (/^(https?:)?\/\//.test(url) || url.charAt(0) === '/') ? url : MODx.config.base_url + url;
 };
 

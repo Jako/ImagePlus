@@ -116,7 +116,7 @@ Ext.extend(ImagePlus.combo.UploadCropBrowser, ImagePlus.combo.UploadBrowser, {
         if (width && height) {
             check({width: width, height: height});
         } else {
-            ImagePlus.util.loadImageDimensions(data.baseUrl || MODx.config.base_url + data.fullRelativeUrl).then(check);
+            ImagePlus.util.loadImageDimensions(data.baseUrl || ImagePlus.util.sourceObjectUrl(data.fullRelativeUrl)).then(check);
         }
     },
     encodeValue: function (value) {

@@ -247,7 +247,7 @@ Ext.extend(ImagePlus.combo.UploadBrowser, ImagePlus.form.MultiTriggerField, {
     onFileChosen: function (data) {
         this.setValue({
             image: data.relativeUrl,
-            baseUrl: data.baseUrl || MODx.config.base_url + data.fullRelativeUrl,
+            baseUrl: data.baseUrl || ImagePlus.util.sourceObjectUrl(data.fullRelativeUrl),
         });
     },
     /**
