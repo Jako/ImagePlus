@@ -71,6 +71,31 @@
               "value": "1"
             }
           ]
+        },
+        {
+          "name": "ImagePlusCleanup",
+          "file": "imagepluscleanup.snippet.php",
+          "description": "Snippet to remove the unused image crop files",
+          "properties": [
+            {
+              "name": "dryRun",
+              "type": "combo-boolean",
+              "value": "1"
+            },
+            {
+              "name": "path",
+              "value": ""
+            },
+            {
+              "name": "source",
+              "value": ""
+            },
+            {
+              "name": "minAge",
+              "type": "numberfield",
+              "value": "24"
+            }
+          ]
         }
       ]
     },

@@ -142,19 +142,7 @@ class ImagePlusImageThumbnailProcessor extends Processor
             return $defaultSourceId;
         }
 
-        $tvSourceIds = [];
-        $c = $this->modx->newQuery('modTemplateVar', ['type' => 'imageplus']);
-        $c->select('id');
-        $tvIds = ($c->prepare() && $c->stmt->execute()) ? $c->stmt->fetchAll(PDO::FETCH_COLUMN) : [];
-        if ($tvIds) {
-            $c = $this->modx->newQuery('sources.modMediaSourceElement', [
-                'object:IN' => $tvIds,
-                'object_class:IN' => ['modTemplateVar', 'MODX\\Revolution\\modTemplateVar'],
-            ]);
-            $c->select('source');
-            $tvSourceIds = ($c->prepare() && $c->stmt->execute()) ? array_map('intval', $c->stmt->fetchAll(PDO::FETCH_COLUMN)) : [];
-        }
-        $tvSourceIds = array_values(array_unique(array_diff($tvSourceIds, [$defaultSourceId])));
+        $tvSourceIds = array_values(array_diff($this->imageplus->getTvSourceIds(), [$defaultSourceId]));
 
         $this->modx->loadClass('sources.modMediaSource');
         foreach (array_merge($tvSourceIds, [$defaultSourceId]) as $sourceId) {

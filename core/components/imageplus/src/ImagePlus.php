@@ -15,6 +15,7 @@ use modTemplateVar;
 use TreehillStudio\ImagePlus\CropEngines\AbstractCropEngine;
 use modMediaSource;
 use modX;
+use PDO;
 use stdClass;
 use xPDO;
 
@@ -372,6 +373,28 @@ class ImagePlus
             return $tv->getSource($this->getResourceContextKey($docid));
         }
         return $this->modx->getObject('sources.modMediaSource', $this->modx->getOption('default_media_source'));
+    }
+
+    /**
+     * Get the ids of the media sources of all Image+ template variables in all contexts
+     *
+     * @return int[]
+     */
+    public function getTvSourceIds()
+    {
+        $c = $this->modx->newQuery('modTemplateVar', ['type' => 'imageplus']);
+        $c->select('id');
+        $tvIds = ($c->prepare() && $c->stmt->execute()) ? $c->stmt->fetchAll(PDO::FETCH_COLUMN) : [];
+        if (!$tvIds) {
+            return [];
+        }
+        $c = $this->modx->newQuery('sources.modMediaSourceElement', [
+            'object:IN' => $tvIds,
+            'object_class:IN' => ['modTemplateVar', 'MODX\\Revolution\\modTemplateVar'],
+        ]);
+        $c->select('source');
+        $sourceIds = ($c->prepare() && $c->stmt->execute()) ? $c->stmt->fetchAll(PDO::FETCH_COLUMN) : [];
+        return array_values(array_unique(array_map('intval', $sourceIds)));
     }
 
     /**

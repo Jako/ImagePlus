@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimal image width/height input options
 - Show all images in one line input option
 - Setup option to skip the 2.x migration and ImagePlusMigration snippet with a dry run
+- ImagePlusCleanup snippet to remove unused crop files
 
 ### Changed
 
