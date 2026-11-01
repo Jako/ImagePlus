@@ -54,6 +54,12 @@ class ImagePlus
     public $options = [];
 
     /**
+     * The cached context keys of resources
+     * @var array $resourceContextKeys
+     */
+    private $resourceContextKeys = [];
+
+    /**
      * ImagePlus constructor
      *
      * @param modX $modx A reference to the modX instance.
@@ -228,7 +234,7 @@ class ImagePlus
         ]);
 
         $json = $this->prepareTvValue($json, $opts, $tv);
-        $source = $this->getTvSource($tv);
+        $source = $this->getTvSource($tv, $opts['docid'] ?? 0);
         $json = $this->getCropEngineValue($json, $opts, ($source) ? $source->get('id') : $this->modx->getOption('default_media_source'));
         return $cropEngine->getImageUrl($json, $opts, $tv);
     }
@@ -297,7 +303,7 @@ class ImagePlus
         $data = json_decode($json, true);
         if (!is_array($data)) {
             // The variable does not contain an Image+ image object and has to be converted to an Image+ image object
-            $source = $this->getTvSource($tv);
+            $source = $this->getTvSource($tv, $opts['docid'] ?? 0);
             if (!$source) {
                 $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Invalid Media Source', '', 'Image+');
                 return '';
@@ -344,15 +350,44 @@ class ImagePlus
     /**
      * Get the media source of a template variable or the default media source
      *
+     * The media source of the template variable depends on the context of the resource. Without a resource id, the
+     * context of the current resource is used.
+     *
      * @param modTemplateVar|null $tv
+     * @param int $docid The id of the resource, that contains the template variable value
      * @return modMediaSource|null
      */
-    public function getTvSource($tv = null)
+    public function getTvSource($tv = null, $docid = 0)
     {
         if ($tv) {
-            return $tv->getSource(($this->modx->resource) ? $this->modx->resource->get('context_key') : 'mgr');
+            return $tv->getSource($this->getResourceContextKey($docid));
         }
         return $this->modx->getObject('sources.modMediaSource', $this->modx->getOption('default_media_source'));
+    }
+
+    /**
+     * Get the context key of a resource, the context key of the current resource or mgr
+     *
+     * @param int $docid
+     * @return string
+     */
+    private function getResourceContextKey($docid = 0)
+    {
+        $docid = (int)$docid;
+        if ($this->modx->resource && (!$docid || (int)$this->modx->resource->get('id') === $docid)) {
+            return $this->modx->resource->get('context_key');
+        }
+        if ($docid) {
+            if (!isset($this->resourceContextKeys[$docid])) {
+                $c = $this->modx->newQuery('modResource', ['id' => $docid]);
+                $c->select('context_key');
+                $this->resourceContextKeys[$docid] = (string)$this->modx->getValue($c->prepare());
+            }
+            if ($this->resourceContextKeys[$docid] !== '') {
+                return $this->resourceContextKeys[$docid];
+            }
+        }
+        return 'mgr';
     }
 
     /**

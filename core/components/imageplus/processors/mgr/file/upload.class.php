@@ -38,7 +38,7 @@ class ImagePlusBrowserFileUploadProcessor extends modBrowserFileUploadProcessor
     public function initialize()
     {
         $this->setDefaultProperties([
-            'source' => 1,
+            'source' => $this->modx->getOption('default_media_source', null, 1),
             'path' => false,
         ]);
         return true;
@@ -103,7 +103,7 @@ class ImagePlusBrowserFileUploadProcessor extends modBrowserFileUploadProcessor
         $sourceProperties = $this->source->getPropertyList();
         return $this->success('', [
             'relativeUrl' => $url,
-            'fullRelativeUrl' => $sourceProperties['baseUrl'] . $url,
+            'fullRelativeUrl' => ($sourceProperties['baseUrl'] ?? '') . $url,
             'baseUrl' => $this->imageplus->getSourceObjectUrl($this->source, $url),
             'width' => $imageSize[0] ?? 0,
             'height' => $imageSize[1] ?? 0,

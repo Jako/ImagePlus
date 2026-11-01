@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The ImagePlus snippet did not use the imageplus.debug system setting
 - PHP warning in the ImagePlus snippet for template variables without output options
 - The check type of the ImagePlus snippet returned noimage for image path values
+- Wrong media source for template variable values of resources in another context
 
 ## [2.9.5] - 2023-09-07
 

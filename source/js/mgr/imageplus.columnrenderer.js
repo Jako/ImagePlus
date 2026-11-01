@@ -16,15 +16,20 @@ ImagePlus.ColumnRenderer = function (json) {
     var data = ImagePlus.util.parseFileValue(json);
     var url, cls = 'imageplus';
     if (data.sourceImg) {
-        // Image+ value before 3.0
-        url = ImagePlus.generateThumbUrl({
+        // Image+ value before 3.0, the crop is optional
+        var params = {
             src: data.sourceImg.src,
-            source: data.sourceImg.source,
-            sw: data.crop.width,
-            sh: data.crop.height,
-            sx: data.crop.x,
-            sy: data.crop.y
-        });
+            source: data.sourceImg.source || MODx.config.default_media_source
+        };
+        if (data.crop && data.crop.width && data.crop.height) {
+            Ext.apply(params, {
+                sw: data.crop.width,
+                sh: data.crop.height,
+                sx: data.crop.x || 0,
+                sy: data.crop.y || 0
+            });
+        }
+        url = ImagePlus.generateThumbUrl(params);
     } else if (data.image && json.charAt(0) === '{') {
         // Show the first created crop or the original image
         var crop = Object.values(data.sizes || {}).find(function (size) {

@@ -98,7 +98,10 @@ class ImagePlusImageThumbnailProcessor extends Processor
         }
         if ($thumbnail === null && $imageSize['mime'] === 'image/jpeg') {
             $thumbnail = $this->createFromExif($path, $content);
-            $outputExtension = 'jpg';
+            if ($thumbnail !== null) {
+                // The embedded EXIF thumbnail is only a fallback, so it is not cached and has no ETag
+                $this->output($thumbnail, 'jpg');
+            }
         }
         if ($thumbnail === null) {
             $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Not enough memory to create a thumbnail of ' . $src . ' (' . $imageSize[0] . 'x' . $imageSize[1] . ')', '', 'ImagePlusImageThumbnailProcessor');
@@ -279,14 +282,18 @@ class ImagePlusImageThumbnailProcessor extends Processor
      *
      * @param string $thumbnail
      * @param string $extension
-     * @param string $etag
+     * @param string|null $etag Without an ETag, the thumbnail is not cached by the browser
      */
-    private function output(string $thumbnail, string $extension, string $etag)
+    private function output(string $thumbnail, string $extension, ?string $etag = null)
     {
         header('Content-Type: ' . ($extension === 'jpg' ? 'image/jpeg' : 'image/png'));
         header('Content-Length: ' . strlen($thumbnail));
-        header('Cache-Control: private, no-cache');
-        header('ETag: ' . $etag);
+        if ($etag !== null) {
+            header('Cache-Control: private, no-cache');
+            header('ETag: ' . $etag);
+        } else {
+            header('Cache-Control: no-store');
+        }
         echo $thumbnail;
         exit;
     }
