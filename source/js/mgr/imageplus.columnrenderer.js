@@ -31,13 +31,15 @@ ImagePlus.ColumnRenderer = function (json) {
         }
         url = ImagePlus.generateThumbUrl(params);
     } else if (data.image && json.charAt(0) === '{') {
-        // Show the first created crop or the original image
+        // Show the first created crop or the original image. The value has no media source and the template variable
+        // is unknown, so the thumbnail processor searches the media source.
         var crop = Object.values(data.sizes || {}).find(function (size) {
             return size.image;
         });
-        url = ImagePlus.util.thumbUrl(crop ? crop.image : data.image, data.source, {w: 150});
+        url = ImagePlus.util.thumbUrl(crop ? crop.image : data.image, null, {w: 150});
     } else {
-        url = MODx.config.base_url + json;
+        // A plain image path, i.e. of a template variable value before Image+
+        url = ImagePlus.util.thumbUrl(json, null, {w: 150});
         cls = 'plain';
     }
     return '<img class="' + cls + '" src="' + Ext.util.Format.htmlEncode(url) + '" style="max-width:100%; height:auto;" />';

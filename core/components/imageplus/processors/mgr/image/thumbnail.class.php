@@ -113,6 +113,65 @@ class ImagePlusImageThumbnailProcessor extends Processor
     }
 
     /**
+     * Get the media source of the image. Without a media source in the request, the media source is searched, because
+     * the grid column renderer doesn't know the template variable of the image.
+     *
+     * @return modMediaSource|null
+     */
+    protected function getSource()
+    {
+        if (!$this->source && (string)$this->getProperty('source', '') === '') {
+            $this->setProperty('source', $this->findSourceId(rawurldecode((string)$this->getProperty('src'))));
+        }
+        return parent::getSource();
+    }
+
+    /**
+     * Find the media source, that contains the image: The media sources of the Image+ template variables and the
+     * default media source are searched. Remote media sources can't be searched, so the media source of the Image+
+     * template variables is used, if they have only one.
+     *
+     * @param string $src
+     * @return int
+     */
+    private function findSourceId(string $src): int
+    {
+        $defaultSourceId = (int)$this->modx->getOption('default_media_source');
+        $src = ltrim($src, '/');
+        if ($src === '' || strpos($src, "\0") !== false || preg_match('#(^|[/\\\\])\.\.([/\\\\]|$)#', $src)) {
+            return $defaultSourceId;
+        }
+
+        $tvSourceIds = [];
+        $c = $this->modx->newQuery('modTemplateVar', ['type' => 'imageplus']);
+        $c->select('id');
+        $tvIds = ($c->prepare() && $c->stmt->execute()) ? $c->stmt->fetchAll(PDO::FETCH_COLUMN) : [];
+        if ($tvIds) {
+            $c = $this->modx->newQuery('sources.modMediaSourceElement', [
+                'object:IN' => $tvIds,
+                'object_class:IN' => ['modTemplateVar', 'MODX\\Revolution\\modTemplateVar'],
+            ]);
+            $c->select('source');
+            $tvSourceIds = ($c->prepare() && $c->stmt->execute()) ? array_map('intval', $c->stmt->fetchAll(PDO::FETCH_COLUMN)) : [];
+        }
+        $tvSourceIds = array_values(array_unique(array_diff($tvSourceIds, [$defaultSourceId])));
+
+        $this->modx->loadClass('sources.modMediaSource');
+        foreach (array_merge($tvSourceIds, [$defaultSourceId]) as $sourceId) {
+            $source = modMediaSource::getDefaultSource($this->modx, $sourceId, false);
+            if (!$source || !$source->getWorkingContext()) {
+                continue;
+            }
+            $source->initialize();
+            $path = $source->getBasePath($src) . $src;
+            if ($path !== $src && is_file($path)) {
+                return $sourceId;
+            }
+        }
+        return (count($tvSourceIds) === 1) ? $tvSourceIds[0] : $defaultSourceId;
+    }
+
+    /**
      * Calculate the thumbnail size, that fits into the requested size without upscaling
      *
      * @param int $sourceWidth
