@@ -196,11 +196,11 @@ following properties can be set in the snippet call:
     An Image+ value does not contain the media source of the image. The image
     path and the paths of the crop files are relative to the media source of the
     template variable. With the `tvname` property, the snippet uses the media
-    source of the template variable in the context of the resource. 
+    source of the template variable in the context of the resource.
 
     A value passed with the `value` property (i.e. a MIGX value) has no template
     variable, so the snippet can't know the media source. In this case it can be set
-    it with the `source` property, when it is not using the default media source.
+    with the `source` property, when it is not using the default media source.
     Otherwise, the URLs of the image and its crop files can't be found and missing
     crop files can't be created.
 
