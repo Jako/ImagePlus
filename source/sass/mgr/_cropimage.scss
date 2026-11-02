@@ -162,6 +162,10 @@ $preview-bar-height: $preview-bar-line-height + 2 * $preview-bar-padding-y;
   .imageplus-cropimage-button {
     // The buttons share the width of the sidebar, a long label wraps inside its button
     flex: 1 1 auto;
+
+    &[hidden] {
+      display: none;
+    }
     padding: 8px 10px;
     border: 0;
     border-radius: 3px;

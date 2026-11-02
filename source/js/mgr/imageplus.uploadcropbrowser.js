@@ -398,8 +398,8 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
             this.createDomElement('legend', {text: legend})
         ].concat(fields));
     },
-    createCropperButton: function (cls, text, handler) {
-        var button = this.createDomElement('button', {type: 'button', class: 'imageplus-cropimage-button ' + cls, text: text});
+    createCropperButton: function (cls, text, handler, attributes) {
+        var button = this.createDomElement('button', Ext.apply({type: 'button', class: 'imageplus-cropimage-button ' + cls, text: text}, attributes));
         button.addEventListener('click', handler.bind(this));
         return button;
     },
@@ -410,8 +410,8 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
                 this.createDomElement('div', {class: 'imageplus-cropimage-sets', id: this.ident + '-cropimage-sizes'}),
                 this.createDomElement('div', {class: 'imageplus-cropimage-toolbar'}, [
                     this.createCropperButton('imageplus-cropimage-button-primary', _('imageplus.cropimage.save'), this.updateCropperRecord),
-                    this.createCropperButton('', _('imageplus.cropimage.reset'), this.resetCropperSize),
-                    this.createCropperButton('', _('imageplus.cropimage.reload'), this.reloadCropperImage)
+                    this.createCropperButton('', _('imageplus.cropimage.reset'), this.resetCropperSize, {id: this.ident + '-cropimage-reset', hidden: true}),
+                    this.createCropperButton('', _('imageplus.cropimage.reload'), this.reloadCropperImage, {id: this.ident + '-cropimage-reload'})
                 ]),
                 this.createDomElement('div', {class: 'imageplus-cropimage-state', id: this.ident + '-cropimage-state', hidden: true})
             ]),
@@ -659,6 +659,10 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
             stateEl.classList.add(messages[state][0]);
             stateEl.textContent = messages[state][1];
         }
+        // The changes can only be reset, if there are unsaved changes. The image can only be reloaded without them.
+        var unsaved = state === 'start' || state === 'stop' || state === 'failure';
+        this.getCropperEl('reset').hidden = !unsaved;
+        this.getCropperEl('reload').hidden = unsaved;
         // Another size can only be selected, if the changes are saved
         var enableAll = state === 'saved' || state === 'ready';
         this.getCropperEl('sizes').querySelectorAll('input').forEach(function (input) {

@@ -355,6 +355,11 @@
 }
 .x-window-imageplus-cropimage .imageplus-cropimage-button {
   flex: 1 1 auto;
+}
+.x-window-imageplus-cropimage .imageplus-cropimage-button[hidden] {
+  display: none;
+}
+.x-window-imageplus-cropimage .imageplus-cropimage-button {
   padding: 8px 10px;
   border: 0;
   border-radius: 3px;
