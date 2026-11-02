@@ -276,8 +276,7 @@ class ImagePlusImageThumbnailProcessor extends Processor
             imagefill($targetImage, 0, 0, imagecolorallocatealpha($targetImage, 0, 0, 0, 127));
         }
         imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, imagesx($sourceImage), imagesy($sourceImage));
-        // Since PHP 8 imagedestroy has no effect, the image memory is released with unset
-        imagedestroy($sourceImage);
+        // The image memory is released with unset (imagedestroy has no effect since PHP 8 and is deprecated since PHP 8.5)
         unset($sourceImage);
 
         ob_start();
@@ -287,7 +286,6 @@ class ImagePlusImageThumbnailProcessor extends Processor
             imagepng($targetImage);
         }
         $thumbnail = ob_get_clean();
-        imagedestroy($targetImage);
         unset($targetImage);
         return $thumbnail ?: null;
     }

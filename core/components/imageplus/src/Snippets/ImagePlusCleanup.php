@@ -24,7 +24,8 @@ class ImagePlusCleanup extends Snippet
     public function getDefaultProperties()
     {
         return [
-            'dryRun::allowEmpty::bool' => true,
+            // An empty value keeps the dry run
+            'dryRun::bool' => true,
             'path' => '',
             'source::explodeSeparated' => '',
             'minAge::int' => 24,

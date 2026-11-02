@@ -236,8 +236,7 @@ class ImageCrop
                 (int)round($srcWidth * $ratioX), (int)round($srcHeight * $ratioY), $srcWidth, $srcHeight
             );
         }
-        // Since PHP 8 imagedestroy has no effect, the image memory is released with unset
-        imagedestroy($sourceImage);
+        // The image memory is released with unset (imagedestroy has no effect since PHP 8 and is deprecated since PHP 8.5)
         unset($sourceImage);
 
         ob_start();
@@ -256,7 +255,6 @@ class ImageCrop
         }
         $result = ob_get_clean();
 
-        imagedestroy($targetImage);
         unset($targetImage);
 
         if (!$result) {

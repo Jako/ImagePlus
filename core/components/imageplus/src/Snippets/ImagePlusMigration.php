@@ -24,7 +24,8 @@ class ImagePlusMigration extends Snippet
     public function getDefaultProperties()
     {
         return [
-            'dryRun::allowEmpty::bool' => true,
+            // An empty value keeps the dry run
+            'dryRun::bool' => true,
         ];
     }
 
