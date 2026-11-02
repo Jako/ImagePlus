@@ -185,14 +185,14 @@ variable output you are limited to one output chunk per template variable, with
 the snippet you can be more flexible and use different output chunks. The
 following properties can be set in the snippet call:
 
-| Property | Description                                                                           | Default         |
-|----------|---------------------------------------------------------------------------------------|-----------------|
-| crop     | Key of the image crop used for the output. The first image crop is used by default.   | -               |
-| docid    | Resource where the Image+ TV value is received from.                                  | -               |
-| options  | phpThumb options for the options placeholder of the template chunk [^5].              | -               |
-| tpl      | Template chunk for the snippet output.                                                | ImagePlus.image |
-| tvname   | Name of the Image+ TV.                                                                | -               |
-| type     | Type of the snippet output. Could be set to <i>check</i> <i>tpl</i> and <i>thumb</i>. | -               |
+| Property | Description                                                                                           | Default         |
+|----------|-------------------------------------------------------------------------------------------------------|-----------------|
+| crop     | Key of the image crop used for the output. The first image crop is used by default.                   | -               |
+| docid    | Resource where the Image+ TV value is received from.                                                  | -               |
+| options  | phpThumb options for the options placeholder of the template chunk [^5].                              | -               |
+| tpl      | Template chunk for the snippet output [^6].                                                           | ImagePlus.image |
+| tvname   | Name of the Image+ TV.                                                                                | -               |
+| type     | Type of the snippet output. Could be set to <i>check</i> [^2], <i>tpl</i> [^3] and <i>thumb</i> [^4]. | -               |
 
 #### Example
 
@@ -212,7 +212,7 @@ option `w=100` (width: 100px) is added to the `options` placeholder.
 
 [^1]: The first entry supercedes the second entry in the list etc.
 [^2]: Outputs *image* if the Image+ TV contains an image, otherwise *noimage*.
-[^3]: Outputs the parsed template set by **tpl** property for retreived Image+ TV value (with additional options set by the **options** property)
-[^4]: Outputs the thumbnail URL for retreived Image+ TV value (with additional options set by the **options** property)
-[^5]: See [phpThumb readme](http://phpthumb.sourceforge.net/demo/docs/phpthumb.readme.txt) for possible options. Maybe not all options are valid in your installation (because of server restricions).
+[^3]: Outputs the template chunk set by the **tpl** property, filled with the retrieved Image+ TV value (the **options** property fills the `options` placeholder).
+[^4]: Outputs the URL of the image crop file of the retrieved Image+ TV value.
+[^5]: See [phpThumb readme](https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt) for possible options. Maybe not all options are valid in your installation (because of server restrictions).
 [^6]: The template chunk placeholder are the same as in the output chunk of the template variable.

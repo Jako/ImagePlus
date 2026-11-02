@@ -17,7 +17,7 @@ tool can be used to resize the image to the desired dimensions/proportions.
 * Option to restrict minimum width and/or height for uploaded image.
 * User image cropping can be forced to stay at preset ratio.
 * Use chunk as output mask and fill placeholders with url, height, width, alt
-  tag, phpthumb options etc. of cropped uploaded image.
+  tag etc. of the image crop file.
 
 ### License
 

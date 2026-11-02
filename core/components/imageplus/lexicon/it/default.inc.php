@@ -23,14 +23,14 @@ $_lang['imageplus.allowCredits'] = 'Mostra il campo Credits';
 $_lang['imageplus.allowCredits_desc'] = 'Consente all’utente di inserire un credito per l’immagine.';
 /** Output options render **/
 $_lang['imageplus.phpThumbParams'] = 'Parametri aggiuntivi di phpThumb';
-$_lang['imageplus.phpThumbParams_desc'] = 'Aggiungi filtri aggiuntivi ecc. per phpThumb. La documentazione può essere trovata <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">qui</a>.';
+$_lang['imageplus.phpThumbParams_desc'] = '(Facoltativo) Parametri di phpThumb per il segnaposto options del chunk di output, per esempio per un filtro di output pThumb. La documentazione può essere trovata <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">qui</a>.';
 $_lang['imageplus.outputChunk'] = 'Chunk Output';
 $_lang['imageplus.outputChunk_desc'] = 'Seleziona un chunk per l’output della variabile tv. Lascia vuoto per avere un semplice url come output.';
-$_lang['imageplus.generateUrl'] = 'Generare l’URL dell’anteprima';
-$_lang['imageplus.generateUrl_desc'] = '(Facoltativo) L’URL della miniatura dell’immagine potrebbe non essere necessario se questa viene generata nel chunk di output, per esempio con un filtro di output pThumb.';
-$_lang['imageplus.generateUrl_desc_warning'] = 'Devi attivare questa opzione quando non specifichi un chunk di output nelle opzioni di output o quando usi il segnaposto [[+url]] nel chunk di output specificato. Altrimenti l’immagine non viene ritagliata/ridimensionata e viene restituito il percorso originale dell’immagine.';
+$_lang['imageplus.generateUrl'] = 'Usa l’URL del file di ritaglio';
+$_lang['imageplus.generateUrl_desc'] = '(Facoltativo) L’URL del file di ritaglio potrebbe non essere necessario se la miniatura viene generata nel chunk di output, per esempio con un filtro di output pThumb.';
+$_lang['imageplus.generateUrl_desc_warning'] = 'Devi attivare questa opzione quando non specifichi un chunk di output nelle opzioni di output o quando usi il segnaposto [[+url]] nel chunk di output specificato. Altrimenti l’immagine non viene ritagliata e viene restituito l’URL dell’immagine originale.';
 /** Placeholder descriptions */
-$_lang['imageplus.placeholder.url'] = 'URL dell’immagine di anteprima';
+$_lang['imageplus.placeholder.url'] = 'URL del file di ritaglio';
 $_lang['imageplus.placeholder.alt'] = 'Testo per l’attributo Alt';
 $_lang['imageplus.placeholder.width'] = 'Larghezza dell’anteprima dell’immagine (ignorata quando 0)';
 $_lang['imageplus.placeholder.height'] = 'Altezza dell’anteprima dell’immagine (ignorata quando 0)';

@@ -23,14 +23,14 @@ $_lang['imageplus.allowCredits'] = 'Vis feltet Credits';
 $_lang['imageplus.allowCredits_desc'] = 'Tillader brugeren at angive en kredit for billedet.';
 /** Output options render **/
 $_lang['imageplus.phpThumbParams'] = 'Ekstra phpThumb parametre';
-$_lang['imageplus.phpThumbParams_desc'] = 'Tilføj ekstra filtre osv. til phpThumb. Dokumentationen kan findes <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">her</a>.';
+$_lang['imageplus.phpThumbParams_desc'] = '(Valgfrit) phpThumb parametre til options-pladsholderen i output chunk\'en, f.eks. til et pthumb output filter. Dokumentationen kan findes <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">her</a>.';
 $_lang['imageplus.outputChunk'] = 'Output chunk';
 $_lang['imageplus.outputChunk_desc'] = 'Vælg en chunk til tv-udgang. Lad det være tomt for rå url-udgang.';
-$_lang['imageplus.generateUrl'] = 'Generer URL til miniature';
-$_lang['imageplus.generateUrl_desc'] = '(Valgfrit) URL til miniature er måske ikke nødvendigt hvis du generer miniaturen i output chunk\'en f.eks. ved brug af pthumb output filter.';
-$_lang['imageplus.generateUrl_desc_warning'] = 'Du skal aktivere denne indstilling, når du ikke angiver en output chunk i outputindstillingerne, eller når du bruger [[+url]]-pladsholderen [[+url]] i den angivne output chunk. Ellers beskæres/formindskes billedet ikke, og den originale billedsti returneres.';
+$_lang['imageplus.generateUrl'] = 'Brug URL til beskæringsfilen';
+$_lang['imageplus.generateUrl_desc'] = '(Valgfrit) URL til beskæringsfilen er måske ikke nødvendig, hvis du genererer miniaturen i output chunk\'en f.eks. ved brug af pthumb output filter.';
+$_lang['imageplus.generateUrl_desc_warning'] = 'Du skal aktivere denne indstilling, når du ikke angiver en output chunk i outputindstillingerne, eller når du bruger [[+url]]-pladsholderen [[+url]] i den angivne output chunk. Ellers beskæres billedet ikke, og URL\'en til det originale billede returneres.';
 /** Placeholder descriptions */
-$_lang['imageplus.placeholder.url'] = 'URL til miniaturebilledet';
+$_lang['imageplus.placeholder.url'] = 'URL til beskæringsfilen';
 $_lang['imageplus.placeholder.alt'] = 'Alt-tekst';
 $_lang['imageplus.placeholder.width'] = 'Miniaturebredde (ignoreret ved 0)';
 $_lang['imageplus.placeholder.height'] = 'Miniaturehøjde (ignoreret ved 0)';

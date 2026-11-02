@@ -29,14 +29,14 @@ $_lang['imageplus.allowCredits'] = 'Credits-veld weergeven';
 $_lang['imageplus.allowCredits_desc'] = 'Mogelijk maken dat de gebruiker een naamsvermelding (credits) voor de afbeelding kan invoeren.';
 /** Output options render **/
 $_lang['imageplus.phpThumbParams'] = 'Extra phpThumb opties';
-$_lang['imageplus.phpThumbParams_desc'] = 'Voeg extra phpThumb opties zoals filters toe. Documentatie is <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">hier</a> te vinden.';
+$_lang['imageplus.phpThumbParams_desc'] = '(Optioneel) phpThumb opties voor de options placeholder van de output chunk, bijvoorbeeld voor een pthumb output filter. Documentatie is <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">hier</a> te vinden.';
 $_lang['imageplus.outputChunk'] = 'Output Chunk';
 $_lang['imageplus.outputChunk_desc'] = 'Selecteer een chunk voor de TV output. Laat leeg om alleen een link naar de afbeelding terug te krijgen.';
-$_lang['imageplus.generateUrl'] = 'Genereer Thumbnail URL';
-$_lang['imageplus.generateUrl_desc'] = '(Optioneel) De thumbnail URL is mogelijk niet nodig, als de thumbnail gegenereerd wordt in de output chunk met bijvoorbeeld een pthumb output filter.';
-$_lang['imageplus.generateUrl_desc_warning'] = 'Deze optie moet ingeschakeld zijn wanneer je geen "output chunk" hebt gedefineerd; of wanneer je de "output chunk" wel hebt gedefineerd en de [[+url]] placeholder hierin gebruikt. Als deze optie in voorgaande situaties niet is ingeschakeld dan worden afbeeldingen niet bijgesneden en/of vergroot en verkleind en wordt het pad naar de originele afbeelding weergegeven.';
+$_lang['imageplus.generateUrl'] = 'Gebruik de URL van het uitsnedebestand';
+$_lang['imageplus.generateUrl_desc'] = '(Optioneel) De URL van het uitsnedebestand is mogelijk niet nodig, als de thumbnail gegenereerd wordt in de output chunk met bijvoorbeeld een pthumb output filter.';
+$_lang['imageplus.generateUrl_desc_warning'] = 'Deze optie moet ingeschakeld zijn wanneer je geen "output chunk" hebt gedefineerd; of wanneer je de "output chunk" wel hebt gedefineerd en de [[+url]] placeholder hierin gebruikt. Als deze optie in voorgaande situaties niet is ingeschakeld dan worden afbeeldingen niet bijgesneden en wordt de URL van de originele afbeelding weergegeven.';
 /** Placeholder descriptions */
-$_lang['imageplus.placeholder.url'] = 'URL van de thumbnail';
+$_lang['imageplus.placeholder.url'] = 'URL van het uitsnedebestand';
 $_lang['imageplus.placeholder.alt'] = 'Alternatieve tekst';
 $_lang['imageplus.placeholder.width'] = 'Breedte van de thumbnail (genegeerd indien 0)';
 $_lang['imageplus.placeholder.height'] = 'Hoogte van de thumbnail (genegeerd indien 0)';

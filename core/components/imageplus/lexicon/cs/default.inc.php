@@ -23,14 +23,14 @@ $_lang['imageplus.allowCredits'] = 'Zobrazit pole Kredity';
 $_lang['imageplus.allowCredits_desc'] = 'Umožnit uživateli zadat kredit obrázku.';
 /** Output options render **/
 $_lang['imageplus.phpThumbParams'] = 'Další phpThumb parametry';
-$_lang['imageplus.phpThumbParams_desc'] = 'Přidání dalších filtrů atd. pro phpThumb. Dokumentaci najdete <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">zde</a>.';
+$_lang['imageplus.phpThumbParams_desc'] = '(Volitelné) Parametry phpThumb pro zástupný symbol options ve výstupním chunku, například pro výstupní filtr pthumb. Dokumentaci najdete <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">zde</a>.';
 $_lang['imageplus.outputChunk'] = 'Výstupní chunk';
 $_lang['imageplus.outputChunk_desc'] = 'Vyberte chunk pro výstup TV. Nechte prázdé pro výstup čisté URL.';
-$_lang['imageplus.generateUrl'] = 'Generovat URL miniatury';
-$_lang['imageplus.generateUrl_desc'] = '(Volitelné) URL miniatury možná není třeba, pokud miniaturu generujete v chunku (například pomocí pthumb).';
-$_lang['imageplus.generateUrl_desc_warning'] = 'Tuto možnost musíte aktivovat, pokud ve výstupních možnostech nezadáte výstupní oddíl nebo pokud v zadaném výstupním oddílu použijete zástupný znak [[+url]]. Jinak se obrázek neořízne/nezmění velikost a vrátí se původní cesta k obrázku.';
+$_lang['imageplus.generateUrl'] = 'Použít URL souboru výřezu';
+$_lang['imageplus.generateUrl_desc'] = '(Volitelné) URL souboru výřezu možná není třeba, pokud miniaturu generujete ve výstupním chunku (například pomocí výstupního filtru pthumb).';
+$_lang['imageplus.generateUrl_desc_warning'] = 'Tuto možnost musíte aktivovat, pokud ve výstupních možnostech nezadáte výstupní oddíl nebo pokud v zadaném výstupním oddílu použijete zástupný znak [[+url]]. Jinak se obrázek neořízne a vrátí se URL původního obrázku.';
 /** Placeholder descriptions */
-$_lang['imageplus.placeholder.url'] = 'URL miniatury';
+$_lang['imageplus.placeholder.url'] = 'URL souboru výřezu';
 $_lang['imageplus.placeholder.alt'] = 'Alt text';
 $_lang['imageplus.placeholder.width'] = 'Šířka miniatury (ignorováno pokud je 0)';
 $_lang['imageplus.placeholder.height'] = 'Výška miniatury (ignorováno pokud je 0)';

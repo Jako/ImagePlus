@@ -23,14 +23,14 @@ $_lang['imageplus.allowCredits'] = 'Mostrar campo de créditos';
 $_lang['imageplus.allowCredits_desc'] = 'Permitir al usuario introducir un crédito para la imagen.';
 /** Output options render **/
 $_lang['imageplus.phpThumbParams'] = 'Parámetros phpThumb adicionales';
-$_lang['imageplus.phpThumbParams_desc'] = 'Añade filtros adicionales etc a phpThumb. La documentación se puede encontrar <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">aquí</a>.';
+$_lang['imageplus.phpThumbParams_desc'] = '(Opcional) Parámetros de phpThumb para el marcador de posición options del chunk de salida, por ejemplo, para un filtro de salida pthumb. La documentación se puede encontrar <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">aquí</a>.';
 $_lang['imageplus.outputChunk'] = 'Resultado chunk';
 $_lang['imageplus.outputChunk_desc'] = 'Selecciona un chunk para obtener un resultado del tv. Dejar en vacío para obtener un resultado de la url cruda.';
-$_lang['imageplus.generateUrl'] = 'Generar la URL del pulgar';
-$_lang['imageplus.generateUrl_desc'] = '(Opcional) La url de la miniatura puede no ser necesaria si se genera la miniatura en el chunk de salida, es decir, mediante un filtro de salida pthumb.';
-$_lang['imageplus.generateUrl_desc_warning'] = 'Tiene que activar esta opción, cuando no especifica un chunk de salida en las opciones de salida o cuando utiliza el marcador de posición [[+url]] en el chunk de salida especificado. En caso contrario, la imagen no se recortará/redimensionará y se devolverá la ruta original de la imagen.';
+$_lang['imageplus.generateUrl'] = 'Usar la URL del archivo de recorte';
+$_lang['imageplus.generateUrl_desc'] = '(Opcional) La URL del archivo de recorte puede no ser necesaria si se genera la miniatura en el chunk de salida, es decir, mediante un filtro de salida pthumb.';
+$_lang['imageplus.generateUrl_desc_warning'] = 'Tiene que activar esta opción, cuando no especifica un chunk de salida en las opciones de salida o cuando utiliza el marcador de posición [[+url]] en el chunk de salida especificado. En caso contrario, la imagen no se recortará y se devolverá la URL de la imagen original.';
 /** Placeholder descriptions */
-$_lang['imageplus.placeholder.url'] = 'URL de la imagen en miniatura';
+$_lang['imageplus.placeholder.url'] = 'URL del archivo de recorte';
 $_lang['imageplus.placeholder.alt'] = 'Alt text';
 $_lang['imageplus.placeholder.width'] = 'Ancho de la imagen en miniatura (se ignora si es 0)';
 $_lang['imageplus.placeholder.height'] = 'Altura de la imagen en miniatura (se ignora si es 0)';
