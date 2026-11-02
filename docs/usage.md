@@ -169,17 +169,8 @@ possible in this chunk to customize the output:
 | url                | URL of the image crop file                                     |
 | width              | Width of the image crop file                                   |
 
-All these placeholders can be used in the Snippet too.
-
-The `crops` placeholders contain all image crops of the value, so one chunk can
-output several image crops, i.e. in a picture element:
-
-```html
-<picture>
-    <source media="(max-width: 767px)" srcset="[[+crops.mobile.url]]" width="[[+crops.mobile.width]]" height="[[+crops.mobile.height]]">
-    <img src="[[+crops.desktop.url]]" width="[[+crops.desktop.width]]" height="[[+crops.desktop.height]]" alt="[[+alt:htmlent]]">
-</picture>
-```
+All these placeholders can be used in the Snippet too. The `crops` placeholders
+are explained in [Multiple Image Crops](#multiple-image-crops).
 
 ## ImagePlus Snippet
 
@@ -222,6 +213,78 @@ an empty template chunk:
 &tpl=``
 ]]
 ```
+
+## Multiple Image Crops
+
+An image can be cropped in several image crops, i.e. for different screen sizes
+or for a responsive image with different resolutions. The image crops are
+defined in the [Image Crops](#image-crops) input option of the TV:
+
+```json
+{
+    "desktop": {"name": "Desktop", "size": "1600x800"},
+    "mobile": {"name": "Mobile", "size": "800x800"}
+}
+```
+
+Each image crop is created in the crop window and saved as its own crop file.
+In the output chunk of the TV and in the template chunk of the snippet, every
+image crop is available with the `crops.{key}.url`, `crops.{key}.width` and
+`crops.{key}.height` placeholders. `{key}` must be replaced with the key of the
+image crop. The `url`, `width` and `height` placeholders contain the image crop
+of the **Image Crop** output option or the `crop` snippet property.
+
+#### Picture Element
+
+Different image crops for different screen sizes:
+
+```html
+<picture>
+    <source media="(max-width: 767px)" srcset="[[+crops.mobile.url]]" width="[[+crops.mobile.width]]" height="[[+crops.mobile.height]]">
+    <img src="[[+crops.desktop.url]]" width="[[+crops.desktop.width]]" height="[[+crops.desktop.height]]" alt="[[+alt:htmlent]]">
+</picture>
+```
+
+#### Responsive Image
+
+Image crops with the same aspect ratio in different sizes, i.e.
+`{"small": {"name": "Small", "size": "640x360"}, "large": {"name": "Large", "size": "1280x720"}}`:
+
+```html
+<img src="[[+crops.large.url]]"
+     srcset="[[+crops.small.url]] 640w, [[+crops.large.url]] 1280w"
+     sizes="(max-width: 767px) 100vw, 50vw"
+     width="[[+crops.large.width]]" height="[[+crops.large.height]]" alt="[[+alt:htmlent]]">
+```
+
+#### Snippet
+
+Use one of these chunks as template chunk of the snippet:
+
+```
+[[ImagePlus?
+&tvname=`imageplus`
+&tpl=`ImagePlus.picture`
+]]
+```
+
+The URL of a single image crop file is returned with an empty `tpl` property
+and the `crop` property:
+
+```
+[[ImagePlus?
+&tvname=`imageplus`
+&tpl=``
+&crop=`mobile`
+]]
+```
+
+!!! note
+
+    A value contains only the image crops, that were saved in the crop window.
+    If an image crop is added to the input option later, its placeholders are
+    empty, until the image crop is saved in the resource. An image path or an
+    Image+ 2.x value contains one image crop [^8].
 
 ## ImagePlusCleanup Snippet
 
