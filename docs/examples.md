@@ -1,5 +1,5 @@
-**Image+* can be used for various purposes. On this page you will find some
-*examples of how it can be used:
+*Image+* can be used for various purposes. On this page you will find some
+examples of how it can be used:
 
 ### Collections
 
@@ -46,8 +46,8 @@ JSON object.
 ### getResources/pdoResources
 
 In order for the TV to be parsed using the *getResources/pdoResources snippet*,
-you need to add the following lines to your *getResources/pdoResources* call
-Snippet* call:
+you need to add the following lines to your *getResources/pdoResources Snippet*
+call:
 
 ```html
 &includeTVs=`name_of_your_tv`
@@ -118,7 +118,7 @@ Here is an example of a call and configuration, where *image* is your Image+ TV:
 
 ```html
 <div class="feature" style="margin-bottom:1rem">
-    <a href="[[+caption]]"><img src="[[+source.src:pthumb=`w=320`]]" alt="[[+alt:htmlent]]" /></a>
+    <a href="[[~[[+docid]]]]"><img src="[[+source.src:pthumb=`w=320`]]" alt="[[+alt:htmlent]]" /></a>
 </div>
 ```
 

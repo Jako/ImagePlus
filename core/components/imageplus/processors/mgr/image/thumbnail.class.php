@@ -97,7 +97,8 @@ class ImagePlusImageThumbnailProcessor extends Processor
         [$targetWidth, $targetHeight] = $this->getTargetSize($sourceWidth, $sourceHeight, $width, $height);
 
         $thumbnail = null;
-        if (extension_loaded('imagick')) {
+        // Imagick without autoOrient can't create the upright thumbnail of a rotated image, GD rotates it instead
+        if (extension_loaded('imagick') && ($orientation === 1 || method_exists('Imagick', 'autoOrient'))) {
             $thumbnail = $this->createWithImagick($path, $content, $targetWidth, $targetHeight, $outputExtension);
         }
         if ($thumbnail === null) {
