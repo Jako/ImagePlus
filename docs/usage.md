@@ -194,9 +194,8 @@ following properties can be set in the snippet call:
 | docid    | Resource where the Image+ TV value is received from.                                                  | -               |
 | options  | phpThumb options for the options placeholder of the template chunk [^5].                              | -               |
 | source   | Media source ID, if the value is passed with the value property (i.e. a MIGX value) [^7].             | -               |
-| tpl      | Template chunk for the snippet output [^6].                                                           | ImagePlus.image |
+| tpl      | Template chunk for the snippet output [^6]. Without a template chunk, the URL of the image crop file is returned. | ImagePlus.image |
 | tvname   | Name of the Image+ TV.                                                                                | -               |
-| type     | Type of the snippet output. Could be set to <i>check</i> [^2], <i>tpl</i> [^3] and <i>thumb</i> [^4]. | -               |
 | value    | Image+ value, that is used instead of the TV value, i.e. a MIGX value.                                | -               |
 
 #### Example
@@ -206,7 +205,6 @@ following properties can be set in the snippet call:
 &tvname=`imageplus`
 &docid=`1`
 &options=`w=100`
-&type=`tpl`
 &tpl=`ImagePlus.demo`
 ]]
 ```
@@ -214,6 +212,16 @@ following properties can be set in the snippet call:
 This snippet call returns the contents of the template variable named
 `imageplus` of resource `1` in the parsed `ImagePlus.demo` chunk. The phpThumb
 option `w=100` (width: 100px) is added to the `options` placeholder.
+
+To check if the template variable contains an image, use an output modifier with
+an empty template chunk:
+
+```
+[[ImagePlus:notempty=`image`:default=`noimage`?
+&tvname=`imageplus`
+&tpl=``
+]]
+```
 
 ## ImagePlusCleanup Snippet
 
@@ -262,9 +270,6 @@ Remove them afterwards:
 ```
 
 [^1]: The first entry supercedes the second entry in the list etc.
-[^2]: Outputs *image* if the Image+ TV contains an image, otherwise *noimage*.
-[^3]: Outputs the template chunk set by the **tpl** property, filled with the retrieved Image+ TV value (the **options** property fills the `options` placeholder).
-[^4]: Outputs the URL of the image crop file of the retrieved Image+ TV value.
 [^5]: See [phpThumb readme](https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt) for possible options. Maybe not all options are valid in your installation (because of server restrictions).
 [^6]: The template chunk placeholder are the same as in the output chunk of the template variable.
 [^7]: Without the source property, the media source of an Image+ 2.x value or the default media source is used. The media source of the template variable is used with the tvname property.

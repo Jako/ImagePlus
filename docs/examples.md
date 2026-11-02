@@ -99,7 +99,6 @@ Here is an example of a call and configuration, where *image* is your Image+ TV:
 
     [[ImagePlus? 
         &tvname=`image` 
-        &type=`tpl` 
         &docid=`[[+id]]`
         &tpl=`tplBlogIntroImg`
     ]] 
@@ -133,7 +132,6 @@ the *ImagePlus Snippet*.
 ```
 [[ImagePlus? 
 &tvname=`yourtvname` 
-&type=`tpl` 
 &options=`&w=320`
 &tpl=`tplResponsiveImage`
 &pagetitle=`[[*pagetitle]]`

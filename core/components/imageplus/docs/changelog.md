@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Predefined crop sizes system settings (select_config and force_config)
 - phpThumbOf, phpThumbsUp and phpThumbOn crop engines, the output uses the image crop files (pThumb is still usable in the output chunk)
 - Generate thumb URL output option, the url placeholder always contains the url of the image crop file
+- Type property of the ImagePlus snippet, the snippet returns the url of the image crop file with an empty tpl property
 
 ### Fixed
 

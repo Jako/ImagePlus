@@ -8,9 +8,8 @@
 $_lang['imageplus.imageplus.docid'] = 'Document waar de Image+ TV van geladen wordt.';
 $_lang['imageplus.imageplus.options'] = 'phpThumb opties voor de options placeholder van de template chunk.';
 $_lang['imageplus.imageplus.source'] = 'Mediabron-ID, als de waarde met de eigenschap value wordt doorgegeven (bijv. een MIGX-waarde). Standaard de standaard mediabron.';
-$_lang['imageplus.imageplus.tpl'] = 'Template chunk voor de snippet output.';
+$_lang['imageplus.imageplus.tpl'] = 'Template chunk voor de snippet output. Zonder template chunk wordt de URL van het uitsnedebestand teruggegeven.';
 $_lang['imageplus.imageplus.tvname'] = 'Naam van de Image+ TV.';
-$_lang['imageplus.imageplus.type'] = 'Type van de snippet output. Dit kan een van de volgende waarden zijn: <i>check</i>, <i>tpl</i> of <i>thumb</i>.';
 $_lang['imageplus.imagepluscleanup.dryRun'] = 'De ongebruikte uitsnedebestanden melden zonder ze te verwijderen.';
 $_lang['imageplus.imagepluscleanup.minAge'] = 'Uitsnedebestanden overslaan die nieuwer zijn dan dit aantal uren, omdat een uitsnede wordt opgeslagen voordat het document wordt opgeslagen.';
 $_lang['imageplus.imagepluscleanup.path'] = 'Uitsnedemap in de mediabronnen. Standaard het deel van de systeeminstelling imageplus.crop_path vóór de eerste placeholder.';

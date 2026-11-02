@@ -25,9 +25,8 @@ class ImagePlus extends Snippet
             'tvname' => '',
             'source::int' => 0,
             'docid::int' => (isset($this->modx->resource)) ? $this->modx->resource->get('id') : 0,
-            'type' => '',
             'options' => '',
-            'tpl' => 'ImagePlus.image',
+            'tpl::allowEmpty' => 'ImagePlus.image',
             'debug::bool' => $this->imageplus->getOption('debug')
         ];
     }
@@ -42,7 +41,6 @@ class ImagePlus extends Snippet
         $value = $this->getProperty('value');
         $tvname = $this->getProperty('tvname');
         $docid = $this->getProperty('docid');
-        $type = $this->getProperty('type');
         $options = $this->getProperty('options');
         $tpl = $this->getProperty('tpl');
         $debug = $this->getProperty('debug');
@@ -91,44 +89,12 @@ class ImagePlus extends Snippet
             }
         }
 
-        // Render output
-        switch ($type) {
-            case 'check':
-                // A value without an Image+ object is an image path
-                $data = json_decode((string)$value, true);
-                if (is_array($data)) {
-                    $output = (!empty($data['image']) || !empty($data['sourceImg']['src'])) ? 'image' : 'noimage';
-                } else {
-                    $output = (trim((string)$value) !== '') ? 'image' : 'noimage';
-                }
-                break;
-            case 'tpl':
-                $data = json_decode($value);
-                $output = ($value) ? $this->imageplus->getImageURL($value, array_merge($tvOutputProperties, $this->getProperties(), [
-                    'docid' => $docid,
-                    'source' => $source,
-                    'phpThumbParams' => $options,
-                    'outputChunk' => $tpl,
-                    'caption' => ($data && isset($data->caption)) ? $data->caption : '',
-                    'credits' => ($data && isset($data->credits)) ? $data->credits : ''
-                ]), $tv) : '';
-                break;
-            case 'thumb':
-                $output = ($value) ? $this->imageplus->getImageURL($value, array_merge($tvOutputProperties, $this->getProperties(), [
-                    'docid' => $docid,
-                    'source' => $source,
-                    'phpThumbParams' => $options,
-                    'outputChunk' => '',
-                ]), $tv) : '';
-                break;
-            default:
-                $output = ($value) ? $this->imageplus->getImageURL($value, array_merge($tvOutputProperties, $this->getProperties(), [
-                    'docid' => $docid,
-                    'source' => $source,
-                    'phpThumbParams' => $options,
-                ]), $tv) : '';
-                break;
-        }
-        return $output;
+        // Render the template chunk or return the url of the image crop file without a template chunk
+        return ($value) ? $this->imageplus->getImageURL($value, array_merge($tvOutputProperties, $this->getProperties(), [
+            'docid' => $docid,
+            'source' => $source,
+            'phpThumbParams' => $options,
+            'outputChunk' => $tpl,
+        ]), $tv) : '';
     }
 }
