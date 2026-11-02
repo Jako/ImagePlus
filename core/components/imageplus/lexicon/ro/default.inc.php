@@ -22,13 +22,13 @@ $_lang['imageplus.allowCaption_desc'] = 'Permiteți utilizatorului să introduc�
 $_lang['imageplus.allowCredits'] = 'Afișați câmpul Credite';
 $_lang['imageplus.allowCredits_desc'] = 'Permite utilizatorului să introducă un credit pentru imagine.';
 /** Output options render **/
-$_lang['imageplus.phpThumbParams'] = 'Parametrii suplimentari phpThumb';
+$_lang['imageplus.phpThumbParams'] = 'Parametri suplimentari phpThumb';
 $_lang['imageplus.phpThumbParams_desc'] = '(Opțional) Parametri phpThumb pentru substituentul options din chunk-ul de ieșire, de exemplu pentru un filtru de ieșire pthumb. Documentația poate fi găsită <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">aici</a>.';
 $_lang['imageplus.outputChunk'] = 'Output Chunk';
 $_lang['imageplus.outputChunk_desc'] = 'Selectați o bucată pentru ieșirea TV. Lăsați gol pentru ieșirea în format raw url.';
 $_lang['imageplus.generateUrl'] = 'Folosește URL-ul fișierului decupat';
 $_lang['imageplus.generateUrl_desc'] = '(Opțional) URL-ul fișierului decupat poate să nu fie necesar dacă generați miniatura în chunk-ul de ieșire, de exemplu, printr-un filtru de ieșire pthumb.';
-$_lang['imageplus.generateUrl_desc_warning'] = 'Trebuie să activați această opțiune atunci când nu specificați o bucată de ieșire în opțiunile de ieșire sau atunci când folosiți simbolul de poziție [[+url]] în bucată de ieșire specificată. În caz contrar, imaginea nu este decupată și se returnează URL-ul imaginii originale.';
+$_lang['imageplus.generateUrl_desc_warning'] = 'Trebuie să activați această opțiune atunci când nu specificați un chunk de ieșire în opțiunile de ieșire sau atunci când folosiți substituentul [[+url]] în chunk-ul de ieșire specificat. În caz contrar, imaginea nu este decupată și se returnează URL-ul imaginii originale.';
 /** Placeholder descriptions */
 $_lang['imageplus.placeholder.url'] = 'URL-ul fișierului decupat';
 $_lang['imageplus.placeholder.alt'] = 'Alt text';

@@ -28,9 +28,9 @@ $_lang['imageplus.outputChunk'] = 'Kimeneti chunk';
 $_lang['imageplus.outputChunk_desc'] = 'Válasszon ki egy darabot a tv-kimenethez. Hagyja üresen a nyers url kimenethez.';
 $_lang['imageplus.generateUrl'] = 'A kivágott fájl URL-jének használata';
 $_lang['imageplus.generateUrl_desc'] = '(Választható) A kivágott fájl URL-jére talán nincs szükség, ha a kimeneti chunkban, azaz egy pthumb kimeneti szűrővel generálod a miniatűr képet.';
-$_lang['imageplus.generateUrl_desc_warning'] = 'Ezt az opciót akkor kell aktiválnod, ha nem adsz meg kimeneti egységet a kimeneti beállítások között, vagy ha a [[+url]] helyőrzőt használod a megadott kimeneti egységben. Ellenkező esetben a képet nem vágja le, és az eredeti kép URL-jét adja vissza.';
+$_lang['imageplus.generateUrl_desc_warning'] = 'Ezt az opciót akkor kell aktiválnod, ha nem adsz meg kimeneti chunkot a kimeneti beállítások között, vagy ha a [[+url]] helyőrzőt használod a megadott kimeneti chunkban. Ellenkező esetben a képet nem vágja le, és az eredeti kép URL-jét adja vissza.';
 /** Placeholder descriptions */
-$_lang['imageplus.placeholder.url'] = 'A kivágott fájl URL címe';
+$_lang['imageplus.placeholder.url'] = 'A kivágott fájl URL-je';
 $_lang['imageplus.placeholder.alt'] = 'Alt text';
 $_lang['imageplus.placeholder.width'] = 'A miniatűr kép szélessége (0 esetén figyelmen kívül hagyva)';
 $_lang['imageplus.placeholder.height'] = 'A miniatűr kép magassága (0 esetén figyelmen kívül hagyva)';

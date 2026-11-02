@@ -34,7 +34,7 @@ $_lang['imageplus.outputChunk'] = 'Output Chunk';
 $_lang['imageplus.outputChunk_desc'] = 'Selecteer een chunk voor de TV output. Laat leeg om alleen een link naar de afbeelding terug te krijgen.';
 $_lang['imageplus.generateUrl'] = 'Gebruik de URL van het uitsnedebestand';
 $_lang['imageplus.generateUrl_desc'] = '(Optioneel) De URL van het uitsnedebestand is mogelijk niet nodig, als de thumbnail gegenereerd wordt in de output chunk met bijvoorbeeld een pthumb output filter.';
-$_lang['imageplus.generateUrl_desc_warning'] = 'Deze optie moet ingeschakeld zijn wanneer je geen "output chunk" hebt gedefineerd; of wanneer je de "output chunk" wel hebt gedefineerd en de [[+url]] placeholder hierin gebruikt. Als deze optie in voorgaande situaties niet is ingeschakeld dan worden afbeeldingen niet bijgesneden en wordt de URL van de originele afbeelding weergegeven.';
+$_lang['imageplus.generateUrl_desc_warning'] = 'Deze optie moet ingeschakeld zijn wanneer je geen "output chunk" hebt gedefinieerd; of wanneer je de "output chunk" wel hebt gedefinieerd en de [[+url]] placeholder hierin gebruikt. Als deze optie in voorgaande situaties niet is ingeschakeld dan worden afbeeldingen niet bijgesneden en wordt de URL van de originele afbeelding weergegeven.';
 /** Placeholder descriptions */
 $_lang['imageplus.placeholder.url'] = 'URL van het uitsnedebestand';
 $_lang['imageplus.placeholder.alt'] = 'Alternatieve tekst';
