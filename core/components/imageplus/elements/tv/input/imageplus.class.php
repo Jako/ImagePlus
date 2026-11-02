@@ -65,7 +65,8 @@ class ImagePlusInputRender extends modTemplateVarInputRender
 
         // Prepare TV config
         $tvConfig = new stdClass();
-        $tvConfig->allowBlank = !($params['allowBlank'] === 'false' || $params['allowBlank'] === 0 || $params['allowBlank'] === false);
+        $allowBlank = $params['allowBlank'] ?? true;
+        $tvConfig->allowBlank = !($allowBlank === 'false' || $allowBlank === 0 || $allowBlank === false);
         $tvConfig->minWidth = (int)($params['minWidth'] ?? 0);
         $tvConfig->minHeight = (int)($params['minHeight'] ?? 0);
         $tvConfig->thumbnailHeight = (int)$this->getTVConfig('thumbnail_height', $tvName, $contextSettings, (!empty($params['thumbnailHeight'])) ? $params['thumbnailHeight'] : null) ?: 250;

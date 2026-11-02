@@ -306,16 +306,17 @@ Ext.extend(ImagePlus.combo.UploadBrowser, ImagePlus.form.MultiTriggerField, {
         }
     },
     renderPreviewMain: function (src, alt, key) {
+        // The attributes are not escaped by the DomHelper
         var mainImage = this.previewEl.createChild({
             tag: 'div',
             cls: 'x-form-imageplus-preview-main',
-            'data-key': key
+            'data-key': Ext.util.Format.htmlEncode(key)
         });
         mainImage.createChild({
             tag: 'img',
             src: this.getThumbUrl(src, this.previewHeight),
             style: 'max-height: ' + this.previewHeight + 'px',
-            alt: alt
+            alt: Ext.util.Format.htmlEncode(alt)
         });
         return mainImage;
     },

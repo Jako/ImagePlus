@@ -259,19 +259,20 @@ Ext.extend(ImagePlus.combo.UploadCropBrowser, ImagePlus.combo.UploadBrowser, {
         // In one line the thumbnails have the half height of the main image, otherwise they are shown small on hover
         var height = this.inlinePreview ? Math.round(this.previewHeight / 2) : this.thumbnailHeight;
         Ext.each(images, function (image) {
-            // The item has the same structure as the main image: the image, a crop link above it and the bar
+            // The item has the same structure as the main image: the image, a crop link above it and the bar.
+            // The attributes are not escaped by the DomHelper.
             var item = thumbnails.createChild({
                 tag: 'div',
-                cls: 'x-form-imageplus-preview-image x-form-imageplus-preview-image-' + image.key,
+                cls: 'x-form-imageplus-preview-image x-form-imageplus-preview-image-' + Ext.util.Format.htmlEncode(image.key),
                 // Hidden below the preview by the image height, the bar height and the shadow, until it is shown on hover
                 style: this.inlinePreview ? '' : 'bottom: -' + (height + 100) + 'px',
-                'data-key': image.key
+                'data-key': Ext.util.Format.htmlEncode(image.key)
             });
             item.createChild({
                 tag: 'img',
                 src: this.getThumbUrl(image.image, height),
                 style: 'height: ' + height + 'px',
-                alt: image.name
+                alt: Ext.util.Format.htmlEncode(image.name)
             });
             this.renderPreviewCropLink(item, image.key);
             this.renderPreviewBar(item, image.name, image.dimensions, image.baseUrl);
