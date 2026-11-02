@@ -21,7 +21,8 @@ use xPDO;
  * Uses the image crop files in the media source without phpThumb. The url, width and height are the ones of the crop
  * file of the image crop in the crop option or of the first image crop. A missing crop file (i.e. of a value created
  * before Image+ 3.0) is created on the first output. The phpThumb parameters are only used in the options placeholders of the
- * output chunk, i.e. for a pthumb output filter.
+ * output chunk, i.e. for a pthumb output filter. The output chunk gets the url, width and height of every image crop in
+ * the crops.<key>.url, crops.<key>.width and crops.<key>.height placeholders.
  *
  * @package imageplus
  * @subpackage ImagePlus\CropEngines
@@ -81,34 +82,22 @@ class CropFile extends AbstractCropEngine
         $source->initialize();
 
         $src = (string)$data->sourceImg->src;
-        $crop = ImageCrop::normalizeCrop([
-            'x' => $data->crop->x,
-            'y' => $data->crop->y,
-            'cropWidth' => $data->crop->width,
-            'cropHeight' => $data->crop->height,
-            'scaleX' => $data->crop->scaleX ?? 1,
-            'scaleY' => $data->crop->scaleY ?? 1,
-            'targetWidth' => $data->targetWidth,
-            'targetHeight' => $data->targetHeight,
-        ]);
-        $url = $this->imageplus->getSourceObjectUrl($source, $src);
-        $width = (int)$data->sourceImg->width;
-        $height = (int)$data->sourceImg->height;
-
-        // The unchanged image needs no crop file, unless it was created in the manager
-        $cropImage = (string)($data->crop->image ?? '');
-        if ($cropImage !== '' || !$this->isOriginal($crop, $width, $height)) {
-            $cropImage = $this->getCropImage($source, $src, $crop, $cropImage, (int)$this->modx->getOption('docid', $opts, 0), ($tv) ? (int)$tv->get('id') : 0);
-            if ($cropImage !== '') {
-                $url = $this->imageplus->getSourceObjectUrl($source, $cropImage);
-                $width = $crop['targetWidth'];
-                $height = $crop['targetHeight'];
-            }
-        }
+        $resourceId = (int)$this->modx->getOption('docid', $opts, 0);
+        $tvId = ($tv) ? (int)$tv->get('id') : 0;
+        [$url, $width, $height] = $this->getOutputImage($data, $source, $resourceId, $tvId);
 
         // If an output chunk is selected, parse that
         $outputChunk = $this->modx->getOption('outputChunk', $opts, '');
         if ($outputChunk) {
+            // The crop engine values of all image crops are only used for the crops placeholders
+            $crops = [];
+            foreach ((array)($opts['crops.values'] ?? []) as $key => $cropJson) {
+                $cropData = json_decode((string)$cropJson);
+                if ($cropData) {
+                    [$crops['crops.' . $key . '.url'], $crops['crops.' . $key . '.width'], $crops['crops.' . $key . '.height']] = $this->getOutputImage($cropData, $source, $resourceId, $tvId);
+                }
+            }
+            unset($opts['crops.values']);
             $basePath = (string)$source->getBasePath($src);
             $imgPath = ($basePath !== '') ? realpath($basePath . $src) : '';
             [$options, $cropOptions] = $this->getPhpThumbOptions($data, (string)$imgPath, (string)$this->modx->getOption('phpThumbParams', $opts, ''));
@@ -128,12 +117,52 @@ class CropFile extends AbstractCropEngine
                 'crop.options' => $cropOptions,
                 'caption' => $data->caption ?? '',
                 'credits' => $data->credits ?? ''
-            ]);
+            ], $crops);
             return $this->modx->getChunk($outputChunk, $chunkParams);
         } else {
             // Otherwise return raw url
             return $url;
         }
+    }
+
+    /**
+     * Get the url, width and height of the crop file of an image crop. The original image is used, if the image crop
+     * is the unchanged image or if its crop file could not be created.
+     *
+     * @param object $data The crop engine value
+     * @param modMediaSource $source The initialized media source
+     * @param int $resourceId
+     * @param int $tvId
+     * @return array The url, width and height
+     */
+    protected function getOutputImage($data, $source, int $resourceId, int $tvId): array
+    {
+        $src = (string)$data->sourceImg->src;
+        $crop = ImageCrop::normalizeCrop([
+            'x' => $data->crop->x,
+            'y' => $data->crop->y,
+            'cropWidth' => $data->crop->width,
+            'cropHeight' => $data->crop->height,
+            'scaleX' => $data->crop->scaleX ?? 1,
+            'scaleY' => $data->crop->scaleY ?? 1,
+            'targetWidth' => $data->targetWidth,
+            'targetHeight' => $data->targetHeight,
+        ]);
+        $url = $this->imageplus->getSourceObjectUrl($source, $src);
+        $width = (int)$data->sourceImg->width;
+        $height = (int)$data->sourceImg->height;
+
+        // The unchanged image needs no crop file, unless it was created in the manager
+        $cropImage = (string)($data->crop->image ?? '');
+        if ($cropImage !== '' || !$this->isOriginal($crop, $width, $height)) {
+            $cropImage = $this->getCropImage($source, $src, $crop, $cropImage, $resourceId, $tvId);
+            if ($cropImage !== '') {
+                $url = $this->imageplus->getSourceObjectUrl($source, $cropImage);
+                $width = $crop['targetWidth'];
+                $height = $crop['targetHeight'];
+            }
+        }
+        return [$url, $width, $height];
     }
 
     /**

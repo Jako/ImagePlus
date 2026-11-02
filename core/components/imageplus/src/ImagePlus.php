@@ -252,7 +252,17 @@ class ImagePlus
         if ($source) {
             $source->initialize();
         }
-        $json = $this->getCropEngineValue($json, $opts, $source ?: $this->modx->getOption('default_media_source'));
+        $source = $source ?: $this->modx->getOption('default_media_source');
+        if (!empty($opts['outputChunk'])) {
+            // The output chunk gets the crops placeholders of all image crops
+            $data = json_decode($json, true);
+            $opts['crops.values'] = [];
+            foreach ((is_array($data) && isset($data['sizes']) && is_array($data['sizes'])) ? array_keys($data['sizes']) : [] as $key) {
+                $cropOpts = ['crop' => (string)$key];
+                $opts['crops.values'][$key] = $this->getCropEngineValue($json, $cropOpts, $source);
+            }
+        }
+        $json = $this->getCropEngineValue($json, $opts, $source);
         return $cropEngine->getImageUrl($json, $opts, $tv);
     }
 

@@ -149,24 +149,37 @@ When you select an **Output Chunk**, the TV output is rendered using that chunk.
 Select the name of the chunk from the drop-down menu. Multiple placeholders are
 possible in this chunk to customize the output:
 
-| Placeholder   | Description                                                    |
-|---------------|----------------------------------------------------------------|
-| alt           | Alt text                                                       |
-| crop.height   | Crop height of the thumbnail image                             |
-| crop.options  | phpThumb crop option string to generate the thumbnail image    |
-| crop.url      | URL of the image crop file created in the manager              |
-| crop.width    | Crop width of the thumbnail image                              |
-| crop.x        | Crop x position of the thumbnail image                         |
-| crop.y        | Crop y position of the thumbnail image                         |
-| height        | Height of the image crop file                                  |
-| options       | phpThumb full option string to generate the thumbnail image    |
-| source.height | Height of the source image                                     |
-| source.src    | Full path of the source image on the server (not a URL)        |
-| source.width  | Width of the source image                                      |
-| url           | URL of the image crop file                                     |
-| width         | Width of the image crop file                                   |
+| Placeholder        | Description                                                    |
+|--------------------|----------------------------------------------------------------|
+| alt                | Alt text                                                       |
+| crop.height        | Crop height of the thumbnail image                             |
+| crop.options       | phpThumb crop option string to generate the thumbnail image    |
+| crop.url           | URL of the image crop file created in the manager              |
+| crop.width         | Crop width of the thumbnail image                              |
+| crop.x             | Crop x position of the thumbnail image                         |
+| crop.y             | Crop y position of the thumbnail image                         |
+| crops.{key}.height | Height of the image crop file of the image crop {key} [^8]     |
+| crops.{key}.url    | URL of the image crop file of the image crop {key} [^8]        |
+| crops.{key}.width  | Width of the image crop file of the image crop {key} [^8]      |
+| height             | Height of the image crop file                                  |
+| options            | phpThumb full option string to generate the thumbnail image    |
+| source.height      | Height of the source image                                     |
+| source.src         | Full path of the source image on the server (not a URL)        |
+| source.width       | Width of the source image                                      |
+| url                | URL of the image crop file                                     |
+| width              | Width of the image crop file                                   |
 
 All these placeholders can be used in the Snippet too.
+
+The `crops` placeholders contain all image crops of the value, so one chunk can
+output several image crops, i.e. in a picture element:
+
+```html
+<picture>
+    <source media="(max-width: 767px)" srcset="[[+crops.mobile.url]]" width="[[+crops.mobile.width]]" height="[[+crops.mobile.height]]">
+    <img src="[[+crops.desktop.url]]" width="[[+crops.desktop.width]]" height="[[+crops.desktop.height]]" alt="[[+alt:htmlent]]">
+</picture>
+```
 
 ## ImagePlus Snippet
 
@@ -255,3 +268,4 @@ Remove them afterwards:
 [^5]: See [phpThumb readme](https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt) for possible options. Maybe not all options are valid in your installation (because of server restrictions).
 [^6]: The template chunk placeholder are the same as in the output chunk of the template variable.
 [^7]: Without the source property, the media source of an Image+ 2.x value or the default media source is used. The media source of the template variable is used with the tvname property.
+[^8]: `{key}` must be replaced with the key of the image crop. An image path or an Image+ 2.x value contains one image crop with the key of the **Image Crop** output option or the key `crop`.
