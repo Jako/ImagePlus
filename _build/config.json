@@ -148,11 +148,11 @@
   "dependencies": [
     {
       "name": "php",
-      "version": ">=7.1"
+      "version": ">=8.2"
     },
     {
       "name": "modx",
-      "version": ">=2.6"
+      "version": ">=2.8"
     }
   ],
   "build": {

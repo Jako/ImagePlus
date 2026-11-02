@@ -16,3 +16,7 @@ $_lang['setting_imageplus.debug'] = 'Foutoplossing';
 $_lang['setting_imageplus.debug_desc'] = 'Log debug-informatie in het MODX-foutlogboek.';
 $_lang['setting_imageplus.thumbnail_height'] = 'Thumbnail hoogte';
 $_lang['setting_imageplus.thumbnail_height_desc'] = 'De thumbnail hoogte van de afbeelding in het template variabel paneel. Standaard: 250';
+$_lang['setting_imageplus.upload_path'] = 'Uploadpad';
+$_lang['setting_imageplus.upload_path_desc'] = 'Het pad in de mediabron voor geüploade afbeeldingen. Beschikbare placeholders: [[+year]], [[+month]], [[+day]], [[+user]], [[+username]], [[+resource_id]], [[+tv_id]]. Laat leeg om in de hoofdmap van de mediabron te uploaden.';
+$_lang['setting_imageplus.crop_path'] = 'Uitsnedepad';
+$_lang['setting_imageplus.crop_path_desc'] = 'Het pad in de mediabron voor de bestanden van de afbeeldingsuitsneden. Dezelfde placeholders als in het uploadpad zijn beschikbaar. Standaard: crop/.';

@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replace the thumbnail width with a thumbnail height input option/system setting
 - New template variable value format without the media source, previous values are converted
 - Rename ImagePlus.MIGX_Renderer to ImagePlus.ColumnRenderer
+- Require PHP 8.2 or later
 
 ### Removed
 
