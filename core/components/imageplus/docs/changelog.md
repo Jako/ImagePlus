@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The check type of the ImagePlus snippet returned noimage for image path values
 - Wrong media source for template variable values of resources in another context
 - Broken grid thumbnails of image path values in media sources outside the site root
+- Wrong crops and thumbnails of photos with an EXIF orientation
 
 ## [2.9.5] - 2023-09-07
 

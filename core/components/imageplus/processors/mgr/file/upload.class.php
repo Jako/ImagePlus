@@ -6,6 +6,7 @@
  * @subpackage processors
  */
 
+use TreehillStudio\ImagePlus\Helper\ImageOrientation;
 use TreehillStudio\ImagePlus\ImagePlus;
 
 // Compatibility between 2.x/3.x
@@ -79,7 +80,8 @@ class ImagePlusBrowserFileUploadProcessor extends modBrowserFileUploadProcessor
         }
         // The uploaded file is moved by the media source
         $file = reset($files);
-        $imageSize = @getimagesize($file['tmp_name']);
+        // The size of the upright image, like it is shown in the browser
+        $imageSize = ImageOrientation::getImageSize($file['tmp_name']);
         $success = $this->source->uploadObjectsToContainer($path, $files);
         if (empty($success)) {
             $msg = '';
@@ -124,7 +126,7 @@ class ImagePlusBrowserFileUploadProcessor extends modBrowserFileUploadProcessor
             return '';
         }
         foreach ($files as $file) {
-            $imageSize = @getimagesize($file['tmp_name']);
+            $imageSize = ImageOrientation::getImageSize($file['tmp_name']);
             if (!$imageSize) {
                 return $this->modx->lexicon('imageplus.cropimage.error_image_not_valid');
             }

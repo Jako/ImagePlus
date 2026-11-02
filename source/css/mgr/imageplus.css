@@ -461,6 +461,9 @@
 .x-window-imageplus-cropimage .cropper-container {
   overflow: hidden;
 }
+.x-window-imageplus-cropimage .cropper-container img {
+  image-orientation: from-image;
+}
 
 .x-form-imageplus-preview {
   position: relative;

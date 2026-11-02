@@ -12,6 +12,7 @@ use modMediaSource;
 use modSnippet;
 use modTemplateVar;
 use modX;
+use TreehillStudio\ImagePlus\Helper\ImageOrientation;
 use xPDO;
 
 /**
@@ -92,6 +93,10 @@ class PhpThumbsUp extends AbstractCropEngine
             'sw' => $data->crop->width,
             'sh' => $data->crop->height,
         ];
+        if ($imgPath && ImageOrientation::getFromFile($imgPath) !== 1) {
+            // The crop area is set on the upright image, so phpThumb rotates the image by its EXIF orientation first
+            $cropParams['ar'] = 'x';
+        }
         $params = [];
         if ($data->targetWidth) {
             $params = array_merge($params, [

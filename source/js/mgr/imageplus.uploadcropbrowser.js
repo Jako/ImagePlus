@@ -108,12 +108,11 @@ Ext.extend(ImagePlus.combo.UploadCropBrowser, ImagePlus.combo.UploadBrowser, {
                 callback.call(this);
             }
         }.bind(this);
-        // The media browser of MODX 3 sends the original size, image_width/image_height are the size of its preview there.
-        // The media browser of MODX 2 sends the original size as image_width/image_height, the upload processor as width/height.
-        var original = 'original_width' in data;
-        var width = parseInt(original ? data.original_width : (data.image_width || data.width), 10);
-        var height = parseInt(original ? data.original_height : (data.image_height || data.height), 10);
-        if (width && height) {
+        // The upload processor sends the size of the upright image. The media browser sends the stored size of the image,
+        // that ignores the EXIF orientation, so the size of an image selected in the media browser is taken in the browser.
+        var width = parseInt(data.width, 10);
+        var height = parseInt(data.height, 10);
+        if (width && height && !('original_width' in data || 'image_width' in data)) {
             check({width: width, height: height});
         } else {
             ImagePlus.util.loadImageDimensions(data.baseUrl || ImagePlus.util.sourceObjectUrl(data.fullRelativeUrl)).then(check);
@@ -338,6 +337,9 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
                 autoCropArea: 1,
                 // Keep the crop area when the browser window is resized
                 restore: true,
+                // The browser shows the image upright by its EXIF orientation, so that the crop area is set on the
+                // upright image like it is cropped by the crop processor
+                checkOrientation: false,
                 crop: this.updateCropperData.bind(this),
                 cropstart: this.setCropperState.bind(this, 'start'),
                 cropend: this.setCropperState.bind(this, 'stop'),
@@ -682,6 +684,16 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
             previewImage.src = this.cropperSizes[this.cropperSize].baseUrl;
         }
     },
+    /**
+     * Crops of photos with an EXIF orientation, that were created before the orientation was regarded, were set on the
+     * image lying on its side. Their crop area doesn't fit the upright image, so the whole image is selected.
+     */
+    isCropperOrientationChanged: function (data) {
+        var imageData = this.cropper.getImageData();
+        var width = parseInt(data.originalWidth, 10);
+        var height = parseInt(data.originalHeight, 10);
+        return !!(width && height && width !== height && width === imageData.naturalHeight && height === imageData.naturalWidth);
+    },
     selectCropperSize: function (key) {
         if (this.cropper && key) {
             this.cropperSize = key;
@@ -693,12 +705,13 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
             return;
         }
         var data = this.getCropperSizeData();
+        var imageData = this.cropper.getImageData();
         var cropperData = {rotate: 0, scaleX: 1, scaleY: 1};
         this.cropper.setAspectRatio((data.ratio) ? data.ratio : NaN);
-        if (data.cropWidth && data.cropHeight) {
+        if (data.cropWidth && data.cropHeight && !this.isCropperOrientationChanged(data)) {
             Ext.apply(cropperData, {x: data.x, y: data.y, width: data.cropWidth, height: data.cropHeight});
         } else {
-            Ext.apply(cropperData, {width: data.originalWidth, height: data.originalHeight});
+            Ext.apply(cropperData, {width: imageData.naturalWidth, height: imageData.naturalHeight});
         }
         this.cropper.setData(cropperData);
         this.setCropperState('ready');

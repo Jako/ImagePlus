@@ -14,12 +14,13 @@
  */
 
 use TreehillStudio\ImagePlus\Helper\ImageMemory;
+use TreehillStudio\ImagePlus\Helper\ImageOrientation;
 use TreehillStudio\ImagePlus\Processors\Processor;
 
 class ImagePlusImageThumbnailProcessor extends Processor
 {
     /** @var string Changing the version invalidates all cached thumbnails */
-    const CACHE_VERSION = '2';
+    const CACHE_VERSION = '3';
 
     /** @var int The maximum width/height of a thumbnail */
     const MAX_SIZE = 2000;
@@ -87,17 +88,23 @@ class ImagePlusImageThumbnailProcessor extends Processor
         if (!$imageSize || empty($imageSize[0]) || empty($imageSize[1])) {
             $this->outputPlaceholder();
         }
-        [$targetWidth, $targetHeight] = $this->getTargetSize($imageSize[0], $imageSize[1], $width, $height);
+        // The thumbnail shows the upright image, the width and the height of a rotated image are swapped
+        $orientation = 1;
+        if ($imageSize['mime'] === 'image/jpeg') {
+            $orientation = ImageOrientation::get($path ? (string)file_get_contents($path, false, null, 0, ImageOrientation::HEADER_LENGTH) : substr($content, 0, ImageOrientation::HEADER_LENGTH));
+        }
+        [$sourceWidth, $sourceHeight] = ImageOrientation::isRotated($orientation) ? [$imageSize[1], $imageSize[0]] : [$imageSize[0], $imageSize[1]];
+        [$targetWidth, $targetHeight] = $this->getTargetSize($sourceWidth, $sourceHeight, $width, $height);
 
         $thumbnail = null;
         if (extension_loaded('imagick')) {
             $thumbnail = $this->createWithImagick($path, $content, $targetWidth, $targetHeight, $outputExtension);
         }
         if ($thumbnail === null) {
-            $thumbnail = $this->createWithGd($path, $content, $imageSize, $fileSize, $targetWidth, $targetHeight, $outputExtension);
+            $thumbnail = $this->createWithGd($path, $content, $imageSize, $fileSize, $targetWidth, $targetHeight, $outputExtension, $orientation);
         }
         if ($thumbnail === null && $imageSize['mime'] === 'image/jpeg') {
-            $thumbnail = $this->createFromExif($path, $content);
+            $thumbnail = $this->createFromExif($path, $content, $orientation);
             if ($thumbnail !== null) {
                 // The embedded EXIF thumbnail is only a fallback, so it is not cached and has no ETag
                 $this->output($thumbnail, 'jpg');
@@ -198,8 +205,10 @@ class ImagePlusImageThumbnailProcessor extends Processor
             // Use the disk cache of ImageMagick instead of using too much memory
             Imagick::setResourceLimit(Imagick::RESOURCETYPE_MEMORY, self::IMAGICK_MEMORY);
             $image = new Imagick();
-            // Let libjpeg decode the image at the smallest scale that is still large enough
-            $image->setOption('jpeg:size', ($targetWidth * 2) . 'x' . ($targetHeight * 2));
+            // Let libjpeg decode the image at the smallest scale that is still large enough. The image could be
+            // rotated by autoOrient, so the larger side is used for both sides.
+            $decodeSize = max($targetWidth, $targetHeight) * 2;
+            $image->setOption('jpeg:size', $decodeSize . 'x' . $decodeSize);
             if ($path) {
                 // Read only the first frame of animated images
                 $image->readImage($path . '[0]');
@@ -240,12 +249,17 @@ class ImagePlusImageThumbnailProcessor extends Processor
      * @param int $targetWidth
      * @param int $targetHeight
      * @param string $outputExtension
+     * @param int $orientation The EXIF orientation of the image
      * @return string|null
      */
-    private function createWithGd(?string $path, ?string $content, array $imageSize, int $fileSize, int $targetWidth, int $targetHeight, string $outputExtension): ?string
+    private function createWithGd(?string $path, ?string $content, array $imageSize, int $fileSize, int $targetWidth, int $targetHeight, string $outputExtension, int $orientation = 1): ?string
     {
         $header = $path ? (string)file_get_contents($path, false, null, 0, 32) : substr($content, 0, 32);
         $memoryNeeded = ImageMemory::estimate($imageSize, $fileSize, ImageMemory::getPngColorType($header), $outputExtension, $targetWidth, $targetHeight, $content !== null);
+        if (ImageOrientation::isRotated($orientation)) {
+            // The rotated image is a copy of the image
+            $memoryNeeded += $imageSize[0] * $imageSize[1] * 4;
+        }
         if (!ImageMemory::reserve($memoryNeeded)) {
             return null;
         }
@@ -254,6 +268,7 @@ class ImagePlusImageThumbnailProcessor extends Processor
         if (!$sourceImage) {
             return null;
         }
+        $sourceImage = ImageOrientation::apply($sourceImage, $orientation);
         $targetImage = imagecreatetruecolor($targetWidth, $targetHeight);
         if ($outputExtension === 'png') {
             imagealphablending($targetImage, false);
@@ -305,9 +320,10 @@ class ImagePlusImageThumbnailProcessor extends Processor
      *
      * @param string|null $path
      * @param string|null $content
+     * @param int $orientation The EXIF orientation of the image, the embedded thumbnail has the same orientation
      * @return string|null
      */
-    private function createFromExif(?string $path, ?string $content): ?string
+    private function createFromExif(?string $path, ?string $content, int $orientation = 1): ?string
     {
         if (!function_exists('exif_thumbnail')) {
             return null;
@@ -320,6 +336,16 @@ class ImagePlusImageThumbnailProcessor extends Processor
             rewind($stream);
             $thumbnail = @exif_thumbnail($stream);
             fclose($stream);
+        }
+        if ($thumbnail && $orientation !== 1) {
+            $image = @imagecreatefromstring($thumbnail);
+            if ($image) {
+                $image = ImageOrientation::apply($image, $orientation);
+                ob_start();
+                imagejpeg($image, null, 85);
+                $thumbnail = ob_get_clean();
+                unset($image);
+            }
         }
         return $thumbnail ?: null;
     }

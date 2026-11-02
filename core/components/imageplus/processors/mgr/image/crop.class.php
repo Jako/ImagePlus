@@ -7,6 +7,7 @@
  */
 
 use TreehillStudio\ImagePlus\Helper\ImageMemory;
+use TreehillStudio\ImagePlus\Helper\ImageOrientation;
 use TreehillStudio\ImagePlus\Processors\Processor;
 
 class ImagePlusImageCropProcessor extends Processor
@@ -81,7 +82,13 @@ class ImagePlusImageCropProcessor extends Processor
                 if (!$imageSize) {
                     return $this->failure($this->modx->lexicon('imageplus.cropimage.error_image_not_valid'));
                 }
+                // The crop area is set on the upright image, that is shown in the browser
+                $orientation = ($imageSize['mime'] === 'image/jpeg') ? ImageOrientation::get(substr($file, 0, ImageOrientation::HEADER_LENGTH)) : 1;
                 $memoryNeeded = ImageMemory::estimate($imageSize, strlen($file), ImageMemory::getPngColorType($file), strtolower($imageExtension), (int)$targetWidth, (int)$targetHeight);
+                if (ImageOrientation::isRotated($orientation)) {
+                    // The rotated image is a copy of the image
+                    $memoryNeeded += $imageSize[0] * $imageSize[1] * 4;
+                }
                 if (!ImageMemory::reserve($memoryNeeded)) {
                     return $this->failure($this->modx->lexicon('imageplus.cropimage.error_memory', [
                         'width' => $imageSize[0],
@@ -96,6 +103,7 @@ class ImagePlusImageCropProcessor extends Processor
                 if (!$sourceImage) {
                     return $this->failure($this->modx->lexicon('imageplus.cropimage.error_image_not_valid'));
                 }
+                $sourceImage = ImageOrientation::apply($sourceImage, $orientation);
                 $sourceWidth = imagesx($sourceImage);
                 $sourceHeight = imagesy($sourceImage);
                 $targetImage = imagecreatetruecolor((int)$targetWidth, (int)$targetHeight);
