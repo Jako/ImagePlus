@@ -379,6 +379,9 @@
 .x-window-imageplus-cropimage .imageplus-cropimage-state {
   margin: 10px 0;
 }
+.x-window-imageplus-cropimage .imageplus-cropimage-state.green {
+  color: #00948e !important;
+}
 .x-window-imageplus-cropimage .imageplus-cropimage-state[hidden] {
   display: none;
 }
@@ -467,6 +470,9 @@
 }
 .x-window-imageplus-cropimage .cropper-container img {
   image-orientation: from-image;
+}
+.x-window-imageplus-cropimage.modx3 .imageplus-cropimage-state.green {
+  color: #6cb24a !important;
 }
 .x-window-imageplus-cropimage.modx3 .imageplus-cropimage-button.imageplus-cropimage-button-primary {
   background: #6cb24a;

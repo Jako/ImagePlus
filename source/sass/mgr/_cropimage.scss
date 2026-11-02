@@ -192,6 +192,11 @@ $preview-bar-height: $preview-bar-line-height + 2 * $preview-bar-padding-y;
   .imageplus-cropimage-state {
     margin: 10px 0;
 
+    // The success message has the color of the primary buttons in MODX 2, the green class of MODX 3 is used otherwise
+    &.green {
+      color: $modx2-primary2 !important;
+    }
+
     &[hidden] {
       display: none;
     }
@@ -300,6 +305,10 @@ $preview-bar-height: $preview-bar-line-height + 2 * $preview-bar-padding-y;
     img {
       image-orientation: from-image;
     }
+  }
+
+  &.modx3 .imageplus-cropimage-state.green {
+    color: $modx3-green !important;
   }
 
   &.modx3 .imageplus-cropimage-button.imageplus-cropimage-button-primary {
