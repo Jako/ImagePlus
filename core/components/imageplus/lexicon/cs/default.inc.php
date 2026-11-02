@@ -32,9 +32,6 @@ $_lang['imageplus.phpThumbParams'] = 'Další phpThumb parametry';
 $_lang['imageplus.phpThumbParams_desc'] = '(Volitelné) Parametry phpThumb pro zástupný symbol options ve výstupním chunku, například pro výstupní filtr pthumb. Dokumentaci najdete <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">zde</a>.';
 $_lang['imageplus.outputChunk'] = 'Výstupní chunk';
 $_lang['imageplus.outputChunk_desc'] = 'Vyberte chunk pro výstup TV. Nechte prázdé pro výstup čisté URL.';
-$_lang['imageplus.generateUrl'] = 'Použít URL souboru výřezu';
-$_lang['imageplus.generateUrl_desc'] = '(Volitelné) URL souboru výřezu možná není potřeba, pokud miniaturu generujete ve výstupním chunku (například pomocí výstupního filtru pthumb).';
-$_lang['imageplus.generateUrl_desc_warning'] = 'Tuto možnost musíte aktivovat, pokud ve výstupních možnostech nezadáte výstupní chunk nebo pokud v zadaném výstupním chunku použijete zástupný symbol [[+url]]. Jinak se obrázek neořízne a vrátí se URL původního obrázku.';
 /** Placeholder descriptions */
 $_lang['imageplus.placeholder.url'] = 'URL souboru výřezu';
 $_lang['imageplus.placeholder.alt'] = 'Alt text';

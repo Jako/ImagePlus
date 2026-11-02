@@ -32,9 +32,6 @@ $_lang['imageplus.phpThumbParams'] = 'Дополнительные параме�
 $_lang['imageplus.phpThumbParams_desc'] = '(Необязательно) Параметры phpThumb для плейсхолдера options в чанке вывода, например для output filter pthumb. Документацию можно найти <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">здесь</a>.';
 $_lang['imageplus.outputChunk'] = 'Чанк для вывода';
 $_lang['imageplus.outputChunk_desc'] = 'Выберите чанк для вывода TV. Оставьте пустым для обычного вывода текстом.';
-$_lang['imageplus.generateUrl'] = 'Использовать URL файла обрезки';
-$_lang['imageplus.generateUrl_desc'] = '(Необязательно) URL файла обрезки может быть не нужен, если вы генерируете миниатюру в чанке вывода, например с помощью output filter pthumb.';
-$_lang['imageplus.generateUrl_desc_warning'] = 'Вы должны активировать эту опцию, когда вы не указываете чанк вывода в опциях вывода или когда вы используете плейсхолдер [[+url]] в указанном чанке вывода. В противном случае изображение не обрезается, и возвращается URL исходного изображения.';
 /** Placeholder descriptions */
 $_lang['imageplus.placeholder.url'] = 'URL файла обрезки';
 $_lang['imageplus.placeholder.alt'] = 'Альтернатиный текст (alt)';

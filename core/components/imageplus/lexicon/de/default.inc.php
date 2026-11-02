@@ -32,9 +32,6 @@ $_lang['imageplus.phpThumbParams'] = 'Zusätzliche phpThumb Parameter';
 $_lang['imageplus.phpThumbParams_desc'] = '(Optional) phpThumb Parameter für den options Platzhalter im Ausgabe Chunk, z.B. für einen pThumb Output Filter. Mehr Informationen zu phpThumb Parametern erhalten Sie <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">hier</a>.';
 $_lang['imageplus.outputChunk'] = 'Ausgabe Chunk';
 $_lang['imageplus.outputChunk_desc'] = '(Optional) Wählen Sie einen Ausgabe Chunk aus. Wenn kein Wert angebeben ist wird der Bildpfad ausgegeben.';
-$_lang['imageplus.generateUrl'] = 'URL der Ausschnittsdatei verwenden';
-$_lang['imageplus.generateUrl_desc'] = '(Optional) Die URL der Ausschnittsdatei wird eventuell nicht benötigt, wenn das Thumbnail im Ausgabe Chunk z.B. mit einem pThumb Output Filter generiert wird.';
-$_lang['imageplus.generateUrl_desc_warning'] = 'Sie müssen diese Option aktivieren, wenn Sie keinen Ausgabe Chunk benutzen oder wenn Sie den [[+url]] Platzhalter im angegebenen Ausgabe Chunk einsetzen. Andernfalls wird das Bild nicht beschnitten und die URL des Originalbilds ausgegeben.';
 /** Placeholder descriptions */
 $_lang['imageplus.placeholder.url'] = 'URL der Datei des Bildausschnitts';
 $_lang['imageplus.placeholder.alt'] = 'Alt-Text';

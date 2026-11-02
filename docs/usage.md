@@ -113,7 +113,9 @@ The order for these settings is [^1].
 ## Image Output
 
 The output uses the image crop files, that are created in the manager. A phpThumb
-extra is not needed. If an image crop has no crop file (i.e. a value created
+extra is not needed. The URL, the width and the height of the output are the
+ones of the crop file of the image crop in the **Image Crop** output option or of
+the first image crop. If an image crop has no crop file (i.e. a value created
 before Image+ 3.0), the crop file is created on the first output. Use an image
 crop with the needed size for each output size.
 
@@ -166,20 +168,7 @@ possible in this chunk to customize the output:
 
 All these placeholders can be used in the Snippet too.
 
-#### Use the Crop File URL
-
-If you create the thumbnail in the output chunk, i.e. through a pthumb output
-filter, you can disable the URL of the image crop file. A missing crop file is
-not created then.
-
-!!! warning "Caution"
-
-    You must enable this option if you do not specify an output chunk in the output
-    options or if you use the `[[+url]]` placeholder in the specified output chunk.
-    Otherwise, the image will not be cropped and the URL of the original image
-    will be returned.
-
-## Snippet
+## ImagePlus Snippet
 
 The snippet gives you a second way to display the TV value. With template
 variable output you are limited to one output chunk per template variable, with

@@ -18,8 +18,9 @@ use xPDO;
 /**
  * Class CropFile
  *
- * Uses the image crop files in the media source without phpThumb. A missing crop file (i.e. of a value created before
- * Image+ 3.0) is created on the first output. The phpThumb parameters are only used in the options placeholders of the
+ * Uses the image crop files in the media source without phpThumb. The url, width and height are the ones of the crop
+ * file of the image crop in the crop option or of the first image crop. A missing crop file (i.e. of a value created
+ * before Image+ 3.0) is created on the first output. The phpThumb parameters are only used in the options placeholders of the
  * output chunk, i.e. for a pthumb output filter.
  *
  * @package imageplus
@@ -94,9 +95,10 @@ class CropFile extends AbstractCropEngine
         $width = (int)$data->sourceImg->width;
         $height = (int)$data->sourceImg->height;
 
-        $generateUrl = $this->modx->getOption('generateUrl', $opts, 1);
-        if ($generateUrl && !$this->isOriginal($crop, $width, $height)) {
-            $cropImage = $this->getCropImage($source, $src, $crop, (string)($data->crop->image ?? ''), (int)$this->modx->getOption('docid', $opts, 0), ($tv) ? (int)$tv->get('id') : 0);
+        // The unchanged image needs no crop file, unless it was created in the manager
+        $cropImage = (string)($data->crop->image ?? '');
+        if ($cropImage !== '' || !$this->isOriginal($crop, $width, $height)) {
+            $cropImage = $this->getCropImage($source, $src, $crop, $cropImage, (int)$this->modx->getOption('docid', $opts, 0), ($tv) ? (int)$tv->get('id') : 0);
             if ($cropImage !== '') {
                 $url = $this->imageplus->getSourceObjectUrl($source, $cropImage);
                 $width = $crop['targetWidth'];

@@ -32,9 +32,6 @@ $_lang['imageplus.phpThumbParams'] = 'Paramètres phpThumb additionnels';
 $_lang['imageplus.phpThumbParams_desc'] = '(Optionnel) Paramètres phpThumb pour le placeholder options du chunk de sortie, par exemple pour un filtre pthumb. La documentation est disponible <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">ici</a>.';
 $_lang['imageplus.outputChunk'] = 'Chunk d’affichage';
 $_lang['imageplus.outputChunk_desc'] = 'Sélectionnez le chunk utilisé pour afficher le résultat de la TV. Laissez vide pour obtenir l’URL brute du résultat.';
-$_lang['imageplus.generateUrl'] = 'Utiliser l’URL du fichier de recadrage';
-$_lang['imageplus.generateUrl_desc'] = '(Optionnel) L’URL du fichier de recadrage n’est peut-être pas nécessaire si vous générez la miniature dans le chunk de sortie (par exemple avec un filtre pthumb).';
-$_lang['imageplus.generateUrl_desc_warning'] = 'Vous devez activer cette option lorsque vous ne spécifiez pas de chunk de sortie dans les options de sortie ou lorsque vous utilisez le placeholder [[+url]] dans le chunk de sortie spécifié. Sinon, l’image n’est pas recadrée et l’URL de l’image originale est renvoyée.';
 /** Placeholder descriptions */
 $_lang['imageplus.placeholder.url'] = 'URL du fichier de recadrage';
 $_lang['imageplus.placeholder.alt'] = 'Texte de l’attribut Alt';

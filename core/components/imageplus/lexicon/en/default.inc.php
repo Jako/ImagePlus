@@ -32,9 +32,6 @@ $_lang['imageplus.phpThumbParams'] = 'Additional phpThumb Parameters';
 $_lang['imageplus.phpThumbParams_desc'] = '(Optional) phpThumb parameters for the options placeholder of the output chunk, i.e. for a pthumb output filter. Documentation can be found <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">here</a>.';
 $_lang['imageplus.outputChunk'] = 'Output Chunk';
 $_lang['imageplus.outputChunk_desc'] = 'Select a chunk for tv output. Leave blank for raw url output.';
-$_lang['imageplus.generateUrl'] = 'Use the Crop File URL';
-$_lang['imageplus.generateUrl_desc'] = '(Optional) The url of the image crop file is maybe not necessary, if you generate the thumbnail in output chunk i.e. by a pthumb output filter.';
-$_lang['imageplus.generateUrl_desc_warning'] = 'You have to activate this option, when you don’t specify an output chunk in the output options or when you use the [[+url]] placeholder in the specified output chunk. Otherwise the image is not cropped and the url of the original image is returned.';
 /** Placeholder descriptions */
 $_lang['imageplus.placeholder.url'] = 'URL of the image crop file';
 $_lang['imageplus.placeholder.alt'] = 'Alt text';
