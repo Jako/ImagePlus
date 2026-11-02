@@ -217,7 +217,7 @@ class ImagePlus
             'ImagePlus.config = ' . json_encode(array_merge($this->options, [
                 // The urls of the media sources are only needed by the manager scripts
                 'sources' => $this->loadSourceMap()
-            ]), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . ';' .
+            ]), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) . ';' .
             '</script>');
     }
 

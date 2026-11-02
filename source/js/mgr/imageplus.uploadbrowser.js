@@ -326,7 +326,7 @@ Ext.extend(ImagePlus.combo.UploadBrowser, ImagePlus.form.MultiTriggerField, {
                 tag: 'a',
                 title: _('imageplus.cropimage.original.download'),
                 cls: 'download',
-                href: url,
+                href: Ext.util.Format.htmlEncode(url),
                 target: '_blank',
                 html: '<i class="icon icon-download"></i>',
             });

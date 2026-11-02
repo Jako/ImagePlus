@@ -84,7 +84,7 @@ class ImagePlusInputRender extends modTemplateVarInputRender
         $tvConfig->tvId = $this->tv->get('id');
         $tvConfig->tvParams = $this->getInputOptions();
 
-        $this->setPlaceholder('tvConfig', json_encode($tvConfig, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        $this->setPlaceholder('tvConfig', json_encode($tvConfig, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG));
 
         // Prepare value, a converted crop is used for the first image crop
         $value = $imageplus->prepareTvValue($this->tv->value, array_merge($params, [
