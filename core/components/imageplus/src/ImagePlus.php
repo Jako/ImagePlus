@@ -62,6 +62,12 @@ class ImagePlus
     private $resourceContextKeys = [];
 
     /**
+     * The cached map of the media source urls
+     * @var array|null $sourceMap
+     */
+    private $sourceMap = null;
+
+    /**
      * ImagePlus constructor
      *
      * @param modX $modx A reference to the modX instance.
@@ -166,6 +172,10 @@ class ImagePlus
      */
     private function loadSourceMap()
     {
+        // The map is loaded once per request, the scripts are included on every manager page and by each template variable
+        if ($this->sourceMap !== null) {
+            return $this->sourceMap;
+        }
         $sources = $this->modx->getCollection('sources.modMediaSource');
         $sourceMap = [];
         foreach ($sources as $source) {
@@ -174,6 +184,7 @@ class ImagePlus
             $sourceMap[$source->get('id')] = new stdClass();
             $sourceMap[$source->get('id')]->url = $source->getBaseUrl();
         }
+        $this->sourceMap = $sourceMap;
         return $sourceMap;
     }
 

@@ -149,26 +149,33 @@ Ext.extend(ImagePlus.panel.input, MODx.Panel, {
         ];
     },
     createTextField: function (key, enabled, lexicon, icon) {
+        var update = function (field) {
+            this.image[key] = field.getValue();
+            this.updateValue();
+        };
         return MODx.load({
             xtype: 'panel',
             cls: 'imageplus-image-field',
             border: false,
             hidden: !enabled,
+            imageKey: key,
             items: {
                 xtype: enabled ? 'textfield' : 'hidden',
                 submitValue: false,
                 value: this.image[key] || '',
                 listeners: {
                     change: {
-                        fn: function (field, value) {
-                            this.image[key] = value;
-                            this.updateValue();
-                        },
+                        fn: update,
                         scope: this
                     },
                     afterrender: function (field) {
                         var el = field.getEl();
                         if (el && enabled) {
+                            // The value is updated while typing, because the change event is not fired, if the
+                            // resource is saved with the keyboard shortcut
+                            el.on('input', function () {
+                                update.call(this, field);
+                            }, this);
                             el.set({'placeholder': _(lexicon)});
                             el.insertSibling({
                                 tag: 'span',
@@ -177,7 +184,7 @@ Ext.extend(ImagePlus.panel.input, MODx.Panel, {
                                 title: _(lexicon)
                             }, 'after', true);
                         }
-                    }
+                    }.bind(this)
                 },
                 style: {
                     marginTop: '5px',
@@ -190,6 +197,9 @@ Ext.extend(ImagePlus.panel.input, MODx.Panel, {
     onReset: function () {
         this.image = this.getValue();
         this.imageBrowser.setValue(this.getBrowserValue());
+        Ext.each(this.textFields, function (panel) {
+            panel.items.get(0).setValue(this.image[panel.imageKey] || '');
+        }, this);
     },
     // Fired when the image or the crops are changed in the browser
     onImageChange: function () {

@@ -77,10 +77,6 @@ ImagePlus.util.formatDimensions = function (dimensions) {
 };
 
 /**
- * Normalize the crop size configurations. "ratio" is accepted as alias of "proportion". It is removed,
- * because the crop window and the saved crops use "ratio" for the calculated aspect ratio.
- */
-/**
  * Get the reduced proportion of a width and a height like "16 x 9"
  */
 ImagePlus.util.formatProportion = function (width, height) {
@@ -107,6 +103,10 @@ ImagePlus.util.loadImageDimensions = function (url) {
     });
 };
 
+/**
+ * Normalize the crop size configurations. "ratio" is accepted as alias of "proportion". It is removed,
+ * because the crop window and the saved crops use "ratio" for the calculated aspect ratio.
+ */
 ImagePlus.util.normalizeCropSizes = function (sizes) {
     var normalized = {};
     Ext.iterate(sizes || {}, function (key, size) {
