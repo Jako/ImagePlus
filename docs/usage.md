@@ -210,6 +210,52 @@ This snippet call returns the contents of the template variable named
 `imageplus` of resource `1` in the parsed `ImagePlus.demo` chunk. The phpThumb
 option `w=100` (width: 100px) is added to the `options` placeholder.
 
+## ImagePlusCleanup Snippet
+
+This snippet removes the unused image crop files. Every changed crop is saved as
+a new file and removed images don't remove their crop files, so the crop folder
+grows over time.
+
+The crop paths in the values and in the default values of all template variables
+are used, also in the values of MIGX template variables. The crop files, that the
+output creates for image crops without a crop file, are used too. All other crop
+files in the crop folder of the media sources are unused. Only files with the
+name of a crop file (`<image name>-<32 character hash>.<extension>`) are
+regarded. Folders below the crop folder, that are empty afterwards, are removed
+too. Remote media sources can't be cleaned up.
+
+The snippet output is only shown to manager users, that are sudo users or
+members of the Administrator user group. All messages are logged in
+`core/cache/logs/imageplus_cleanup.log`.
+
+!!! warning
+
+    Crop paths, that are only referenced outside the template variable values
+    (i.e. in a chunk, in a custom database table or in another extra) are not
+    known to the snippet. Check the list of the dry run before removing the files.
+
+| Property | Description                                                                                                       | Default                                                                         |
+|----------|-------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| dryRun   | Report the unused crop files without removing them. An empty value keeps the dry run.                             | 1                                                                               |
+| minAge   | Skip crop files, that are newer than this number of hours, because a crop is saved before the resource is saved. | 24                                                                              |
+| path     | Crop folder in the media sources.                                                                                 | The part of the imageplus.crop_path system setting before the first placeholder |
+| source   | Comma-separated list of media source IDs.                                                                         | The media sources of the Image+ template variables and the default media source |
+
+#### Example
+
+Call the snippet uncached on a page, that is only visible for administrators.
+First check the unused files:
+
+```
+[[!ImagePlusCleanup]]
+```
+
+Remove them afterwards:
+
+```
+[[!ImagePlusCleanup? &dryRun=`0`]]
+```
+
 [^1]: The first entry supercedes the second entry in the list etc.
 [^2]: Outputs *image* if the Image+ TV contains an image, otherwise *noimage*.
 [^3]: Outputs the template chunk set by the **tpl** property, filled with the retrieved Image+ TV value (the **options** property fills the `options` placeholder).

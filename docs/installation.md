@@ -18,6 +18,38 @@ can manually install Image+.
 The template variable values of Image+ 2.x are converted to the format of
 Image+ 3.0 by the setup or on their first output.
 
+The setup option **Migrate the Image+ 2.x template variables and settings** is
+enabled by default. The migration converts the template variable values to the
+new value format, converts the target width/height/aspect ratio input options
+and settings to the minimal image size and image crops input options and removes
+the legacy settings. Values, that could not be converted, are logged in
+`core/cache/logs/imageplus_migration.log`.
+
+### ImagePlusMigration Snippet
+
+If you want to check the migration first, disable the setup option and call the
+ImagePlusMigration snippet uncached on a page, that is only visible for
+administrators. The snippet output is only shown to manager users, that are sudo
+users or members of the Administrator user group.
+
+| Property | Description                                               | Default |
+|----------|-----------------------------------------------------------|---------|
+| dryRun   | Report the changes of the migration without saving them. | 1       |
+
+First check the changes:
+
+```
+[[!ImagePlusMigration]]
+```
+
+Migrate afterwards:
+
+```
+[[!ImagePlusMigration? &dryRun=`0`]]
+```
+
+An empty `dryRun` property keeps the dry run.
+
 Browsers before 2020 showed photos without their EXIF orientation, so crops of
 these photos, that were set in such a browser, refer to the photo lying on its
 side. These crops have to be cropped again.
