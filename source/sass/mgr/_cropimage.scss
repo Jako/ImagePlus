@@ -8,6 +8,12 @@
 @use "sass:color";
 @use "../../../node_modules/cropperjs/src/css/cropper" with ($cropper-image-path: "../../img/mgr");
 
+// The colors of the primary buttons in the MODX 2 manager (a gradient) and in the MODX 3 manager
+$modx2-primary1: #32ab9a;
+$modx2-primary2: #00948e;
+$modx3-green: #6cb24a;
+$modx3-green-darken: #528738;
+
 // The size of the bar below the preview images
 $preview-bar-padding-y: 4px;
 $preview-bar-padding-x: 6px;
@@ -154,7 +160,9 @@ $preview-bar-height: $preview-bar-line-height + 2 * $preview-bar-padding-y;
   }
 
   .imageplus-cropimage-button {
-    padding: 8px 15px;
+    // The buttons share the width of the sidebar, a long label wraps inside its button
+    flex: 1 1 auto;
+    padding: 8px 10px;
     border: 0;
     border-radius: 3px;
     background: #e4e4e4;
@@ -167,11 +175,16 @@ $preview-bar-height: $preview-bar-line-height + 2 * $preview-bar-padding-y;
     }
 
     &.imageplus-cropimage-button-primary {
-      background: #3697cd;
+      background: $modx2-primary1 linear-gradient($modx2-primary1, $modx2-primary2);
       color: #ffffff;
 
-      &:hover {
-        background: #2f86b6;
+      &:hover,
+      &:focus {
+        background: color.adjust($modx2-primary1, $lightness: -6%) linear-gradient(color.adjust($modx2-primary1, $lightness: -6%), color.adjust($modx2-primary2, $lightness: -6%));
+      }
+
+      &:active {
+        background: color.adjust($modx2-primary1, $lightness: -12%) linear-gradient(color.adjust($modx2-primary1, $lightness: -12%), color.adjust($modx2-primary2, $lightness: -12%));
       }
     }
   }
@@ -286,6 +299,16 @@ $preview-bar-height: $preview-bar-line-height + 2 * $preview-bar-padding-y;
     // The browser shows the image upright by its EXIF orientation, Cropper.js only does this with checkOrientation
     img {
       image-orientation: from-image;
+    }
+  }
+
+  &.modx3 .imageplus-cropimage-button.imageplus-cropimage-button-primary {
+    background: $modx3-green;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background: $modx3-green-darken;
     }
   }
 }

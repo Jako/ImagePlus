@@ -282,7 +282,7 @@ ImagePlus.window.CropImage = function (config) {
     this.ident = 'imageplus-window-cropimage-' + Ext.id();
     Ext.applyIf(config, {
         title: _('imageplus.cropimage'),
-        cls: 'x-window-imageplus-cropimage',
+        cls: 'x-window-imageplus-cropimage modx' + ImagePlus.config.modxversion,
         minWidth: 500,
         minHeight: 300,
         width: Ext.getBody().getViewSize().width * 0.9,
@@ -343,7 +343,7 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
                 crop: this.updateCropperData.bind(this),
                 cropstart: this.setCropperState.bind(this, 'start'),
                 cropend: this.setCropperState.bind(this, 'stop'),
-                ready: this.resetCropperSize.bind(this)
+                ready: this.onCropperReady.bind(this)
             });
         }
     },
@@ -409,8 +409,9 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
                 this.createDomElement('div', {class: 'imageplus-cropimage-title', text: _('imageplus.cropimage.sets')}),
                 this.createDomElement('div', {class: 'imageplus-cropimage-sets', id: this.ident + '-cropimage-sizes'}),
                 this.createDomElement('div', {class: 'imageplus-cropimage-toolbar'}, [
+                    this.createCropperButton('imageplus-cropimage-button-primary', _('imageplus.cropimage.save'), this.updateCropperRecord),
                     this.createCropperButton('', _('imageplus.cropimage.reset'), this.resetCropperSize),
-                    this.createCropperButton('imageplus-cropimage-button-primary', _('imageplus.cropimage.save'), this.updateCropperRecord)
+                    this.createCropperButton('', _('imageplus.cropimage.reload'), this.reloadCropperImage)
                 ]),
                 this.createDomElement('div', {class: 'imageplus-cropimage-state', id: this.ident + '-cropimage-state', hidden: true})
             ]),
@@ -464,6 +465,14 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
             var data = this.cropper.getData();
             this.cropper.resize();
             this.cropper.setData(data);
+        }
+    },
+    onCropperReady: function () {
+        if (this.cropperReload) {
+            this.cropperReload = false;
+            this.recropCropperSizes();
+        } else {
+            this.resetCropperSize();
         }
     },
     onDestroyCropper: function () {
@@ -640,6 +649,7 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
             stop: ['red', _('imageplus.cropimage.changes_unsaved')],
             saved: ['green', _('imageplus.cropimage.changes_saved')],
             saving: ['loading', _('imageplus.cropimage.saving')],
+            reloading: ['loading', _('imageplus.cropimage.reloading')],
             failure: ['red', content]
         };
         var stateEl = this.getCropperEl('state');
@@ -678,11 +688,15 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
             'proportion': ImagePlus.util.formatDimensions(data.proportion)
         }, this.setCropperField, this);
     },
-    updateCropperImage: function () {
-        var previewImage = this.getCropperEl('preview-' + this.cropperSize);
+    updateCropperImage: function (key) {
+        key = key || this.cropperSize;
+        var previewImage = this.getCropperEl('preview-' + key);
         if (previewImage) {
-            previewImage.src = this.cropperSizes[this.cropperSize].baseUrl;
+            previewImage.src = this.cropperSizes[key].baseUrl;
         }
+    },
+    isCropperBusy: function () {
+        return this.cropperState === 'saving' || this.cropperState === 'reloading';
     },
     /**
      * Crops of photos with an EXIF orientation, that were created before the orientation was regarded, were set on the
@@ -701,7 +715,7 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
         }
     },
     resetCropperSize: function () {
-        if (!this.cropper) {
+        if (!this.cropper || this.isCropperBusy()) {
             return;
         }
         var data = this.getCropperSizeData();
@@ -717,10 +731,21 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
         this.setCropperState('ready');
     },
     updateCropperRecord: function () {
-        if (!this.cropper) {
+        if (!this.cropper || this.isCropperBusy()) {
             return;
         }
         var data = Ext.apply(Ext.apply({}, this.getCropperSizeData()), this.getCropperCanvasData());
+        this.requestCropperCrop(data, function () {
+            this.setCropperSizeData(data);
+            this.updateCropperImage();
+            this.setCropperState('saved');
+        });
+        this.setCropperState('saving');
+    },
+    /**
+     * Create the crop file of an image crop. The path and the url of the crop file are set in the crop data.
+     */
+    requestCropperCrop: function (data, callback) {
         MODx.Ajax.request({
             url: ImagePlus.config.connectorUrl,
             params: {
@@ -746,9 +771,7 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
                     fn: function (result) {
                         data.image = result.object.image;
                         data.baseUrl = result.object.baseUrl;
-                        this.setCropperSizeData(data);
-                        this.updateCropperImage();
-                        this.setCropperState('saved');
+                        callback.call(this);
                     },
                     scope: this
                 },
@@ -760,7 +783,110 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
                 }
             }
         });
-        this.setCropperState('saving');
+    },
+    /**
+     * Load the image again, i.e. if it was replaced by a changed image with the same filename, and create the saved
+     * image crops again
+     */
+    reloadCropperImage: function () {
+        if (!this.cropper || this.isCropperBusy() || !this.cropperRecord.baseUrl) {
+            return;
+        }
+        Ext.MessageBox.confirm(_('imageplus.cropimage.reload.title'), _('imageplus.cropimage.reload.content'), function (answer) {
+            if (answer !== 'yes') {
+                return;
+            }
+            var baseUrl = this.cropperRecord.baseUrl;
+            // The timestamp loads the image from the server instead of the browser cache
+            var url = baseUrl + ((baseUrl.indexOf('?') === -1) ? '?' : '&') + '_dc=' + Date.now();
+            var image = new Image();
+            image.onload = function () {
+                if (this.cropper) {
+                    this.cropperReload = true;
+                    this.cropper.replace(url);
+                }
+            }.bind(this);
+            image.onerror = function () {
+                this.setCropperState('failure', _('imageplus.cropimage.error_image_not_exists'));
+            }.bind(this);
+            this.setCropperState('reloading');
+            image.src = url;
+        }, this);
+    },
+    /**
+     * Create the saved image crops again with the reloaded image
+     */
+    recropCropperSizes: function () {
+        var imageData = this.cropper.getImageData();
+        var keys = Object.keys(this.cropperSizes).filter(function (key) {
+            var size = this.cropperSizes[key];
+            return size.image && size.cropWidth && size.cropHeight;
+        }, this);
+        var ratioChanged = false;
+        var next = function () {
+            var key = keys.shift();
+            if (!key) {
+                this.cropperState = 'ready';
+                this.resetCropperSize();
+                this.setCropperState('saved');
+                if (ratioChanged) {
+                    Ext.MessageBox.alert(_('imageplus.cropimage.reload_ratio.title'), _('imageplus.cropimage.reload_ratio.content'));
+                }
+                return;
+            }
+            var size = this.cropperSizes[key];
+            var data = this.getReloadedCropperSize(size, imageData.naturalWidth, imageData.naturalHeight);
+            ratioChanged = ratioChanged || this.isCropperRatioChanged(size, imageData.naturalWidth, imageData.naturalHeight);
+            this.requestCropperCrop(data, function () {
+                this.cropperSizes[key] = data;
+                this.updateCropperImage(key);
+                next();
+            });
+        }.bind(this);
+        next();
+    },
+    isCropperRatioChanged: function (size, width, height) {
+        var originalWidth = parseInt(size.originalWidth, 10);
+        var originalHeight = parseInt(size.originalHeight, 10);
+        return !!(originalWidth && originalHeight && Math.abs(originalWidth / originalHeight - width / height) > 0.01);
+    },
+    /**
+     * Get the crop data of an image crop for a reloaded image. With a changed image size, the position of the crop area
+     * is scaled with the image and the crop area keeps its aspect ratio. The crop area has to be inside the image.
+     */
+    getReloadedCropperSize: function (size, width, height) {
+        var originalWidth = parseInt(size.originalWidth, 10) || width;
+        var originalHeight = parseInt(size.originalHeight, 10) || height;
+        var x = parseInt(size.x, 10) || 0;
+        var y = parseInt(size.y, 10) || 0;
+        var cropWidth = parseInt(size.cropWidth, 10);
+        var cropHeight = parseInt(size.cropHeight, 10);
+        var ratio = size.ratio || cropWidth / cropHeight;
+        if (originalWidth !== width || originalHeight !== height) {
+            var scale = Math.min(width / originalWidth, height / originalHeight);
+            x = Math.round(x * width / originalWidth);
+            y = Math.round(y * height / originalHeight);
+            cropWidth = Math.round(cropWidth * scale);
+            cropHeight = Math.round(cropHeight * scale);
+        }
+        if (cropWidth > width) {
+            cropWidth = width;
+            cropHeight = Math.round(width / ratio);
+        }
+        if (cropHeight > height) {
+            cropHeight = height;
+            cropWidth = Math.round(height * ratio);
+        }
+        cropWidth = Math.max(1, cropWidth);
+        cropHeight = Math.max(1, cropHeight);
+        return Ext.apply(Ext.apply({}, size), {
+            originalWidth: width,
+            originalHeight: height,
+            x: Math.max(0, Math.min(x, width - cropWidth)),
+            y: Math.max(0, Math.min(y, height - cropHeight)),
+            cropWidth: cropWidth,
+            cropHeight: cropHeight
+        });
     }
 });
 Ext.reg('imageplus-window-crop-image', ImagePlus.window.CropImage);

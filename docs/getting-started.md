@@ -21,3 +21,9 @@ the Image+ TV.
 In the cropping window you need to drag the handles of the dotted box to change
 the cropping area. If the TV has been configured with size constraints or an
 aspect ratio, the cropping area will be limited to that aspect ratio.
+
+If an image was replaced by a changed image with the same filename, click
+**Reload image** in the cropping window. The image is loaded again and all saved
+image crops are created again from it. If the size of the image has changed, the
+cropping areas are scaled to the new size. If its aspect ratio has changed, you
+should check the image crops and save them again. Save the resource afterwards.

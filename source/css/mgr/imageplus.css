@@ -354,7 +354,8 @@
   gap: 5px;
 }
 .x-window-imageplus-cropimage .imageplus-cropimage-button {
-  padding: 8px 15px;
+  flex: 1 1 auto;
+  padding: 8px 10px;
   border: 0;
   border-radius: 3px;
   background: #e4e4e4;
@@ -366,11 +367,14 @@
   background: #d4d4d4;
 }
 .x-window-imageplus-cropimage .imageplus-cropimage-button.imageplus-cropimage-button-primary {
-  background: #3697cd;
+  background: #32ab9a linear-gradient(#32ab9a, #00948e);
   color: #ffffff;
 }
-.x-window-imageplus-cropimage .imageplus-cropimage-button.imageplus-cropimage-button-primary:hover {
-  background: #2f86b6;
+.x-window-imageplus-cropimage .imageplus-cropimage-button.imageplus-cropimage-button-primary:hover, .x-window-imageplus-cropimage .imageplus-cropimage-button.imageplus-cropimage-button-primary:focus {
+  background: rgb(16.8929110106%, 57.7737556561%, 52.0301659125%) linear-gradient(rgb(16.8929110106%, 57.7737556561%, 52.0301659125%), rgb(0%, 46.0392156863%, 44.1727609963%));
+}
+.x-window-imageplus-cropimage .imageplus-cropimage-button.imageplus-cropimage-button-primary:active {
+  background: rgb(14.1779788839%, 48.4886877828%, 43.6681749623%) linear-gradient(rgb(14.1779788839%, 48.4886877828%, 43.6681749623%), rgb(0%, 34.0392156863%, 32.6592474828%));
 }
 .x-window-imageplus-cropimage .imageplus-cropimage-state {
   margin: 10px 0;
@@ -463,6 +467,12 @@
 }
 .x-window-imageplus-cropimage .cropper-container img {
   image-orientation: from-image;
+}
+.x-window-imageplus-cropimage.modx3 .imageplus-cropimage-button.imageplus-cropimage-button-primary {
+  background: #6cb24a;
+}
+.x-window-imageplus-cropimage.modx3 .imageplus-cropimage-button.imageplus-cropimage-button-primary:hover, .x-window-imageplus-cropimage.modx3 .imageplus-cropimage-button.imageplus-cropimage-button-primary:focus, .x-window-imageplus-cropimage.modx3 .imageplus-cropimage-button.imageplus-cropimage-button-primary:active {
+  background: #528738;
 }
 
 .x-form-imageplus-preview {
