@@ -77,13 +77,13 @@ template chunk in the snippet's call options. The credits are inserted into the
 
 ### Context/System Settings
 
-Each *Image+* TV **Input Option** can be replaced by a context or system
-setting. And context/system settings can be defined for a single TV.
+The **Thumbnail Height**, **Show Alt Tag Field**, **Show Caption Field** and
+**Show Credits Field** input options can be set by a context or system setting.
+The setting is used, if the input option of the TV is empty. And
+context/system settings can be defined for a single TV.
 
-There are predefined system settings in the `imageplus` namespace which are
-empty or zero. If you activate one of them or fill it with a value, this setting
-will override the input options of all image+ TVs. Context settings must be
-created before they can be used.
+There are predefined system settings in the `imageplus` namespace. Context
+settings must be created before they can be used.
 
 | Key                       | Name                                      | Description                                                                                     | Default |
 |---------------------------|-------------------------------------------|-------------------------------------------------------------------------------------------------|---------|
@@ -92,7 +92,7 @@ created before they can be used.
 | imageplus.allow_credits   | Show Credits Field                        | Allow user to enter a credit for the image.                                                     | No      |
 | imageplus.crop_path       | Crop Path                                 | The path in the media source for the image crop files.                                          | crop/   |
 | imageplus.debug           | Debug                                     | Log debug information in the MODX error log.                                                    | No      |
-| imageplus.thumbnail_height | Thumbnail Height                         | The thumbnail height of the image in the template variable panel.                               | 250     |
+| imageplus.thumbnail_height | Thumbnail Height                         | The thumbnail height of the image in the template variable panel. Without a value, 250 pixels are used. | -       |
 | imageplus.upload_path     | Upload Path                               | The path in the media source for uploaded images.                                               | -       |
 
 The upload path and the crop path can contain the placeholders `[[+year]]`,
@@ -152,6 +152,8 @@ possible in this chunk to customize the output:
 | Placeholder        | Description                                                    |
 |--------------------|----------------------------------------------------------------|
 | alt                | Alt text                                                       |
+| caption            | Caption                                                        |
+| credits            | Credits                                                        |
 | crop.height        | Crop height of the thumbnail image                             |
 | crop.options       | phpThumb crop option string to generate the thumbnail image    |
 | crop.url           | URL of the image crop file created in the manager              |
@@ -182,7 +184,7 @@ following properties can be set in the snippet call:
 | Property | Description                                                                                           | Default         |
 |----------|-------------------------------------------------------------------------------------------------------|-----------------|
 | crop     | Key of the image crop used for the output. The first image crop is used by default.                   | -               |
-| docid    | Resource where the Image+ TV value is received from.                                                  | -               |
+| docid    | Resource where the Image+ TV value is received from.                                                  | Current resource |
 | options  | phpThumb options for the options placeholder of the template chunk [^5].                              | -               |
 | source   | Media source ID, if the value is passed with the value property (i.e. a MIGX value) [^7].             | -               |
 | tpl      | Template chunk for the snippet output [^6]. Without a template chunk, the URL of the image crop file is returned. | ImagePlus.image |
