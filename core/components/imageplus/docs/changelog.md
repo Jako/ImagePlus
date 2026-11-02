@@ -34,7 +34,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fatal error in the output without a crop engine
 - The ImagePlus snippet did not use the imageplus.debug system setting
 - PHP warning in the ImagePlus snippet for template variables without output options
 - The check type of the ImagePlus snippet returned noimage for image path values
