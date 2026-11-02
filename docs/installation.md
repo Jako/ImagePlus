@@ -20,9 +20,11 @@ Image+ 3.0 by the setup or on their first output.
 
 The setup option **Migrate the Image+ 2.x template variables and settings** is
 enabled by default. The migration converts the template variable values to the
-new value format, converts the target width/height/aspect ratio input options
-and settings to the minimal image size and image crops input options and removes
-the legacy settings. Values, that could not be converted, are logged in
+new value format, converts the target width/height input options and settings
+to the minimal image size input options and to the size of the image crop,
+converts the target ratio to the ratio of the image crop and removes the legacy
+settings. The crop files of the image crops are created. Values and
+crop files, that could not be converted or created, are logged in
 `core/cache/logs/imageplus_migration.log`.
 
 ### ImagePlusMigration Snippet

@@ -14,6 +14,7 @@ name and one of the following constraints:
 |------------|-------------------------------------------------|-------------|
 | size       | The target size of the crop (width x height)    | `1000x500`  |
 | proportion | The aspect ratio of the crop (width x height)   | `16x9`      |
+| ratio      | Alias of proportion                             | `16x9`      |
 | width      | The target width of the crop                    | `800`       |
 | height     | The target height of the crop                   | `600`       |
 

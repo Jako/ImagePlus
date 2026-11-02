@@ -18,8 +18,10 @@ $migrationOption = '<div style="position: relative">
     <input type="checkbox" name="migrate_legacy" id="migrate_legacy" ' . (($defaults['migrate_legacy']) ? 'checked' : '') . ' value="1">
     <label for="migrate_legacy" style="display: inline;">Migrate the Image+ 2.x template variables and settings</label>
     <p class="red">The template variable values are converted to the new value format without the media source, if
-    it is the media source of the template variable. The target width/height/aspect ratio input options and settings are converted to the minimal
-    image size and image crops input options and the legacy settings are removed. Errors are logged in
+    it is the media source of the template variable. The target width/height input options and settings are converted to the minimal
+    image size input options and to the size of the image crop, the target ratio is converted to the ratio of the image
+    crop and the legacy settings are removed. The crop files of the image crops
+    are created. Errors are logged in
     core/cache/logs/imageplus_migration.log</p>
     <p>Disable this option to check the migration first with the ImagePlusMigration snippet and its dryRun
     property. Run the snippet with &dryRun=`0` afterwards to migrate.</p>

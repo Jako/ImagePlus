@@ -10,6 +10,7 @@ namespace TreehillStudio\ImagePlus\Helper;
 
 use modContext;
 use modContextSetting;
+use modMediaSource;
 use modSystemSetting;
 use modTemplateVar;
 use modTemplateVarResource;
@@ -22,11 +23,12 @@ use xPDO;
  *
  * Convert the Image+ template variable values before 3.0 to the Image+ 3.x value format and remove the media source
  * from the values, if it is the media source of the template variable. Otherwise, log an error for each affected
- * value in core/cache/logs/imageplus_migration.log
+ * value in core/cache/logs/imageplus_migration.log. Create the missing crop files of the image crops in the values.
  *
  * Convert the target width and target height input options, system and context settings of the Image+ template variables to
- * the minimal image width/height input options and their aspect ratio or the target ratio to the image crops input
- * option. Remove these and the predefined crop sizes/aspect ratios system and context settings.
+ * the minimal image width/height input options and to the size of the image crop in the image crops input option. The
+ * target ratio is converted to the ratio of the image crop. Remove these and the predefined crop sizes/aspect ratios
+ * system and context settings.
  *
  * In dry run mode, nothing is saved or removed and the changes are only reported.
  */
@@ -55,6 +57,18 @@ class Migration
      * @var array $messages
      */
     protected $messages = [];
+
+    /**
+     * The number of created crop files
+     * @var int $countCropFiles
+     */
+    protected $countCropFiles = 0;
+
+    /**
+     * The number of crop files, that could not be created
+     * @var int $countCropErrors
+     */
+    protected $countCropErrors = 0;
 
     /**
      * Migration constructor
@@ -159,12 +173,18 @@ class Migration
      * crops input option, this is the image crop with the key crop, that is also used for the converted target
      * options in migrateTargets.
      *
+     * The missing crop files of the image crops are created, i.e. of the converted values and of the Image+ 3.x values
+     * with a removed crop file.
+     *
      * @return void
      */
     public function migrateValues()
     {
+        $this->modx->lexicon->load('imageplus:default');
         $countMigrated = 0;
         $countErrors = 0;
+        $this->countCropFiles = 0;
+        $this->countCropErrors = 0;
         $tvSources = [];
 
         /** @var modTemplateVar[] $tvs */
@@ -186,41 +206,52 @@ class Migration
             /** @var modTemplateVarResource[] $tvResources */
             $tvResources = $this->modx->getIterator('modTemplateVarResource', $c);
             foreach ($tvResources as $tvResource) {
-                $value = json_decode($tvResource->get('value'), true);
+                $oldValue = $tvResource->get('value');
+                $value = json_decode($oldValue, true);
                 if (!is_array($value)) {
                     // Plain image paths are converted on the fly by ImagePlus::prepareTvValue
                     continue;
                 }
                 $legacy = isset($value['sourceImg']) && is_array($value['sourceImg']);
                 $valueSource = ($legacy) ? ($value['sourceImg']['source'] ?? null) : ($value['source'] ?? null);
-                if (!$legacy && $valueSource === null) {
-                    // Image+ 3.x value
-                    continue;
-                }
+                $convert = $legacy || $valueSource !== null;
                 $tvName = 'the template variable "' . $tv->get('name') . '" (' . $tv->get('id') . ') in the resource ' . $tvResource->get('contentid');
 
-                if ($valueSource !== null) {
-                    // The media source of the template variable depends on the context of the resource
-                    $contextKey = $tvResource->get('context_key') ?: 'web';
-                    $sourceKey = $tv->get('id') . '-' . $contextKey;
-                    if (!isset($tvSources[$sourceKey])) {
-                        $source = $tv->getSource($contextKey);
-                        $tvSources[$sourceKey] = ($source) ? (int)$source->get('id') : 0;
+                // The media source of the template variable depends on the context of the resource
+                $contextKey = $tvResource->get('context_key') ?: 'web';
+                $sourceKey = $tv->get('id') . '-' . $contextKey;
+                if (!array_key_exists($sourceKey, $tvSources)) {
+                    $source = $tv->getSource($contextKey);
+                    if ($source) {
+                        $source->initialize();
                     }
-                    if ((int)$valueSource !== $tvSources[$sourceKey]) {
-                        $this->log(xPDO::LOG_LEVEL_ERROR, 'The media source ' . $valueSource . ' in the value of ' . $tvName . ' is not the media source ' . $tvSources[$sourceKey] . ' of the template variable in the context "' . $contextKey . '". Value: ' . $tvResource->get('value'), true);
-                        $countErrors++;
-                        continue;
-                    }
+                    $tvSources[$sourceKey] = $source ?: null;
+                }
+                $source = $tvSources[$sourceKey];
+                $sourceId = ($source) ? (int)$source->get('id') : 0;
+                if ($valueSource !== null && (int)$valueSource !== $sourceId) {
+                    $this->log(xPDO::LOG_LEVEL_ERROR, 'The media source ' . $valueSource . ' in the value of ' . $tvName . ' is not the media source ' . $sourceId . ' of the template variable in the context "' . $contextKey . '". Value: ' . $oldValue, true);
+                    $countErrors++;
+                    continue;
                 }
 
                 // A value without an image is cleared
-                $oldValue = $tvResource->get('value');
-                $newValue = $this->imageplus->prepareTvValue($oldValue, ['crop' => $cropKey], $tv);
+                $newValue = ($convert) ? $this->imageplus->prepareTvValue($oldValue, ['crop' => $cropKey], $tv) : $oldValue;
+                if ($newValue !== '' && $source) {
+                    $data = json_decode($newValue, true);
+                    if (is_array($data) && $this->createCropFiles($data, $source, $tvName, (int)$tvResource->get('contentid'), (int)$tv->get('id'))) {
+                        $newValue = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+                    }
+                }
+                if ($newValue === $oldValue) {
+                    continue;
+                }
                 $tvResource->set('value', $newValue);
                 if ($this->dryRun || $tvResource->save()) {
-                    $this->logChange(($newValue !== '') ? 'Would convert the value of ' . $tvName . ' to: ' . json_encode(json_decode($newValue, true), JSON_UNESCAPED_SLASHES) : 'Would clear the value of ' . $tvName . ', it does not contain an image. Value: ' . $oldValue);
-                    $countMigrated++;
+                    if ($convert) {
+                        $this->logChange(($newValue !== '') ? 'Would convert the value of ' . $tvName . ' to: ' . json_encode(json_decode($newValue, true), JSON_UNESCAPED_SLASHES) : 'Would clear the value of ' . $tvName . ', it does not contain an image. Value: ' . $oldValue);
+                        $countMigrated++;
+                    }
                 } else {
                     $this->log(xPDO::LOG_LEVEL_ERROR, 'Could not save the value of ' . $tvName . '.', true);
                     $countErrors++;
@@ -231,9 +262,115 @@ class Migration
         if ($countMigrated) {
             $this->log(xPDO::LOG_LEVEL_INFO, $this->verb('Converted', 'convert') . ' ' . $countMigrated . ' Image+ template variable values to the Image+ 3.x format.');
         }
+        if ($this->countCropFiles) {
+            $this->log(xPDO::LOG_LEVEL_INFO, $this->verb('Created', 'create') . ' ' . $this->countCropFiles . ' crop ' . (($this->countCropFiles === 1) ? 'file' : 'files') . ' of the Image+ template variable values.');
+        }
         if ($countErrors) {
             $this->log(xPDO::LOG_LEVEL_WARN, $countErrors . ' Image+ template variable values ' . (($this->dryRun) ? 'would not be' : 'were not') . ' migrated. Please check core/cache/logs/imageplus_migration.log');
         }
+        if ($this->countCropErrors) {
+            $this->log(xPDO::LOG_LEVEL_WARN, $this->countCropErrors . ' crop ' . (($this->countCropErrors === 1) ? 'file' : 'files') . ' of the Image+ template variable values could not be created. They are created on the first output, if possible. Please check core/cache/logs/imageplus_migration.log');
+        }
+    }
+
+    /**
+     * Create the missing crop files of the image crops in a value. The crop files of remote media sources are only
+     * checked in the value.
+     *
+     * @param array $data The decoded Image+ 3.x value, the crop files and their urls are added
+     * @param modMediaSource $source The initialized media source of the template variable
+     * @param string $tvName The template variable and the resource for the log messages
+     * @param int $resourceId
+     * @param int $tvId
+     * @return bool True, if a crop file was added to the value
+     */
+    protected function createCropFiles(array &$data, $source, string $tvName, int $resourceId, int $tvId): bool
+    {
+        if (empty($data['image']) || empty($data['sizes']) || !is_array($data['sizes'])) {
+            return false;
+        }
+        $basePath = (string)$source->getBasePath($data['image']);
+        $imageCrop = new ImageCrop($this->modx, $this->imageplus);
+        $changed = false;
+        foreach ($data['sizes'] as $key => $size) {
+            if (!is_array($size) || empty($size['cropWidth']) || empty($size['cropHeight'])) {
+                continue;
+            }
+            if (!empty($size['image']) && ($basePath === '' || is_file($basePath . $size['image']))) {
+                continue;
+            }
+            $cropName = 'the crop file of the image crop "' . $key . '" of ' . $tvName;
+            if ($this->dryRun) {
+                $this->logChange('Would create ' . $cropName . '.');
+                $this->countCropFiles++;
+                continue;
+            }
+            $result = $imageCrop->create($source, (string)$data['image'], $size, $resourceId, $tvId);
+            if (isset($result['error'])) {
+                $this->log(xPDO::LOG_LEVEL_ERROR, 'Could not create ' . $cropName . ': ' . $result['error'] . ' Image: ' . $data['image'], true);
+                $this->countCropErrors++;
+                continue;
+            }
+            $data['sizes'][$key]['image'] = $result['image'];
+            $this->countCropFiles++;
+            $changed = true;
+        }
+        if ($changed) {
+            $data = $this->imageplus->updateValueUrls($data, $source);
+        }
+        return $changed;
+    }
+
+    /**
+     * Get the constraint of the image crop for the targets of Image+ 2.x
+     *
+     * The target width and height are converted to the size of the image crop. If only one of them is set, the other
+     * one is calculated with the target ratio, like the crop of Image+ 2.x. Otherwise, the target ratio is converted
+     * to the ratio of the image crop.
+     *
+     * @param array $targets The targetWidth, targetHeight and targetRatio
+     * @return array The size or the ratio of the image crop or an empty array without targets
+     */
+    protected function getCropConstraint(array $targets): array
+    {
+        $width = (int)($targets['targetWidth'] ?? 0);
+        $height = (int)($targets['targetHeight'] ?? 0);
+        $ratio = (float)($targets['targetRatio'] ?? 0);
+        if ($ratio > 0 && $width && !$height) {
+            $height = max(1, (int)round($width / $ratio));
+        } elseif ($ratio > 0 && $height && !$width) {
+            $width = max(1, (int)round($height * $ratio));
+        }
+        if ($width || $height) {
+            // A size with only one value has no aspect ratio
+            return ['size' => ($width ?: '') . 'x' . ($height ?: '')];
+        }
+        if ($ratio > 0) {
+            return ['ratio' => $this->getProportion($ratio)];
+        }
+        return [];
+    }
+
+    /**
+     * Get the proportion of an aspect ratio like 16x9, the proportion with a denominator up to 100 is preferred.
+     *
+     * @param float $ratio
+     * @return string
+     */
+    protected function getProportion(float $ratio): string
+    {
+        for ($denominator = 1; $denominator <= 100; $denominator++) {
+            $numerator = (int)round($ratio * $denominator);
+            if ($numerator && abs($numerator / $denominator - $ratio) < 0.0005) {
+                return $numerator . 'x' . $denominator;
+            }
+        }
+        $numerator = max(1, (int)round($ratio * 1000));
+        $gcd = function ($a, $b) use (&$gcd) {
+            return $b ? $gcd($b, $a % $b) : $a;
+        };
+        $divisor = $gcd($numerator, 1000);
+        return ($numerator / $divisor) . 'x' . (1000 / $divisor);
     }
 
     /**
@@ -289,6 +426,8 @@ class Migration
                 'targetHeight' => trim((string)($properties['targetHeight'] ?? '')),
                 'targetRatio' => trim((string)($properties['targetRatio'] ?? '')),
             ];
+            // The targets of the image crop
+            $cropTargets = $targets;
             // The system and context settings were used, if no target input option was set
             if (!array_filter($targets)) {
                 $targets = $getTargets($tv->get('name'), '');
@@ -300,7 +439,7 @@ class Migration
                     // The minimal size is the lowest size of all contexts, so that no image is rejected, that was allowed before
                     $widths = array_map('intval', array_column($contextTargets, 'targetWidth'));
                     $heights = array_map('intval', array_column($contextTargets, 'targetHeight'));
-                    // The aspect ratio of the first context with targets is used
+                    // The targets of the first context with targets are used for the image crop
                     $first = [];
                     foreach ($contextTargets as $contextTarget) {
                         if (array_filter($contextTarget)) {
@@ -312,10 +451,10 @@ class Migration
                         'targetWidth' => (string)min($widths),
                         'targetHeight' => (string)min($heights),
                         'targetRatio' => $first['targetRatio'] ?? '',
-                        'proportion' => ((int)($first['targetWidth'] ?? 0) && (int)($first['targetHeight'] ?? 0)) ? (int)$first['targetWidth'] . 'x' . (int)$first['targetHeight'] : '',
                     ];
+                    $cropTargets = $first;
                     if (count(array_unique(array_map('serialize', $contextTargets))) > 1) {
-                        $this->log(xPDO::LOG_LEVEL_WARN, 'The template variable "' . $tv->get('name') . '" had different targets in the contexts. The lowest target width/height is used as minimal image size and the aspect ratio of the first context is used for the image crop. Please check the template variable options.');
+                        $this->log(xPDO::LOG_LEVEL_WARN, 'The template variable "' . $tv->get('name') . '" had different targets in the contexts. The lowest target width/height is used as minimal image size and the targets of the first context are used for the image crop. Please check the template variable options.');
                     }
                 }
             }
@@ -330,24 +469,15 @@ class Migration
                 $properties['minHeight'] = (string)(int)$targets['targetHeight'];
                 $changed = true;
             }
-            // The aspect ratio of the target width and height or the target ratio is used for the image crop
+            // The target width and height are used as size and the target ratio as ratio of the image crop
             $sizes = json_decode($properties['sizes'] ?? '', true);
             if (!is_array($sizes) || empty($sizes)) {
-                $proportion = '';
-                if (isset($targets['proportion'])) {
-                    $proportion = $targets['proportion'];
-                } elseif ((int)$targets['targetWidth'] && (int)$targets['targetHeight']) {
-                    $proportion = (int)$targets['targetWidth'] . 'x' . (int)$targets['targetHeight'];
-                }
-                if (!$proportion && (float)$targets['targetRatio']) {
-                    $proportion = round((float)$targets['targetRatio'] * 1000) . 'x1000';
-                }
-                if ($proportion) {
+                $constraint = $this->getCropConstraint($cropTargets);
+                if ($constraint) {
                     // The key of the image crop is the key, that was used for the target options
-                    $properties['sizes'] = json_encode(['crop' => [
+                    $properties['sizes'] = json_encode(['crop' => array_merge([
                         'name' => $this->modx->lexicon('imageplus.cropimage.crop'),
-                        'proportion' => $proportion
-                    ]], JSON_UNESCAPED_SLASHES);
+                    ], $constraint)], JSON_UNESCAPED_SLASHES);
                     $changed = true;
                 }
             }
