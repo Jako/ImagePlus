@@ -16,3 +16,7 @@ $_lang['setting_imageplus.debug'] = 'Отладка';
 $_lang['setting_imageplus.debug_desc'] = 'Записывать отладочную информацию в лог ошибок MODX.';
 $_lang['setting_imageplus.thumbnail_height'] = 'Высота иконки';
 $_lang['setting_imageplus.thumbnail_height_desc'] = 'Высота миниатюры изображения в панели переменных шаблона. По умолчанию: 250';
+$_lang['setting_imageplus.upload_path'] = 'Путь загрузки';
+$_lang['setting_imageplus.upload_path_desc'] = 'Путь в источнике файлов для загруженных изображений. Доступные плейсхолдеры: [[+year]], [[+month]], [[+day]], [[+user]], [[+username]], [[+resource_id]], [[+tv_id]]. Оставьте пустым для загрузки в корень источника файлов.';
+$_lang['setting_imageplus.crop_path'] = 'Путь обрезок';
+$_lang['setting_imageplus.crop_path_desc'] = 'Путь в источнике файлов для файлов обрезок. Доступны те же плейсхолдеры, что и для пути загрузки. По умолчанию: crop/.';
