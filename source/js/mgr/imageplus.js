@@ -27,6 +27,11 @@ Ext.extend(imagePlus, Ext.Component, {
     },
 
     warnAboutUnmetDependencies: function () {
+        // The warning is shown once, also if the page contains several Image+ template variables
+        if (this.unmetDependenciesWarned) {
+            return;
+        }
+        this.unmetDependenciesWarned = true;
         var warningWindow = MODx.load({
             xtype: 'modx-window',
             title: 'Image+ Warning – Unmet Dependencies',

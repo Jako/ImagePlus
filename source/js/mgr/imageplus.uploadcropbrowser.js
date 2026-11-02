@@ -59,6 +59,9 @@ Ext.extend(ImagePlus.combo.UploadCropBrowser, ImagePlus.combo.UploadBrowser, {
             record: value,
             resourceId: this.resourceId,
             tvId: this.tvId,
+            // The reloaded image has to have the minimal size too
+            minWidth: this.minWidth,
+            minHeight: this.minHeight,
             listeners: {
                 select: {
                     fn: this.setValue,
@@ -818,10 +821,16 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
             var url = baseUrl + ((baseUrl.indexOf('?') === -1) ? '?' : '&') + '_dc=' + Date.now();
             var image = new Image();
             image.onload = function () {
-                if (this.cropper) {
-                    this.cropperReload = true;
-                    this.cropper.replace(url);
+                if (!this.cropper) {
+                    return;
                 }
+                var error = this.getCropperMinSizeError(image.naturalWidth, image.naturalHeight);
+                if (error) {
+                    this.setCropperState('reload_failure', error);
+                    return;
+                }
+                this.cropperReload = true;
+                this.cropper.replace(url);
             }.bind(this);
             image.onerror = function () {
                 this.setCropperState('reload_failure', _('imageplus.cropimage.error_image_not_exists'));
@@ -829,6 +838,20 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
             this.setCropperState('reloading');
             image.src = url;
         }, this);
+    },
+    /**
+     * Get the error message, if an image is smaller than the minimal size
+     */
+    getCropperMinSizeError: function (width, height) {
+        var minWidth = parseInt(this.minWidth, 10) || 0;
+        var minHeight = parseInt(this.minHeight, 10) || 0;
+        if (minWidth && width < minWidth) {
+            return _('imageplus.cropimage.error_min_width', {width: width, min_width: minWidth});
+        }
+        if (minHeight && height < minHeight) {
+            return _('imageplus.cropimage.error_min_height', {height: height, min_height: minHeight});
+        }
+        return '';
     },
     /**
      * Create the saved image crops again with the reloaded image
