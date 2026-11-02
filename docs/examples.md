@@ -118,7 +118,7 @@ Here is an example of a call and configuration, where *image* is your Image+ TV:
 
 ```html
 <div class="feature" style="margin-bottom:1rem">
-    <a href="[[+caption]]"><img src="[[+source.src:pthumb=`w=320`]]" alt="[[+alt]]" /></a>
+    <a href="[[+caption]]"><img src="[[+source.src:pthumb=`w=320`]]" alt="[[+alt:htmlent]]" /></a>
 </div>
 ```
 
@@ -148,6 +148,6 @@ the *ImagePlus Snippet*.
             sizes="33.3vw"/>
     <source srcset="[[+source.src:pthumb=`[[+crop.options]]&w=640`]] 2x,
                 [[+source.src:pthumb=`[[+crop.options]]&w=320`]] 1x"/>
-    <img src="[[+url]]" alt="[[+alt:default=`[[+pagetitle]]`]]"/>
+    <img src="[[+url]]" alt="[[+alt:default=`[[+pagetitle]]`:htmlent]]"/>
 </picture>
 ```

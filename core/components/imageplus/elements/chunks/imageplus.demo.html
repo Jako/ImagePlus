@@ -70,7 +70,7 @@
     <h4>Default image output</h4>
 
     <div>
-        <img src="[[+url]]" alt="[[+alt]]"/>
+        <img src="[[+url]]" alt="[[+alt:htmlent]]"/>
         [[+caption:notempty=`<p class="caption">[[+caption]]</p>`]]
         [[+credits:notempty=`<p class="credits">[[+credits]]</p>`]]
     </div>
@@ -89,7 +89,7 @@
                     sizes="33.3vw"/>
             <source srcset="[[+source.src:pthumb=`[[+crop.options]]&w=640`]] 2x,
                         [[+source.src:pthumb=`[[+crop.options]]&w=320`]] 1x"/>
-            <img src="[[+url]]" alt="[[+alt]]"/>
+            <img src="[[+url]]" alt="[[+alt:htmlent]]"/>
         </picture>
     </p>
     [[+caption:notempty=`<p class="caption">[[+caption]]</p>`]]

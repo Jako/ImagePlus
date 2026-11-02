@@ -121,7 +121,7 @@ pThumb output filter with the `source.src` and the `options` or `crop.options`
 placeholders in the output chunk:
 
 ```html
-<img src="[[+source.src:pthumb=`[[+crop.options]]&w=640&f=webp`]]" alt="[[+alt]]">
+<img src="[[+source.src:pthumb=`[[+crop.options]]&w=640&f=webp`]]" alt="[[+alt:htmlent]]">
 ```
 
 ## Output Options
