@@ -1,6 +1,7 @@
 {
   "name": "treehillstudio/imageplus",
   "description": "Advanced Image Template Variable",
+  "version": "3.0.0-b1",
   "authors": [
     {
       "name": "Thomas Jakobi",
@@ -16,6 +17,10 @@
   },
   "require": {
     "php": ">=8.2"
+  },
+  "suggest": {
+    "ext-gd": "Needed to create the image crop files and the thumbnails",
+    "ext-imagick": "Creates the thumbnails with less memory"
   },
   "autoload": {
     "psr-4": {

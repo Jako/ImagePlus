@@ -7,6 +7,7 @@
  */
 $_lang['imageplus.imageplus.docid'] = 'Resursa din care se preia valoarea TV-ului Image+.';
 $_lang['imageplus.imageplus.options'] = 'Opțiuni phpThumb pentru substituentul options din chunk-ul șablon.';
+$_lang['imageplus.imageplus.source'] = 'ID-ul sursei media, dacă valoarea este transmisă cu proprietatea value (de ex. o valoare MIGX). Implicit, sursa media implicită.';
 $_lang['imageplus.imageplus.tpl'] = 'Chunk-ul șablon pentru ieșirea snippet-ului.';
 $_lang['imageplus.imageplus.tvname'] = 'Numele TV-ului Image+.';
 $_lang['imageplus.imageplus.type'] = 'Tipul ieșirii snippet-ului. Poate fi setat la <i>check</i> <i>tpl</i> și <i>thumb</i>.';

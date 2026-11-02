@@ -190,9 +190,11 @@ following properties can be set in the snippet call:
 | crop     | Key of the image crop used for the output. The first image crop is used by default.                   | -               |
 | docid    | Resource where the Image+ TV value is received from.                                                  | -               |
 | options  | phpThumb options for the options placeholder of the template chunk [^5].                              | -               |
+| source   | Media source ID, if the value is passed with the value property (i.e. a MIGX value) [^7].             | -               |
 | tpl      | Template chunk for the snippet output [^6].                                                           | ImagePlus.image |
 | tvname   | Name of the Image+ TV.                                                                                | -               |
 | type     | Type of the snippet output. Could be set to <i>check</i> [^2], <i>tpl</i> [^3] and <i>thumb</i> [^4]. | -               |
+| value    | Image+ value, that is used instead of the TV value, i.e. a MIGX value.                                | -               |
 
 #### Example
 
@@ -262,3 +264,4 @@ Remove them afterwards:
 [^4]: Outputs the URL of the image crop file of the retrieved Image+ TV value.
 [^5]: See [phpThumb readme](https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt) for possible options. Maybe not all options are valid in your installation (because of server restrictions).
 [^6]: The template chunk placeholder are the same as in the output chunk of the template variable.
+[^7]: Without the source property, the media source of an Image+ 2.x value or the default media source is used. The media source of the template variable is used with the tvname property.

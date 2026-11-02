@@ -7,6 +7,7 @@
  */
 $_lang['imageplus.imageplus.docid'] = 'Document waar de Image+ TV van geladen wordt.';
 $_lang['imageplus.imageplus.options'] = 'phpThumb opties voor de options placeholder van de template chunk.';
+$_lang['imageplus.imageplus.source'] = 'Mediabron-ID, als de waarde met de eigenschap value wordt doorgegeven (bijv. een MIGX-waarde). Standaard de standaard mediabron.';
 $_lang['imageplus.imageplus.tpl'] = 'Template chunk voor de snippet output.';
 $_lang['imageplus.imageplus.tvname'] = 'Naam van de Image+ TV.';
 $_lang['imageplus.imageplus.type'] = 'Type van de snippet output. Dit kan een van de volgende waarden zijn: <i>check</i>, <i>tpl</i> of <i>thumb</i>.';

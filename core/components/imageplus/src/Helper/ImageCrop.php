@@ -245,6 +245,8 @@ class ImageCrop
                 imagepng($targetImage);
                 break;
             case 'gif':
+                // GIF has no alpha channel, so the fully transparent pixels get the transparent color of the GIF
+                imagecolortransparent($targetImage, imagecolorallocatealpha($targetImage, 0, 0, 0, 127));
                 imagegif($targetImage);
                 break;
             case 'webp':

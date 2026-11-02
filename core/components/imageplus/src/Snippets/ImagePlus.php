@@ -23,6 +23,7 @@ class ImagePlus extends Snippet
         return [
             'value' => '',
             'tvname' => '',
+            'source::int' => 0,
             'docid::int' => (isset($this->modx->resource)) ? $this->modx->resource->get('id') : 0,
             'type' => '',
             'options' => '',
@@ -45,6 +46,7 @@ class ImagePlus extends Snippet
         $options = $this->getProperty('options');
         $tpl = $this->getProperty('tpl');
         $debug = $this->getProperty('debug');
+        $source = $this->getProperty('source');
 
         if ($value) {
             // Value is set by snippet property
@@ -55,7 +57,10 @@ class ImagePlus extends Snippet
                     return 'Unable to decode JSON in snippet property';
                 }
             }
-            // No TV is used
+            // No TV is used, the media source is set by the snippet property or by the value before Image+ 3.0
+            if (!$source && isset($data->sourceImg->source)) {
+                $source = (int)$data->sourceImg->source;
+            }
             $tv = null;
             $tvOutputProperties = [];
         } else {
@@ -101,6 +106,7 @@ class ImagePlus extends Snippet
                 $data = json_decode($value);
                 $output = ($value) ? $this->imageplus->getImageURL($value, array_merge($tvOutputProperties, $this->getProperties(), [
                     'docid' => $docid,
+                    'source' => $source,
                     'phpThumbParams' => $options,
                     'outputChunk' => $tpl,
                     'caption' => ($data && isset($data->caption)) ? $data->caption : '',
@@ -110,6 +116,7 @@ class ImagePlus extends Snippet
             case 'thumb':
                 $output = ($value) ? $this->imageplus->getImageURL($value, array_merge($tvOutputProperties, $this->getProperties(), [
                     'docid' => $docid,
+                    'source' => $source,
                     'phpThumbParams' => $options,
                     'outputChunk' => '',
                 ]), $tv) : '';
@@ -117,6 +124,7 @@ class ImagePlus extends Snippet
             default:
                 $output = ($value) ? $this->imageplus->getImageURL($value, array_merge($tvOutputProperties, $this->getProperties(), [
                     'docid' => $docid,
+                    'source' => $source,
                     'phpThumbParams' => $options,
                 ]), $tv) : '';
                 break;

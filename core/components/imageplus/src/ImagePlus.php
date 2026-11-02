@@ -237,7 +237,7 @@ class ImagePlus
         ]);
 
         $json = $this->prepareTvValue($json, $opts, $tv);
-        $source = $this->getTvSource($tv, $opts['docid'] ?? 0);
+        $source = $this->getTvSource($tv, $opts['docid'] ?? 0, $opts['source'] ?? 0);
         if ($source) {
             $source->initialize();
         }
@@ -319,7 +319,7 @@ class ImagePlus
         $data = json_decode($json, true);
         if (!is_array($data)) {
             // The variable does not contain an Image+ image object and has to be converted to an Image+ image object
-            $source = $this->getTvSource($tv, $opts['docid'] ?? 0);
+            $source = $this->getTvSource($tv, $opts['docid'] ?? 0, $opts['source'] ?? 0);
             if (!$source) {
                 $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'Invalid Media Source', '', 'Image+');
                 return '';
@@ -368,18 +368,20 @@ class ImagePlus
      * Get the media source of a template variable or the default media source
      *
      * The media source of the template variable depends on the context of the resource. Without a resource id, the
-     * context of the current resource is used.
+     * context of the current resource is used. Without a template variable (i.e. for a MIGX value), the media source
+     * with the source id or the default media source is used.
      *
      * @param modTemplateVar|null $tv
      * @param int $docid The id of the resource, that contains the template variable value
+     * @param int $sourceId The id of the media source, that is used without a template variable
      * @return modMediaSource|null
      */
-    public function getTvSource($tv = null, $docid = 0)
+    public function getTvSource($tv = null, $docid = 0, $sourceId = 0)
     {
         if ($tv) {
             return $tv->getSource($this->getResourceContextKey($docid));
         }
-        return $this->modx->getObject('sources.modMediaSource', $this->modx->getOption('default_media_source'));
+        return $this->modx->getObject('sources.modMediaSource', (int)$sourceId ?: $this->modx->getOption('default_media_source'));
     }
 
     /**

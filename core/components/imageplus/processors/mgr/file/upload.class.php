@@ -6,6 +6,7 @@
  * @subpackage processors
  */
 
+use TreehillStudio\ImagePlus\Helper\ImageCrop;
 use TreehillStudio\ImagePlus\Helper\ImageOrientation;
 use TreehillStudio\ImagePlus\ImagePlus;
 
@@ -74,7 +75,7 @@ class ImagePlusBrowserFileUploadProcessor extends modBrowserFileUploadProcessor
             $this->source->errors = [];
         }
         $files = $this->prepareFiles();
-        $error = $this->checkMinSize($files);
+        $error = $this->checkImages($files);
         if ($error) {
             return $this->failure($error);
         }
@@ -113,20 +114,18 @@ class ImagePlusBrowserFileUploadProcessor extends modBrowserFileUploadProcessor
     }
 
     /**
-     * Check the minimal size of the uploaded images
+     * Check that the uploaded files are images, that can be cropped, and check their minimal size
      *
      * @param array $files
-     * @return string The error message, if an image is smaller than the minimal size
+     * @return string The error message, if a file is not a valid image or an image is smaller than the minimal size
      */
-    private function checkMinSize(array $files)
+    private function checkImages(array $files)
     {
         $minWidth = (int)$this->getProperty('min_width', 0);
         $minHeight = (int)$this->getProperty('min_height', 0);
-        if (!$minWidth && !$minHeight) {
-            return '';
-        }
         foreach ($files as $file) {
-            $imageSize = ImageOrientation::getImageSize($file['tmp_name']);
+            $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            $imageSize = (in_array($extension, ImageCrop::EXTENSIONS, true)) ? ImageOrientation::getImageSize($file['tmp_name']) : false;
             if (!$imageSize) {
                 return $this->modx->lexicon('imageplus.cropimage.error_image_not_valid');
             }

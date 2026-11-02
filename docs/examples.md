@@ -32,11 +32,13 @@ You can display the thumbnail in the grid column by setting the renderer to
 configuration to do this.
 
 To use this *Image+* MIGX field in the frontend, call the *ImagePlus Snippet*
-where the value parameter is the name of the MIGX field:
+where the value parameter is the name of the MIGX field. If the MIGX field does
+not use the default media source, set its ID with the source parameter:
 
 ```html
 [[ImagePlus? 
 &value=`[[+migxImagePlusField]]`
+&source=`2`
 ]]
 ```
 

@@ -60,6 +60,7 @@ class ImagePlusImageThumbnailProcessor extends Processor
             $fileSize = filesize($path);
         } else {
             $path = null;
+            /** @var bool|array $object */
             $object = $this->source->getObjectContents($src);
             $content = (is_array($object) && isset($object['content'])) ? (string)$object['content'] : '';
             if ($content === '') {
@@ -146,7 +147,7 @@ class ImagePlusImageThumbnailProcessor extends Processor
     {
         $defaultSourceId = (int)$this->modx->getOption('default_media_source');
         $src = ltrim($src, '/');
-        if ($src === '' || strpos($src, "\0") !== false || preg_match('#(^|[/\\\\])\.\.([/\\\\]|$)#', $src)) {
+        if ($src === '' || str_contains($src, "\0") || preg_match('#(^|[/\\\\])\.\.([/\\\\]|$)#', $src)) {
             return $defaultSourceId;
         }
 
@@ -300,18 +301,13 @@ class ImagePlusImageThumbnailProcessor extends Processor
      */
     private function createGdImageFromFile(string $path, string $mime)
     {
-        switch ($mime) {
-            case 'image/jpeg':
-                return @imagecreatefromjpeg($path);
-            case 'image/png':
-                return @imagecreatefrompng($path);
-            case 'image/gif':
-                return @imagecreatefromgif($path);
-            case 'image/webp':
-                return function_exists('imagecreatefromwebp') ? @imagecreatefromwebp($path) : false;
-            default:
-                return false;
-        }
+        return match ($mime) {
+            'image/jpeg' => @imagecreatefromjpeg($path),
+            'image/png' => @imagecreatefrompng($path),
+            'image/gif' => @imagecreatefromgif($path),
+            'image/webp' => function_exists('imagecreatefromwebp') ? @imagecreatefromwebp($path) : false,
+            default => false,
+        };
     }
 
     /**

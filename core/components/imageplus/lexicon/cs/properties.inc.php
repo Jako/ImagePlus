@@ -7,6 +7,7 @@
  */
 $_lang['imageplus.imageplus.docid'] = 'Dokument, odkud je přebírána hodnota Image+ TV.';
 $_lang['imageplus.imageplus.options'] = 'Možnosti phpThumb pro zástupný symbol options v chunku šablony.';
+$_lang['imageplus.imageplus.source'] = 'ID zdroje médií, pokud je hodnota předána vlastností value (tj. hodnota MIGX). Výchozí je výchozí zdroj médií.';
 $_lang['imageplus.imageplus.tpl'] = 'Chunk pro výstup snippetu.';
 $_lang['imageplus.imageplus.tvname'] = 'Název Image+ TV.';
 $_lang['imageplus.imageplus.type'] = 'Typ výstupu snippetu. Může být nastaven na <i>check</i> <i>tpl</i> a <i>thumb</i>.';

@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multiple image crops per image, saved as files in the media source
 - Upload path and crop path system settings
 - Image crop output option/snippet property and crop.url placeholder
+- Media source snippet property for MIGX values
 - Minimal image width/height input options
 - Show all images in one line input option
 - Setup option to skip the 2.x migration and ImagePlusMigration snippet with a dry run
