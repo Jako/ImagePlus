@@ -13,6 +13,7 @@ namespace TreehillStudio\ImagePlus;
 
 use modTemplateVar;
 use TreehillStudio\ImagePlus\CropEngines\AbstractCropEngine;
+use TreehillStudio\ImagePlus\Helper\ImageOrientation;
 use modMediaSource;
 use modX;
 use PDO;
@@ -323,7 +324,8 @@ class ImagePlus
 
             $imgPath = $source->getBasePath() . $json;
             if (file_exists($imgPath)) {
-                $size = getimagesize($imgPath);
+                // The crop refers to the upright image, like the crops of the crop window
+                $size = ImageOrientation::getImageSize($imgPath);
             } else {
                 if ($this->getOption('debug')) {
                     $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'The template variabe value does not contain an existing image', '', 'Image+');
