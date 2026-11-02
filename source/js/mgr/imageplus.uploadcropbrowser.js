@@ -478,6 +478,8 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
     onDestroyCropper: function () {
         if (this.cropper) {
             this.cropper.destroy();
+            // The running requests check the cropper, so that they stop after the window is closed
+            this.cropper = null;
         }
     },
     onBeforeClose: function (btn) {
@@ -489,7 +491,7 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
                 return !this.cropperSizes[key].cropWidth;
             }, this)) {
                 warning = 'unset';
-            } else if (this.cropperState !== 'saved' && this.cropperState !== 'ready') {
+            } else if (this.cropperState !== 'saved' && this.cropperState !== 'ready' && this.cropperState !== 'reload_failure') {
                 warning = 'changes';
             }
         }
@@ -650,7 +652,8 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
             saved: ['green', _('imageplus.cropimage.changes_saved')],
             saving: ['loading', _('imageplus.cropimage.saving')],
             reloading: ['loading', _('imageplus.cropimage.reloading')],
-            failure: ['red', content]
+            failure: ['red', content],
+            reload_failure: ['red', content]
         };
         var stateEl = this.getCropperEl('state');
         stateEl.classList.remove('red', 'green', 'loading');
@@ -664,7 +667,7 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
         this.getCropperEl('reset').hidden = !unsaved;
         this.getCropperEl('reload').hidden = unsaved;
         // Another size can only be selected, if the changes are saved
-        var enableAll = state === 'saved' || state === 'ready';
+        var enableAll = state === 'saved' || state === 'ready' || state === 'reload_failure';
         this.getCropperEl('sizes').querySelectorAll('input').forEach(function (input) {
             input.disabled = !enableAll && input.value !== this.cropperSize;
         }, this);
@@ -749,7 +752,7 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
     /**
      * Create the crop file of an image crop. The path and the url of the crop file are set in the crop data.
      */
-    requestCropperCrop: function (data, callback) {
+    requestCropperCrop: function (data, callback, failure) {
         MODx.Ajax.request({
             url: ImagePlus.config.connectorUrl,
             params: {
@@ -773,6 +776,9 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
             listeners: {
                 success: {
                     fn: function (result) {
+                        if (!this.cropper) {
+                            return;
+                        }
                         data.image = result.object.image;
                         data.baseUrl = result.object.baseUrl;
                         callback.call(this);
@@ -781,7 +787,14 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
                 },
                 failure: {
                     fn: function (result) {
-                        this.setCropperState('failure', result.message);
+                        if (!this.cropper) {
+                            return;
+                        }
+                        if (failure) {
+                            failure.call(this, result.message);
+                        } else {
+                            this.setCropperState('failure', result.message);
+                        }
                     },
                     scope: this
                 }
@@ -811,7 +824,7 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
                 }
             }.bind(this);
             image.onerror = function () {
-                this.setCropperState('failure', _('imageplus.cropimage.error_image_not_exists'));
+                this.setCropperState('reload_failure', _('imageplus.cropimage.error_image_not_exists'));
             }.bind(this);
             this.setCropperState('reloading');
             image.src = url;
@@ -828,6 +841,9 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
         }, this);
         var ratioChanged = false;
         var next = function () {
+            if (!this.cropper) {
+                return;
+            }
             var key = keys.shift();
             if (!key) {
                 this.cropperState = 'ready';
@@ -845,6 +861,11 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
                 this.cropperSizes[key] = data;
                 this.updateCropperImage(key);
                 next();
+            }, function (message) {
+                // The saved crop area is shown again and the image can be reloaded again
+                this.cropperState = 'ready';
+                this.resetCropperSize();
+                this.setCropperState('reload_failure', message);
             });
         }.bind(this);
         next();

@@ -102,7 +102,6 @@ class ImagePlus
         $this->options = array_merge($this->options, [
             'debug' => (bool)$this->modx->getOption($this->namespace . '.debug', null, '0') == 1,
             'modxversion' => $modxversion['version'],
-            'sources' => $this->loadSourceMap()
         ]);
 
         $this->checkDependencies();
@@ -204,7 +203,10 @@ class ImagePlus
             $this->modx->controller->addCss($cssUrl . 'imageplus.min.css?v=v' . $this->version);
         }
         $this->modx->controller->addHtml('<script type="text/javascript">' .
-            'ImagePlus.config = ' . json_encode($this->options, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . ';' .
+            'ImagePlus.config = ' . json_encode(array_merge($this->options, [
+                // The urls of the media sources are only needed by the manager scripts
+                'sources' => $this->loadSourceMap()
+            ]), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . ';' .
             '</script>');
     }
 
