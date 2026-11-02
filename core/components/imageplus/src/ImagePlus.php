@@ -140,11 +140,19 @@ class ImagePlus
      */
     private function checkDependencies()
     {
-        if (!$this->getOption('cropEngineClass')) {
-            $this->options['cropEngineClass'] = '\\' . CropEngines\CropFile::class;
+        $engineClass = (string)$this->getOption('cropEngineClass');
+        if ($engineClass !== '' && (!class_exists($engineClass) || !is_subclass_of($engineClass, AbstractCropEngine::class) || !$engineClass::engineRequirementsMet($this->modx))) {
+            // The crop engine could not be used, i.e. a phpThumb crop engine of Image+ 2.x, so the image crop files are used
+            if ($this->getOption('debug')) {
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'The crop engine ' . $engineClass . ' could not be used. The CropFile crop engine is used instead.', '', 'Image+');
+            }
+            $engineClass = '';
         }
-        $engineClass = $this->getOption('cropEngineClass');
-        if (!class_exists($engineClass) || !$engineClass::engineRequirementsMet($this->modx)) {
+        if ($engineClass === '') {
+            $engineClass = '\\' . CropEngines\CropFile::class;
+        }
+        $this->options['cropEngineClass'] = $engineClass;
+        if (!$engineClass::engineRequirementsMet($this->modx)) {
             // Handle unmet dependencies
             $this->options['hasUnmetDependencies'] = true;
             return;

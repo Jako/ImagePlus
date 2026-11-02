@@ -43,8 +43,8 @@ Ext.extend(imagePlus, Ext.Component, {
                 }
             }],
             html: '<h3>The crop engine is not available!</h3>' +
-            '<p>The PHP GD extension is missing or the crop engine in the imageplus.cropEngineClass system setting does not exist.</p>' +
-            '<p>Enable the PHP GD extension on the server or remove the imageplus.cropEngineClass system setting.</p>'
+            '<p>The PHP GD extension is missing. It is needed to create the image crop files.</p>' +
+            '<p>Enable the PHP GD extension on the server.</p>'
         });
         warningWindow.show();
     }

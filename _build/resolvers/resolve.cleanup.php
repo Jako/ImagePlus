@@ -147,6 +147,16 @@ switch ($options[xPDOTransport::PACKAGE_ACTION]) {
             if ($setting && $setting->remove()) {
                 $modx->log(xPDO::LOG_LEVEL_INFO, 'Removed the imageplus.thumbnail_width system setting.');
             }
+            // The phpThumb crop engines are removed, the output uses the image crop files
+            foreach (['modSystemSetting', 'modContextSetting'] as $settingClass) {
+                /** @var modSystemSetting[]|modContextSetting[] $settings */
+                $settings = $modx->getIterator($settingClass, ['key' => 'imageplus.cropEngineClass']);
+                foreach ($settings as $setting) {
+                    if (preg_match('/PhpThumb(Of|sUp|On)$/i', trim((string)$setting->get('value'))) && $setting->remove()) {
+                        $modx->log(xPDO::LOG_LEVEL_INFO, 'Removed the imageplus.cropEngineClass ' . (($settingClass === 'modContextSetting') ? 'context setting of the context ' . $setting->get('context_key') : 'system setting') . ' with the removed crop engine ' . $setting->get('value') . '.');
+                    }
+                }
+            }
         }
         $success = true;
         break;

@@ -36,7 +36,7 @@ $_lang['imageplus.generateUrl'] = 'Use the Crop File URL';
 $_lang['imageplus.generateUrl_desc'] = '(Optional) The url of the image crop file is maybe not necessary, if you generate the thumbnail in output chunk i.e. by a pthumb output filter.';
 $_lang['imageplus.generateUrl_desc_warning'] = 'You have to activate this option, when you don’t specify an output chunk in the output options or when you use the [[+url]] placeholder in the specified output chunk. Otherwise the image is not cropped and the url of the original image is returned.';
 /** Placeholder descriptions */
-$_lang['imageplus.placeholder.url'] = 'URL of the thumbnail image';
+$_lang['imageplus.placeholder.url'] = 'URL of the image crop file';
 $_lang['imageplus.placeholder.alt'] = 'Alt text';
 $_lang['imageplus.placeholder.width'] = 'Width of the thumbnail image (ignored when 0)';
 $_lang['imageplus.placeholder.height'] = 'Height of the thumbnail image (ignored when 0)';

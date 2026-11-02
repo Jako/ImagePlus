@@ -36,7 +36,7 @@ $_lang['imageplus.generateUrl'] = 'URL der Ausschnittsdatei verwenden';
 $_lang['imageplus.generateUrl_desc'] = '(Optional) Die URL der Ausschnittsdatei wird eventuell nicht benötigt, wenn das Thumbnail im Ausgabe Chunk z.B. mit einem pThumb Output Filter generiert wird.';
 $_lang['imageplus.generateUrl_desc_warning'] = 'Sie müssen diese Option aktivieren, wenn Sie keinen Ausgabe Chunk benutzen oder wenn Sie den [[+url]] Platzhalter im angegebenen Ausgabe Chunk einsetzen. Andernfalls wird das Bild nicht beschnitten und die URL des Originalbilds ausgegeben.';
 /** Placeholder descriptions */
-$_lang['imageplus.placeholder.url'] = 'Thumbnail URL';
+$_lang['imageplus.placeholder.url'] = 'URL der Datei des Bildausschnitts';
 $_lang['imageplus.placeholder.alt'] = 'Alt-Text';
 $_lang['imageplus.placeholder.width'] = 'Breite des Thumbnails (wird ignoriert, wenn 0)';
 $_lang['imageplus.placeholder.height'] = 'Höhe des Thumbnails (wird ignoriert, wenn 0)';
