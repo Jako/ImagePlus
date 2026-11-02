@@ -25,6 +25,7 @@ use xPDO;
  * Image+ values), and in their default values are used. All other crop files in the crop folder of the media sources
  * are unused. Only files with the name of a crop file are regarded and files, that are newer than the minimal age, are
  * skipped, because a crop is saved before the resource is saved. Remote media sources can't be cleaned up.
+ * Folders below the crop folder, that are empty afterwards, are removed too.
  *
  * In dry run mode, nothing is removed and the unused files are only reported. The messages are logged in
  * core/cache/logs/imageplus_cleanup.log
@@ -225,6 +226,7 @@ class Cleanup
         $countRecent = 0;
         $countErrors = 0;
         $size = 0;
+        $removedFiles = [];
         $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($folder, FilesystemIterator::SKIP_DOTS));
         foreach ($files as $file) {
             if (!$file->isFile() || !preg_match(self::CROP_FILENAME, $file->getFilename())) {
@@ -257,11 +259,69 @@ class Cleanup
             }
             $countUnused++;
             $size += $fileSize;
+            $removedFiles[$file->getPathname()] = true;
         }
+        $countFolders = 0;
+        $this->removeEmptyFolders($folder, $path, $removedFiles, $sourceName, $countFolders);
 
-        $this->log(xPDO::LOG_LEVEL_INFO, sprintf('%s %d unused crop files (%s) in %s of the media source %s. %d crop files are used, %d crop files are newer than %d hours.',
-            ($this->dryRun) ? 'Would remove' : 'Removed', $countUnused, $this->formatSize($size), $path, $sourceName, $countUsed, $countRecent, $minAge) .
-            (($countErrors) ? sprintf(' %d crop files could not be removed.', $countErrors) : ''));
+        $verb = ($this->dryRun) ? 'Would remove' : 'Removed';
+        $this->log(xPDO::LOG_LEVEL_INFO, sprintf('%s %s (%s) in %s of the media source %s. %s used, %s newer than %s.',
+                $verb, $this->formatCount($countUnused, 'unused crop file', 'unused crop files'), $this->formatSize($size), $path, $sourceName,
+                $this->formatCount($countUsed, 'crop file is', 'crop files are'), $this->formatCount($countRecent, 'crop file is', 'crop files are'),
+                $this->formatCount($minAge, 'hour', 'hours')) .
+            (($countFolders) ? sprintf(' %s %s.', $verb, $this->formatCount($countFolders, 'empty folder', 'empty folders')) : '') .
+            (($countErrors) ? sprintf(' %s not be removed.', $this->formatCount($countErrors, 'crop file could', 'crop files could')) : ''));
+    }
+
+    /**
+     * Remove the folders below a folder, that are empty after removing the unused crop files. In dry run mode, the
+     * removed files are still there and the folders are only reported.
+     *
+     * @param string $folder The absolute path of the folder
+     * @param string $path The path of the folder in the media source
+     * @param array $removedFiles The absolute paths of the (would be) removed files as keys
+     * @param string $sourceName
+     * @param int $countFolders The number of the removed folders
+     * @return bool The folder is empty
+     */
+    protected function removeEmptyFolders(string $folder, string $path, array $removedFiles, string $sourceName, int &$countFolders): bool
+    {
+        $empty = true;
+        foreach (new FilesystemIterator($folder, FilesystemIterator::SKIP_DOTS) as $entry) {
+            if (!$entry->isDir() || $entry->isLink()) {
+                if (!isset($removedFiles[$entry->getPathname()])) {
+                    $empty = false;
+                }
+                continue;
+            }
+            $subPath = $path . '/' . $entry->getFilename();
+            if (!$this->removeEmptyFolders($entry->getPathname(), $subPath, $removedFiles, $sourceName, $countFolders)) {
+                $empty = false;
+            } elseif ($this->dryRun) {
+                $this->log(xPDO::LOG_LEVEL_INFO, 'Would remove the empty folder ' . $subPath . ' in the media source ' . $sourceName . '.');
+                $countFolders++;
+            } elseif (@rmdir($entry->getPathname())) {
+                $this->log(xPDO::LOG_LEVEL_INFO, 'Removed the empty folder ' . $subPath . ' in the media source ' . $sourceName . '.');
+                $countFolders++;
+            } else {
+                $this->log(xPDO::LOG_LEVEL_ERROR, 'Could not remove the empty folder ' . $subPath . ' in the media source ' . $sourceName . '.');
+                $empty = false;
+            }
+        }
+        return $empty;
+    }
+
+    /**
+     * Format a number with the singular or the plural of a noun.
+     *
+     * @param int $count
+     * @param string $singular
+     * @param string $plural
+     * @return string
+     */
+    protected function formatCount(int $count, string $singular, string $plural): string
+    {
+        return $count . ' ' . (($count === 1) ? $singular : $plural);
     }
 
     /**
