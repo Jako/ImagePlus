@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Target width/height/aspect ratio options and settings, migrated to the minimal image size and image crops options (MIGX configs have to be changed manually)
 - Predefined crop sizes system settings (select_config and force_config)
+- phpThumbOf, phpThumbsUp and phpThumbOn crop engines, the output uses the image crop files (pThumb is still usable in the output chunk)
 
 ### Fixed
 

@@ -109,16 +109,31 @@ The order for these settings is [^1].
 - context setting
 - system setting
 
+## Image Output
+
+The output uses the image crop files, that are created in the manager. A phpThumb
+extra is not needed. If an image crop has no crop file (i.e. a value created
+before Image+ 3.0), the crop file is created on the first output. Use an image
+crop with the needed size for each output size.
+
+For further image processing, i.e. for different sizes or image formats, use the
+pThumb output filter with the `source.src` and the `options` or `crop.options`
+placeholders in the output chunk:
+
+```html
+<img src="[[+source.src:pthumb=`[[+crop.options]]&w=640&f=webp`]]" alt="[[+alt]]">
+```
+
 ## Output Options
 
 Several advanced output options are available for an *Image+* TV:
 
 #### Additional phpThumb Parameters
 
-By default, an *Image+* TV returns a relative URL to a cropped (and possibly
-constrained) image scaled by phpThumb. This output option allows you to assign
-several additional phpThumb parameters that will be generated to create the
-thumbnail image.
+These phpThumb parameters are added to the `options` placeholder of the output
+chunk [^5]. They replace the target size of the image crop in this placeholder and
+can be used with a pthumb output filter in the output chunk. They don't change
+the URL of the image crop file.
 
 #### Image Crop
 
@@ -135,38 +150,33 @@ possible in this chunk to customize the output:
 |---------------|----------------------------------------------------------------|
 | alt           | Alt text                                                       |
 | crop.height   | Crop height of the thumbnail image                             |
-| crop.options  | Crop engine crop option string to generate the thumbnail image |
+| crop.options  | phpThumb crop option string to generate the thumbnail image    |
 | crop.url      | URL of the image crop file created in the manager              |
 | crop.width    | Crop width of the thumbnail image                              |
 | crop.x        | Crop x position of the thumbnail image                         |
 | crop.y        | Crop y position of the thumbnail image                         |
-| height        | Minimal height of the thumbnail image                          |
-| options       | Crop engine full option string to generate the thumbnail image |
+| height        | Height of the image crop file                                  |
+| options       | phpThumb full option string to generate the thumbnail image    |
 | source.height | Height of the source image                                     |
 | source.src    | Full path of the source image on the server (not a URL)        |
 | source.width  | Width of the source image                                      |
-| url           | URL of the thumbnail image                                     |
-| width         | Minimal width of the thumbnail image                           |
+| url           | URL of the image crop file                                     |
+| width         | Width of the image crop file                                   |
 
 All these placeholders can be used in the Snippet too.
 
-#### Generate Thumb URL
+#### Use the Crop File URL
 
 If you create the thumbnail in the output chunk, i.e. through a pthumb output
-filter, you can disable the generation of the internal thumb URL.
+filter, you can disable the URL of the image crop file. A missing crop file is
+not created then.
 
 !!! warning "Caution"
 
     You must enable this option if you do not specify an output chunk in the output
     options or if you use the `[[+url]]` placeholder in the specified output chunk.
-    Otherwise, the image will not be cropped/truncated and the original image path
+    Otherwise, the image will not be cropped and the URL of the original image
     will be returned.
-
-#### Thumb URL Issues
-
-If you use Image+ in a multiple language site with different base URL context
-settings, you have to set the system setting `phpthumbof.cache_url` to `/`.
-Otherwise, the generated thumbnail path will contain the `{base_url}` prefix.
 
 ## Snippet
 
@@ -179,7 +189,7 @@ following properties can be set in the snippet call:
 |----------|---------------------------------------------------------------------------------------|-----------------|
 | crop     | Key of the image crop used for the output. The first image crop is used by default.   | -               |
 | docid    | Resource where the Image+ TV value is received from.                                  | -               |
-| options  | Extended phpThumb options for the image.                                              | -               |
+| options  | phpThumb options for the options placeholder of the template chunk [^5].              | -               |
 | tpl      | Template chunk for the snippet output.                                                | ImagePlus.image |
 | tvname   | Name of the Image+ TV.                                                                | -               |
 | type     | Type of the snippet output. Could be set to <i>check</i> <i>tpl</i> and <i>thumb</i>. | -               |
@@ -197,12 +207,12 @@ following properties can be set in the snippet call:
 ```
 
 This snippet call returns the contents of the template variable named
-`imageplus` of resource `1` and the extended phpThumb option `&w=100` (width:
-100px) in the parsed `ImagePlus.demo` chunk.
+`imageplus` of resource `1` in the parsed `ImagePlus.demo` chunk. The phpThumb
+option `w=100` (width: 100px) is added to the `options` placeholder.
 
 [^1]: The first entry supercedes the second entry in the list etc.
 [^2]: Outputs *image* if the Image+ TV contains an image, otherwise *noimage*.
 [^3]: Outputs the parsed template set by **tpl** property for retreived Image+ TV value (with additional options set by the **options** property)
 [^4]: Outputs the thumbnail URL for retreived Image+ TV value (with additional options set by the **options** property)
-[^5]: See [phpThumb readme](http://phpthumb.sourceforge.net/demo/docs/phpthumb.readme.txt) for possible options. Maybe not all options are valid in your installation (because of crop engine limitations or server restricions).
+[^5]: See [phpThumb readme](http://phpthumb.sourceforge.net/demo/docs/phpthumb.readme.txt) for possible options. Maybe not all options are valid in your installation (because of server restricions).
 [^6]: The template chunk placeholder are the same as in the output chunk of the template variable.

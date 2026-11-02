@@ -6,8 +6,7 @@
  * @subpackage processors
  */
 
-use TreehillStudio\ImagePlus\Helper\ImageMemory;
-use TreehillStudio\ImagePlus\Helper\ImageOrientation;
+use TreehillStudio\ImagePlus\Helper\ImageCrop;
 use TreehillStudio\ImagePlus\Processors\Processor;
 
 class ImagePlusImageCropProcessor extends Processor
@@ -28,151 +27,33 @@ class ImagePlusImageCropProcessor extends Processor
             return $this->failure($this->modx->lexicon('imageplus.cropimage.error_file_not_set'));
         }
 
-        // Try to load the image
-        $file = $this->source->getObjectContents($filename);
-        $file = $file['content'];
-        if (empty($file)) {
-            return $this->failure('File ' . $filename . ' not found in source ' . $this->source->get('id'));
+        $cropWidth = $this->getProperty('cropWidth');
+        $cropHeight = $this->getProperty('cropHeight');
+        if (empty($cropHeight) || empty($cropWidth)) {
+            return $this->failure($this->modx->lexicon('imageplus.cropimage.error_cropheight_cropwidth'));
         }
 
-        if (!empty($file)) {
-            $filepath = $this->source->getBasePath($filename) . $filename;
-            $pathinfo = pathinfo($filename);
-            $imageExtension = $pathinfo['extension'];
-            $imageName = $pathinfo['filename'];
-            $imageDirname = ($pathinfo['dirname'] !== '.') ? $pathinfo['dirname'] . '/' : '';
-
-            $x = $this->getProperty('x');
-            $y = $this->getProperty('y');
-            $cropWidth = $this->getProperty('cropWidth');
-            $cropHeight = $this->getProperty('cropHeight');
-            $scaleX = $this->getProperty('scaleX');
-            $scaleY = $this->getProperty('scaleY');
-            $targetWidth = $this->getProperty('targetWidth');
-            $targetHeight = $this->getProperty('targetHeight');
-
-            if (empty($cropHeight) || empty($cropWidth)) {
-                return $this->failure($this->modx->lexicon('imageplus.cropimage.error_cropheight_cropwidth'));
-            }
-
-            if (($targetWidth === 'NaN' && $targetHeight === 'NaN') ||
-                ($targetWidth === '' && $targetHeight === '')) {
-                $targetWidth = $cropWidth;
-                $targetHeight = $cropHeight;
-            } elseif ($targetWidth === 'NaN' || $targetWidth === '') {
-                $targetWidth = strval(floor($targetHeight / $cropHeight * $cropWidth));
-            } elseif ($targetHeight === 'NaN' || $targetHeight === '') {
-                $targetHeight = strval(floor($targetWidth / $cropWidth * $cropHeight));
-            }
-
-            $imageHash = implode('-', [$cropWidth, $cropHeight, $x, $y, $scaleX, $scaleY, $targetWidth, $targetHeight, is_file($filepath) ? filemtime($filepath) : md5($file)]);
-
-            $cropPath = $this->imageplus->parsePathPlaceholders($this->imageplus->getOption('crop_path', null, ''), $this->getProperty('resource_id'), $this->getProperty('tv_id'));
-            $cropPath = trim(preg_replace('/[.]{2,}/', '', $cropPath), '/');
-            $imagePath = (($cropPath === '') ? 'crop' : $cropPath) . '/' . $imageDirname;
-
-            $this->source->createContainer($imagePath, '/');
-            // Unset errors to prevent issues if the container already exists.
-            $this->source->errors = array();
-
-            if (in_array(strtolower($imageExtension), ['jpg', 'jpeg', 'png', 'gif', 'webp'], true)) {
-                $cropName = $imageName . '-' . md5($imageHash) . '.' . $imageExtension;
-
-                $imageSize = getimagesizefromstring($file);
-                if (!$imageSize) {
-                    return $this->failure($this->modx->lexicon('imageplus.cropimage.error_image_not_valid'));
-                }
-                // The crop area is set on the upright image, that is shown in the browser
-                $orientation = ($imageSize['mime'] === 'image/jpeg') ? ImageOrientation::get(substr($file, 0, ImageOrientation::HEADER_LENGTH)) : 1;
-                $memoryNeeded = ImageMemory::estimate($imageSize, strlen($file), ImageMemory::getPngColorType($file), strtolower($imageExtension), (int)$targetWidth, (int)$targetHeight);
-                if (ImageOrientation::isRotated($orientation)) {
-                    // The rotated image is a copy of the image
-                    $memoryNeeded += $imageSize[0] * $imageSize[1] * 4;
-                }
-                if (!ImageMemory::reserve($memoryNeeded)) {
-                    return $this->failure($this->modx->lexicon('imageplus.cropimage.error_memory', [
-                        'width' => $imageSize[0],
-                        'height' => $imageSize[1],
-                        'memory' => ceil($memoryNeeded / 1048576) . 'M',
-                        'limit' => ini_get('memory_limit'),
-                    ]));
-                }
-
-                $sourceImage = imagecreatefromstring($file);
-                unset($file);
-                if (!$sourceImage) {
-                    return $this->failure($this->modx->lexicon('imageplus.cropimage.error_image_not_valid'));
-                }
-                $sourceImage = ImageOrientation::apply($sourceImage, $orientation);
-                $sourceWidth = imagesx($sourceImage);
-                $sourceHeight = imagesy($sourceImage);
-                $targetImage = imagecreatetruecolor((int)$targetWidth, (int)$targetHeight);
-
-                if ((int)$scaleX === -1) {
-                    imageflip($sourceImage, IMG_FLIP_HORIZONTAL);
-                }
-                if ((int)$scaleY === -1) {
-                    imageflip($sourceImage, IMG_FLIP_VERTICAL);
-                }
-                imagealphablending($sourceImage, true);
-
-                imagealphablending($targetImage, false);
-                imagesavealpha($targetImage, true);
-                imagefill($targetImage, 0, 0, imagecolorallocatealpha($targetImage, 0, 0, 0, 127));
-
-                // Copy the part of the crop area that is inside the source image directly into the target image.
-                // Parts of the crop area outside the source image stay transparent.
-                $ratioX = (int)$targetWidth / (int)$cropWidth;
-                $ratioY = (int)$targetHeight / (int)$cropHeight;
-                $srcX = max(0, (int)$x);
-                $srcY = max(0, (int)$y);
-                $srcWidth = min($sourceWidth, (int)$x + (int)$cropWidth) - $srcX;
-                $srcHeight = min($sourceHeight, (int)$y + (int)$cropHeight) - $srcY;
-                if ($srcWidth > 0 && $srcHeight > 0) {
-                    imagecopyresampled($targetImage, $sourceImage,
-                        (int)round(($srcX - (int)$x) * $ratioX), (int)round(($srcY - (int)$y) * $ratioY), $srcX, $srcY,
-                        (int)round($srcWidth * $ratioX), (int)round($srcHeight * $ratioY), $srcWidth, $srcHeight
-                    );
-                }
-                // Since PHP 8 imagedestroy has no effect, the image memory is released with unset
-                imagedestroy($sourceImage);
-                unset($sourceImage);
-
-                ob_start();
-                if (strtolower($imageExtension) === 'jpg') {
-                    imagejpeg($targetImage);
-                } else if (strtolower($imageExtension) === 'jpeg') {
-                    imagejpeg($targetImage);
-                } else if (strtolower($imageExtension) === 'png') {
-                    imagepng($targetImage);
-                } else if (strtolower($imageExtension) === 'gif') {
-                    imagegif($targetImage);
-                } else if (strtolower($imageExtension) === 'webp') {
-                    imagewebp($targetImage);
-                }
-                $result = ob_get_clean();
-
-                imagedestroy($targetImage);
-                unset($targetImage);
-
-                if ($result) {
-                    if ($this->source->createObject($imagePath, $cropName, $result) ||
-                        $this->source->updateObject($imagePath . $cropName, $result)
-                    ) {
-                        return $this->success($this->modx->lexicon('imageplus.cropimage.success_image'), [
-                            'image' => $imagePath . $cropName,
-                            'baseUrl' => $this->imageplus->getSourceObjectUrl($this->source, $imagePath . $cropName),
-                            'width' => $cropWidth,
-                            'height' => $cropHeight
-                        ]);
-                    }
-                    return $this->failure($this->modx->lexicon('imageplus.cropimage.error_crop'));
-                }
-                return $this->failure($this->modx->lexicon('imageplus.cropimage.error_image'));
-            }
-            return $this->failure($this->modx->lexicon('imageplus.cropimage.error_image_not_valid'));
+        // A missing target size is sent as NaN or as empty string and is calculated by the aspect ratio of the crop
+        $imageCrop = new ImageCrop($this->modx, $this->imageplus);
+        $result = $imageCrop->create($this->source, $filename, [
+            'x' => $this->getProperty('x'),
+            'y' => $this->getProperty('y'),
+            'cropWidth' => $cropWidth,
+            'cropHeight' => $cropHeight,
+            'scaleX' => $this->getProperty('scaleX'),
+            'scaleY' => $this->getProperty('scaleY'),
+            'targetWidth' => $this->getProperty('targetWidth'),
+            'targetHeight' => $this->getProperty('targetHeight'),
+        ], (int)$this->getProperty('resource_id'), (int)$this->getProperty('tv_id'));
+        if (isset($result['error'])) {
+            return $this->failure($result['error']);
         }
-        return $this->failure($this->modx->lexicon('imageplus.cropimage.error_image_not_exists'));
+        return $this->success($this->modx->lexicon('imageplus.cropimage.success_image'), [
+            'image' => $result['image'],
+            'baseUrl' => $this->imageplus->getSourceObjectUrl($this->source, $result['image']),
+            'width' => $cropWidth,
+            'height' => $cropHeight
+        ]);
     }
 
     /**

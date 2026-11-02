@@ -25,7 +25,8 @@ use xPDO;
  * Image+ values), and in their default values are used. All other crop files in the crop folder of the media sources
  * are unused. Only files with the name of a crop file are regarded and files, that are newer than the minimal age, are
  * skipped, because a crop is saved before the resource is saved. Remote media sources can't be cleaned up.
- * Folders below the crop folder, that are empty afterwards, are removed too.
+ * Folders below the crop folder, that are empty afterwards, are removed too. The crop files, that the CropFile crop
+ * engine creates for image crops without an existing crop file, are used too.
  *
  * In dry run mode, nothing is removed and the unused files are only reported. The messages are logged in
  * core/cache/logs/imageplus_cleanup.log
@@ -52,6 +53,12 @@ class Cleanup
      * @var bool $dryRun
      */
     protected $dryRun;
+
+    /**
+     * The image crops, the CropFile crop engine creates a crop file for them, if their crop file is missing
+     * @var array $uncroppedSizes
+     */
+    protected $uncroppedSizes = [];
 
     /**
      * The collected log messages
@@ -143,8 +150,9 @@ class Cleanup
     {
         $usedPaths = [];
         $queries = [
-            $this->modx->newQuery('modTemplateVarResource', ['value:LIKE' => '%sizes%']),
-            $this->modx->newQuery('modTemplateVar', ['default_text:LIKE' => '%sizes%']),
+            // Values before Image+ 3.0 contain sourceImg
+            $this->modx->newQuery('modTemplateVarResource', ['value:LIKE' => '%sizes%', 'OR:value:LIKE' => '%sourceImg%']),
+            $this->modx->newQuery('modTemplateVar', ['default_text:LIKE' => '%sizes%', 'OR:default_text:LIKE' => '%sourceImg%']),
         ];
         $queries[0]->select('value');
         $queries[1]->select('default_text');
@@ -190,13 +198,64 @@ class Cleanup
                 if (is_array($size) && !empty($size['image']) && is_string($size['image'])) {
                     $usedPaths[ltrim(str_replace('\\', '/', $size['image']), '/')] = true;
                 }
+                if (is_array($size) && !empty($value['image']) && is_string($value['image'])) {
+                    // The CropFile crop engine creates a crop file, if the crop file is missing
+                    $this->addUncroppedSize($value['image'], $size);
+                }
             }
+        } elseif (isset($value['sourceImg']['src']) && is_string($value['sourceImg']['src']) && isset($value['crop']) && is_array($value['crop'])) {
+            // A value before Image+ 3.0
+            $this->addUncroppedSize($value['sourceImg']['src'], [
+                'x' => $value['crop']['x'] ?? 0,
+                'y' => $value['crop']['y'] ?? 0,
+                'cropWidth' => $value['crop']['width'] ?? 0,
+                'cropHeight' => $value['crop']['height'] ?? 0,
+                'targetWidth' => $value['targetWidth'] ?? 0,
+                'targetHeight' => $value['targetHeight'] ?? 0,
+            ]);
         }
         foreach ($value as $item) {
             if (is_array($item) || is_string($item)) {
                 $this->collectPaths($item, $usedPaths, $depth + 1);
             }
         }
+    }
+
+    /**
+     * Remember an image crop, for which the CropFile crop engine could create a crop file.
+     *
+     * @param string $image The path of the image in the media source
+     * @param array $size The image crop
+     * @return void
+     */
+    protected function addUncroppedSize(string $image, array $size)
+    {
+        $crop = ImageCrop::normalizeCrop($size);
+        if ($crop['cropWidth'] && $crop['cropHeight']) {
+            $this->uncroppedSizes[] = [
+                'image' => ltrim(str_replace('\\', '/', $image), '/'),
+                'crop' => $crop,
+            ];
+        }
+    }
+
+    /**
+     * Get the names of the crop files, that the CropFile crop engine creates for the image crops without an existing
+     * crop file in a media source. The name does not depend on the crop folder.
+     *
+     * @param string $basePath The base path of the media source
+     * @return array The names as keys
+     */
+    protected function getGeneratedNames(string $basePath): array
+    {
+        $names = [];
+        foreach ($this->uncroppedSizes as $size) {
+            $filepath = rtrim($basePath, '/') . '/' . $size['image'];
+            if (is_file($filepath)) {
+                $names[ImageCrop::getCropName($size['image'], $size['crop'], (string)filemtime($filepath))] = true;
+            }
+        }
+        return $names;
     }
 
     /**
@@ -221,6 +280,7 @@ class Cleanup
             return;
         }
 
+        $generatedNames = $this->getGeneratedNames($basePath);
         $countUsed = 0;
         $countUnused = 0;
         $countRecent = 0;
@@ -233,7 +293,7 @@ class Cleanup
                 continue;
             }
             $filePath = $path . '/' . ltrim(str_replace('\\', '/', substr($file->getPathname(), strlen($folder))), '/');
-            if (isset($usedPaths[$filePath])) {
+            if (isset($usedPaths[$filePath]) || isset($generatedNames[$file->getFilename()])) {
                 $countUsed++;
                 continue;
             }

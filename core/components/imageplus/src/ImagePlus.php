@@ -140,22 +140,14 @@ class ImagePlus
      */
     private function checkDependencies()
     {
-        // Do some basic intelligent sniffing
         if (!$this->getOption('cropEngineClass')) {
-            if (CropEngines\PhpThumbsUp::engineRequirementsMet($this->modx)) {
-                $this->options['cropEngineClass'] = '\TreehillStudio\ImagePlus\CropEngines\PhpThumbsUp';
-            } elseif (CropEngines\PhpThumbOf::engineRequirementsMet($this->modx)) {
-                $this->options['cropEngineClass'] = '\TreehillStudio\ImagePlus\CropEngines\PhpThumbOf';
-            } elseif (CropEngines\PhpThumbOn::engineRequirementsMet($this->modx)) {
-                $this->options['cropEngineClass'] = '\TreehillStudio\ImagePlus\CropEngines\PhpThumbOn';
-            } else {
-                $this->options['cropEngineClass'] = '';
-            }
-            if (!$this->getOption('cropEngineClass')) {
-                // Handle unmet dependencies
-                $this->options['hasUnmetDependencies'] = true;
-                return;
-            }
+            $this->options['cropEngineClass'] = '\\' . CropEngines\CropFile::class;
+        }
+        $engineClass = $this->getOption('cropEngineClass');
+        if (!class_exists($engineClass) || !$engineClass::engineRequirementsMet($this->modx)) {
+            // Handle unmet dependencies
+            $this->options['hasUnmetDependencies'] = true;
+            return;
         }
         $this->options['hasUnmetDependencies'] = false;
     }
@@ -219,7 +211,6 @@ class ImagePlus
      */
     public function getImageURL($json, $opts = [], $tv = null)
     {
-        // Check system settings for crop engine override
         $engineClass = $this->getOption('cropEngineClass');
 
         // Check crop engine is usable
@@ -282,6 +273,10 @@ class ImagePlus
                 'y' => (int)($size['y'] ?? 0),
                 'width' => (int)($size['cropWidth'] ?? 0),
                 'height' => (int)($size['cropHeight'] ?? 0),
+                'scaleX' => ((int)($size['scaleX'] ?? 1) === -1) ? -1 : 1,
+                'scaleY' => ((int)($size['scaleY'] ?? 1) === -1) ? -1 : 1,
+                // The crop file of the image crop in the media source
+                'image' => (string)($size['image'] ?? ''),
             ],
             'targetWidth' => (int)($size['targetWidth'] ?? 0),
             'targetHeight' => (int)($size['targetHeight'] ?? 0),

@@ -28,13 +28,13 @@ $_lang['imageplus.allowCaption_desc'] = 'Ermöglicht die Eingabe eines Titels f�
 $_lang['imageplus.allowCredits'] = 'Bildnachweis Feld anzeigen';
 $_lang['imageplus.allowCredits_desc'] = 'Ermöglicht die Eingabe eines Bildnachweises für das Bild.';
 /** Output options render **/
-$_lang['imageplus.phpThumbParams'] = 'Zursätzliche phpThumb Parameter';
-$_lang['imageplus.phpThumbParams_desc'] = '(Optional) Geben Sie zusätzliche phpThumb Parameter an. Mehr Informationen zu phpThumb Parametern erhalten Sie <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">hier</a>.';
+$_lang['imageplus.phpThumbParams'] = 'Zusätzliche phpThumb Parameter';
+$_lang['imageplus.phpThumbParams_desc'] = '(Optional) phpThumb Parameter für den options Platzhalter im Ausgabe Chunk, z.B. für einen pThumb Output Filter. Mehr Informationen zu phpThumb Parametern erhalten Sie <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">hier</a>.';
 $_lang['imageplus.outputChunk'] = 'Ausgabe Chunk';
 $_lang['imageplus.outputChunk_desc'] = '(Optional) Wählen Sie einen Ausgabe Chunk aus. Wenn kein Wert angebeben ist wird der Bildpfad ausgegeben.';
-$_lang['imageplus.generateUrl'] = 'Thumbnail URL generieren';
-$_lang['imageplus.generateUrl_desc'] = '(Optional) Die Thumbnail URL eventuell wird nicht benötigt, wenn das Thumbnail im Ausgabe Chunk z.B. mit einem pThumb Output Filter generiert wird.';
-$_lang['imageplus.generateUrl_desc_warning'] = 'Sie müssen diese Option aktivieren, wenn Sie keinen Ausgabe Chunk benutzen oder wenn Sie den [[+url]] Platzhalter im angegebenen Ausgabe Chunk einsetzen. Andernfalls wird das Bild nicht beschnitten/skaliert und der original Bildpfad ausgegeben.';
+$_lang['imageplus.generateUrl'] = 'URL der Ausschnittsdatei verwenden';
+$_lang['imageplus.generateUrl_desc'] = '(Optional) Die URL der Ausschnittsdatei wird eventuell nicht benötigt, wenn das Thumbnail im Ausgabe Chunk z.B. mit einem pThumb Output Filter generiert wird.';
+$_lang['imageplus.generateUrl_desc_warning'] = 'Sie müssen diese Option aktivieren, wenn Sie keinen Ausgabe Chunk benutzen oder wenn Sie den [[+url]] Platzhalter im angegebenen Ausgabe Chunk einsetzen. Andernfalls wird das Bild nicht beschnitten und die URL des Originalbilds ausgegeben.';
 /** Placeholder descriptions */
 $_lang['imageplus.placeholder.url'] = 'Thumbnail URL';
 $_lang['imageplus.placeholder.alt'] = 'Alt-Text';

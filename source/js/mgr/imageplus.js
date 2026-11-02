@@ -42,9 +42,9 @@ Ext.extend(imagePlus, Ext.Component, {
                     L.ownerCt.ownerCt.close();
                 }
             }],
-            html: '<h3>You don\'t have any crop engines!</h3>' +
-            '<p>Before you can use Image+, you need at least one Crop Engine installed to handle image manipulation.</p>' +
-            '<p>A quick fix is to install either pThumb, phpThumbOf, phpThumbsUp or phpThumbOn from the MODX Package Repository</p>'
+            html: '<h3>The crop engine is not available!</h3>' +
+            '<p>The PHP GD extension is missing or the crop engine in the imageplus.cropEngineClass system setting does not exist.</p>' +
+            '<p>Enable the PHP GD extension on the server or remove the imageplus.cropEngineClass system setting.</p>'
         });
         warningWindow.show();
     }
