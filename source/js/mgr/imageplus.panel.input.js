@@ -125,6 +125,7 @@ Ext.extend(ImagePlus.panel.input, MODx.Panel, {
             minWidth: this.options.minWidth || 0,
             minHeight: this.options.minHeight || 0,
             format: this.options.format || '',
+            uploadPath: this.options.uploadPath || '',
             previewHeight: this.options.thumbnailHeight || 250,
             // Without the inline preview, the wide view shows the images like the narrow view
             allowInlinePreview: this.options.inlinePreview !== false,

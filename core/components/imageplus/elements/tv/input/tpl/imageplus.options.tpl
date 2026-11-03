@@ -53,48 +53,6 @@
                 layout: 'form',
                 labelAlign: 'top',
                 items: [{
-                    xtype: 'numberfield',
-                    fieldLabel: _('imageplus.minWidth'),
-                    description: MODx.expandHelp ? '' : _('imageplus.minWidth_desc'),
-                    name: 'inopt_minWidth',
-                    id: 'inopt_minWidth{/literal}{$tv}{literal}',
-                    value: params['minWidth'] || '',
-                    allowDecimals: false,
-                    allowNegative: false,
-                    anchor: '100%',
-                    listeners: oc
-                }, {
-                    xtype: MODx.expandHelp ? 'label' : 'hidden',
-                    forId: 'inopt_minWidth{/literal}{$tv}{literal}',
-                    html: _('imageplus.minWidth_desc'),
-                    cls: 'desc-under'
-                }]
-            }, {
-                columnWidth: 0.33,
-                layout: 'form',
-                labelAlign: 'top',
-                items: [{
-                    xtype: 'numberfield',
-                    fieldLabel: _('imageplus.minHeight'),
-                    description: MODx.expandHelp ? '' : _('imageplus.minHeight_desc'),
-                    name: 'inopt_minHeight',
-                    id: 'inopt_minHeight{/literal}{$tv}{literal}',
-                    value: params['minHeight'] || '',
-                    allowDecimals: false,
-                    allowNegative: false,
-                    anchor: '100%',
-                    listeners: oc
-                }, {
-                    xtype: MODx.expandHelp ? 'label' : 'hidden',
-                    forId: 'inopt_minHeight{/literal}{$tv}{literal}',
-                    html: _('imageplus.minHeight_desc'),
-                    cls: 'desc-under'
-                }]
-            }, {
-                columnWidth: 0.34,
-                layout: 'form',
-                labelAlign: 'top',
-                items: [{
                     xtype: 'combo',
                     fieldLabel: _('imageplus.format'),
                     description: MODx.expandHelp ? '' : _('imageplus.format_desc'),
@@ -122,11 +80,72 @@
                     html: _('imageplus.format_desc'),
                     cls: 'desc-under'
                 }]
+            }, {
+                columnWidth: 0.33,
+                layout: 'form',
+                labelAlign: 'top',
+                items: [{
+                    xtype: 'numberfield',
+                    fieldLabel: _('imageplus.minWidth'),
+                    description: MODx.expandHelp ? '' : _('imageplus.minWidth_desc'),
+                    name: 'inopt_minWidth',
+                    id: 'inopt_minWidth{/literal}{$tv}{literal}',
+                    value: params['minWidth'] || '',
+                    allowDecimals: false,
+                    allowNegative: false,
+                    anchor: '100%',
+                    listeners: oc
+                }, {
+                    xtype: MODx.expandHelp ? 'label' : 'hidden',
+                    forId: 'inopt_minWidth{/literal}{$tv}{literal}',
+                    html: _('imageplus.minWidth_desc'),
+                    cls: 'desc-under'
+                }]
+            }, {
+                columnWidth: 0.34,
+                layout: 'form',
+                labelAlign: 'top',
+                items: [{
+                    xtype: 'numberfield',
+                    fieldLabel: _('imageplus.minHeight'),
+                    description: MODx.expandHelp ? '' : _('imageplus.minHeight_desc'),
+                    name: 'inopt_minHeight',
+                    id: 'inopt_minHeight{/literal}{$tv}{literal}',
+                    value: params['minHeight'] || '',
+                    allowDecimals: false,
+                    allowNegative: false,
+                    anchor: '100%',
+                    listeners: oc
+                }, {
+                    xtype: MODx.expandHelp ? 'label' : 'hidden',
+                    forId: 'inopt_minHeight{/literal}{$tv}{literal}',
+                    html: _('imageplus.minHeight_desc'),
+                    cls: 'desc-under'
+                }]
             }]
         }, {
             layout: 'column',
             items: [{
-                columnWidth: 0.5,
+                columnWidth: 0.33,
+                layout: 'form',
+                labelAlign: 'top',
+                items: [{
+                    xtype: 'textfield',
+                    fieldLabel: _('imageplus.uploadPath'),
+                    description: MODx.expandHelp ? '' : _('imageplus.uploadPath_desc'),
+                    name: 'inopt_uploadPath',
+                    id: 'inopt_uploadPath{/literal}{$tv}{literal}',
+                    value: params['uploadPath'] || '',
+                    anchor: '100%',
+                    listeners: oc
+                }, {
+                    xtype: MODx.expandHelp ? 'label' : 'hidden',
+                    forId: 'inopt_uploadPath{/literal}{$tv}{literal}',
+                    html: _('imageplus.uploadPath_desc'),
+                    cls: 'desc-under'
+                }]
+            }, {
+                columnWidth: 0.33,
                 layout: 'form',
                 labelAlign: 'top',
                 items: [{
@@ -145,7 +164,7 @@
                     cls: 'desc-under'
                 }]
             }, {
-                columnWidth: 0.5,
+                columnWidth: 0.34,
                 layout: 'form',
                 labelAlign: 'top',
                 items: [{

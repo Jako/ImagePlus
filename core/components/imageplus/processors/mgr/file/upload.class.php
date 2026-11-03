@@ -67,7 +67,10 @@ class ImagePlusBrowserFileUploadProcessor extends modBrowserFileUploadProcessor
             return $this->failure($this->modx->lexicon('imageplus.cropimage.error_file_not_set'));
         }
 
-        $path = $this->imageplus->parsePathPlaceholders($this->imageplus->getOption('upload_path', null, ''), $this->getProperty('resource_id'), $this->getProperty('tv_id'));
+        // The upload path input option of the template variable overrides the imageplus.upload_path system setting
+        $path = trim((string)$this->getProperty('upload_path', ''));
+        $path = ($path !== '') ? $path : $this->imageplus->getOption('upload_path', null, '');
+        $path = $this->imageplus->parsePathPlaceholders($path, $this->getProperty('resource_id'), $this->getProperty('tv_id'));
         $path = trim(preg_replace('/[.]{2,}/', '', $path), '/');
         if ($path !== '') {
             $this->source->createContainer($path, '');

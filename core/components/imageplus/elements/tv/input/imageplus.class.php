@@ -69,6 +69,7 @@ class ImagePlusInputRender extends modTemplateVarInputRender
         $tvConfig->allowBlank = !($allowBlank === 'false' || $allowBlank === 0 || $allowBlank === false);
         $tvConfig->minWidth = (int)($params['minWidth'] ?? 0);
         $tvConfig->minHeight = (int)($params['minHeight'] ?? 0);
+        $tvConfig->uploadPath = trim((string)($params['uploadPath'] ?? ''));
         $tvConfig->format = \TreehillStudio\ImagePlus\Helper\ImageCrop::getTVFormat($params);
         $tvConfig->thumbnailHeight = (int)$this->getTVConfig('thumbnail_height', $tvName, $contextSettings, (!empty($params['thumbnailHeight'])) ? $params['thumbnailHeight'] : null) ?: 250;
         $tvConfig->inlinePreview = !(isset($params['inlinePreview']) && in_array($params['inlinePreview'], ['false', '0', 0, false], true));

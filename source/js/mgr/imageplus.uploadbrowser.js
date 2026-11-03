@@ -131,6 +131,8 @@ ImagePlus.combo.UploadBrowser = function (config) {
         showDownload: false,
         resourceId: '0',
         tvId: '0',
+        // The upload path of the template variable, the imageplus.upload_path system setting is used by default
+        uploadPath: '',
     });
     ImagePlus.combo.UploadBrowser.superclass.constructor.call(this, config);
 };
@@ -205,6 +207,7 @@ Ext.extend(ImagePlus.combo.UploadBrowser, ImagePlus.form.MultiTriggerField, {
                 source: this.source,
                 resource_id: this.resourceId,
                 tv_id: this.tvId,
+                upload_path: this.uploadPath || '',
             },
             items: [{
                 xtype: 'imageplus-form-filefield',

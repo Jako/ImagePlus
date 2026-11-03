@@ -18,6 +18,7 @@ field. The following properties are possible:
     "minWidth":"",
     "minHeight":"",
     "format":"",
+    "uploadPath":"",
     "thumbnailHeight":"",
     "inlinePreview":"",
     "allowAltTag":"",

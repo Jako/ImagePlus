@@ -69,4 +69,4 @@ cropping areas are scaled to the new size. If its aspect ratio has changed, you
 should check the image crops and save them again. Save the MODX resource
 afterwards.
 
-[^1]: The image is uploaded into the path of the `imageplus.upload_path` system setting or into the root of the media source.
+[^1]: The image is uploaded into the path of the **Upload Path** input option, of the `imageplus.upload_path` system setting or into the root of the media source.

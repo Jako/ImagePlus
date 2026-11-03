@@ -50,6 +50,15 @@ this image format too.
 The values are used in the `format` property of a MIGX configuration. An empty
 value uses the default.
 
+#### Upload Path
+
+The path in the media source for images, that are uploaded with the upload
+trigger of the TV. It overrides the `imageplus.upload_path` system setting. If
+both are empty, the images are uploaded into the root of the media source. The
+path can contain the same placeholders as the system setting (see
+[Context/System Settings](#contextsystem-settings)), i.e.
+`images/[[+year]]/[[+month]]/`.
+
 #### Minimal Image Width/Height
 
 The selected or uploaded image must have at least this width and/or height in
@@ -120,7 +129,9 @@ settings must be created before they can be used.
 
 The upload path and the crop path can contain the placeholders `[[+year]]`,
 `[[+month]]`, `[[+day]]`, `[[+user]]`, `[[+username]]`, `[[+resource_id]]` and
-`[[+tv_id]]`.
+`[[+tv_id]]`. The upload path of a single TV is set with the
+[Upload Path](#upload-path) input option. The TV name based settings below are
+not available for the upload path and the crop path.
 
 The global context/system settings have the prefix `imageplus.` and the
 individual TV context/system settings have the prefix `imageplus.{tvname}.`.
