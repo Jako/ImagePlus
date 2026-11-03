@@ -152,3 +152,27 @@ the *ImagePlus Snippet*.
     <img src="[[+url]]" alt="[[+alt:default=`[[+pagetitle]]`:htmlent]]"/>
 </picture>
 ```
+
+### Image formats
+
+The image crops are saved in the image format of the **Image Format** input
+option of the TV (WebP by default). With the `format` property of the *ImagePlus
+Snippet*, the crop files can be created in other image formats too, i.e. for a
+picture element with a fallback for older browsers. With an empty `tpl`
+property, the snippet returns the URL of the crop file.
+
+**Picture element**
+```html
+<picture>
+    <source type="image/avif" srcset="[[ImagePlus? &tvname=`yourtvname` &tpl=`` &format=`avif`]]"/>
+    <source type="image/webp" srcset="[[ImagePlus? &tvname=`yourtvname` &tpl=`` &format=`webp`]]"/>
+    <img src="[[ImagePlus? &tvname=`yourtvname` &tpl=`` &format=`jpg`]]" alt="[[*pagetitle:htmlent]]"/>
+</picture>
+```
+
+The crop files in the other image formats are created on the first output. The
+AVIF format needs a GD library with AVIF support on the server. Otherwise, the
+snippet returns the URL of the image and the AVIF source has to be removed.
+
+In a MIGX configuration, the image format of the crop files is set with the
+`format` property, i.e. `"format":"jpg"`.
