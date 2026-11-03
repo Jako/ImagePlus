@@ -55,8 +55,8 @@ You can also change the cropping area with the **Left**, **Top**, **Width** and
 pixels of the original image. A changed value moves or resizes the box, when the
 input loses the focus or the value is changed with the arrows. A resized box
 stays centered on its previous position. If the image crop has an aspect ratio,
-a changed width changes the height too and vice versa. The of the original image
-and the target image only show their sizes and are not editable.
+a changed width changes the height too and vice versa. The fields of the
+original image and the target image only show their sizes and are not editable.
 
 If an image was replaced by a changed image with the same filename, click
 **Reload image** in the cropping window. The image is loaded again and all saved
