@@ -41,19 +41,28 @@ appear where you can select the area of the image to use. The original image is
 not changed. So you can upload a single image and reuse it in multiple places on
 the website at different sizes.
 
-![Cropping tool window](img/cropping-tool.jpg)
-
 If you want to change the cropping area, you need to click the crop trigger of
 the Image+ TV.
 
-In the cropping window you need to drag the handles of the dotted box to change
-the cropping area. If the TV has been configured with size constraints or an
-aspect ratio, the cropping area will be limited to that aspect ratio.
+![Cropping tool window](img/cropping-tool.jpg)
+
+In the cropping window you need to drag the handles of the box to change the
+cropping area. If the TV has been configured with size constraints or an aspect
+ratio, the cropping area will be limited to that aspect ratio.
+
+You can also change the cropping area with the **Left**, **Top**, **Width** and
+**Height** inputs in the *Crop Image* section below the image. The values are
+pixels of the original image. A changed value moves or resizes the box, when the
+input loses the focus or the value is changed with the arrows. A resized box
+stays centered on its previous position. If the image crop has an aspect ratio,
+a changed width changes the height too and vice versa. The of the original image
+and the target image only show their sizes and are not editable.
 
 If an image was replaced by a changed image with the same filename, click
 **Reload image** in the cropping window. The image is loaded again and all saved
 image crops are created again from it. If the size of the image has changed, the
 cropping areas are scaled to the new size. If its aspect ratio has changed, you
-should check the image crops and save them again. Save the resource afterwards.
+should check the image crops and save them again. Save the MODX resource
+afterwards.
 
 [^1]: The image is uploaded into the path of the `imageplus.upload_path` system setting or into the root of the media source.
