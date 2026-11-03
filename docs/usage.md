@@ -163,13 +163,13 @@ possible in this chunk to customize the output:
 | crops.{key}.height | Height of the image crop file of the image crop {key} [^8]   |
 | crops.{key}.url    | URL of the image crop file of the image crop {key} [^8]      |
 | crops.{key}.width  | Width of the image crop file of the image crop {key} [^8]    |
-| height             | **[legacy]** Height of the image crop file                   |
+| height             | Height of the image crop file or the image [^9]              |
 | options            | phpThumb full option string to generate the thumbnail image  |
 | source.height      | Height of the source image                                   |
 | source.src         | Full path of the source image on the server (not a URL)      |
 | source.width       | Width of the source image                                    |
-| url                | **[legacy]** URL of the image crop file or the image [^9]    |
-| width              | **[legacy]** Width of the image crop file                    |
+| url                | URL of the image crop file or the image [^9]                 |
+| width              | Width of the image crop file or the image [^9]               |
 
 All these placeholders can be used in the Snippet too. The `crops` placeholders
 are explained in [Multiple Image Crops](#multiple-image-crops).
@@ -352,4 +352,4 @@ Remove them afterwards:
 [^6]: The template chunk placeholder are the same as in the output chunk of the template variable.
 [^7]: Without the source property, the media source of an Image+ 2.x value or the default media source is used. The media source of the template variable is used with the tvname property.
 [^8]: `{key}` must be replaced with the key of the image crop. An image path or an Image+ 2.x value contains one image crop with the key of the **Image Crop** output option or the key `crop`.
-[^9]: `crop.url` contains only the URL of an image crop file stored in the Image+ value and is empty otherwise. `url` contains the URL of the image crop file, which is created if it is missing. It contains the URL of the image, if the image crop is the unchanged image or if the image crop file could not be created.
+[^9]: `crop.url` contains only the URL of an image crop file stored in the Image+ value and is empty otherwise. `url`, `width` and `height` contain the URL and the size of the image crop file, which is created if it is missing. They contain the URL and the size of the image, if the image crop is the unchanged image or if the image crop file could not be created.
