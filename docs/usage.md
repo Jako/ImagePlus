@@ -38,6 +38,18 @@ error message. A changed image format is used for the image crops, that are
 saved afterwards. Missing crop files, that are created on the first output, get
 this image format too.
 
+| Option              | Value   |
+|---------------------|---------|
+| WebP                | `webp`  |
+| JPEG                | `jpg`   |
+| PNG                 | `png`   |
+| GIF                 | `gif`   |
+| AVIF                | `avif`  |
+| Format of the image | `image` |
+
+The values are used in the `format` property of a MIGX configuration. An empty
+value uses the default.
+
 #### Minimal Image Width/Height
 
 The selected or uploaded image must have at least this width and/or height in
