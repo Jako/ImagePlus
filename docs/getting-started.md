@@ -42,8 +42,8 @@ not changed. So you can upload a single image and reuse it in multiple places on
 the website at different sizes.
 
 The image crops are saved as crop files in the media source. They get the image
-format of the [Image Format](usage.md#image-format) input option of the TV, WebP
-by default.
+format of the [Image Format](usage.md#image-format) input option of the TV:
+WebP (the default), JPEG, PNG, GIF, AVIF or the format of the image.
 
 If you want to change the cropping area, you need to click the crop trigger of
 the Image+ TV.
