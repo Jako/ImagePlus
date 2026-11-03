@@ -9,24 +9,12 @@
         </thead>
         <tbody>
         <tr>
-            <td>[[%imageplus.placeholder.url? &namespace=`imageplus`]]</td>
-            <td>[[+url]]</td>
-        </tr>
-        <tr>
             <td>[[%imageplus.placeholder.crop.url? &namespace=`imageplus`]]</td>
             <td>[[+crop.url]]</td>
         </tr>
         <tr>
             <td>[[%imageplus.placeholder.alt? &namespace=`imageplus`]]</td>
             <td>[[+alt]]</td>
-        </tr>
-        <tr>
-            <td>[[%imageplus.placeholder.width? &namespace=`imageplus`]]</td>
-            <td>[[+width]]</td>
-        </tr>
-        <tr>
-            <td>[[%imageplus.placeholder.height? &namespace=`imageplus`]]</td>
-            <td>[[+height]]</td>
         </tr>
         <tr>
             <td>[[%imageplus.placeholder.source.src? &namespace=`imageplus`]]</td>
@@ -70,7 +58,7 @@
     <h4>Default image output</h4>
 
     <div>
-        <img src="[[+url]]" alt="[[+alt:htmlent]]"/>
+        <img src="[[+crop.url]]" alt="[[+alt:htmlent]]"/>
         [[+caption:notempty=`<p class="caption">[[+caption]]</p>`]]
         [[+credits:notempty=`<p class="credits">[[+credits]]</p>`]]
     </div>
