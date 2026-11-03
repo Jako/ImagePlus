@@ -149,27 +149,27 @@ When you select an **Output Chunk**, the TV output is rendered using that chunk.
 Select the name of the chunk from the drop-down menu. Multiple placeholders are
 possible in this chunk to customize the output:
 
-| Placeholder        | Description                                                    |
-|--------------------|----------------------------------------------------------------|
-| alt                | Alt text                                                       |
-| caption            | Caption                                                        |
-| credits            | Credits                                                        |
-| crop.height        | Crop height of the thumbnail image                             |
-| crop.options       | phpThumb crop option string to generate the thumbnail image    |
-| crop.url           | URL of the image crop file created in the manager              |
-| crop.width         | Crop width of the thumbnail image                              |
-| crop.x             | Crop x position of the thumbnail image                         |
-| crop.y             | Crop y position of the thumbnail image                         |
-| crops.{key}.height | Height of the image crop file of the image crop {key} [^8]     |
-| crops.{key}.url    | URL of the image crop file of the image crop {key} [^8]        |
-| crops.{key}.width  | Width of the image crop file of the image crop {key} [^8]      |
-| height             | Height of the image crop file                                  |
-| options            | phpThumb full option string to generate the thumbnail image    |
-| source.height      | Height of the source image                                     |
-| source.src         | Full path of the source image on the server (not a URL)        |
-| source.width       | Width of the source image                                      |
-| url                | URL of the image crop file                                     |
-| width              | Width of the image crop file                                   |
+| Placeholder        | Description                                                  |
+|--------------------|--------------------------------------------------------------|
+| alt                | Alt text                                                     |
+| caption            | Caption                                                      |
+| credits            | Credits                                                      |
+| crop.height        | Crop height of the thumbnail image                           |
+| crop.options       | phpThumb crop option string to generate the thumbnail image  |
+| crop.url           | URL of the image crop file                                   |
+| crop.width         | Crop width of the thumbnail image                            |
+| crop.x             | Crop x position of the thumbnail image                       |
+| crop.y             | Crop y position of the thumbnail image                       |
+| crops.{key}.height | Height of the image crop file of the image crop {key} [^8]   |
+| crops.{key}.url    | URL of the image crop file of the image crop {key} [^8]      |
+| crops.{key}.width  | Width of the image crop file of the image crop {key} [^8]    |
+| height             | **[legacy]** Height of the image crop file                   |
+| options            | phpThumb full option string to generate the thumbnail image  |
+| source.height      | Height of the source image                                   |
+| source.src         | Full path of the source image on the server (not a URL)      |
+| source.width       | Width of the source image                                    |
+| url                | **[legacy]** URL of the image crop file                      |
+| width              | **[legacy]** Width of the image crop file                    |
 
 All these placeholders can be used in the Snippet too. The `crops` placeholders
 are explained in [Multiple Image Crops](#multiple-image-crops).
@@ -181,15 +181,15 @@ variable output you are limited to one output chunk per template variable, with
 the snippet you can be more flexible and use different output chunks. The
 following properties can be set in the snippet call:
 
-| Property | Description                                                                                           | Default         |
-|----------|-------------------------------------------------------------------------------------------------------|-----------------|
-| crop     | Key of the image crop used for the output. The first image crop is used by default.                   | -               |
-| docid    | Resource where the Image+ TV value is received from.                                                  | Current resource |
-| options  | phpThumb options for the options placeholder of the template chunk [^5].                              | -               |
-| source   | Media source ID, if the value is passed with the value property (i.e. a MIGX value) [^7].             | -               |
-| tpl      | Template chunk for the snippet output [^6]. Without a template chunk, the URL of the image crop file is returned. | ImagePlus.image |
-| tvname   | Name of the Image+ TV.                                                                                | -               |
-| value    | Image+ value, that is used instead of the TV value, i.e. a MIGX value.                                | -               |
+| Property | Description                                                                                                       | Default          |
+|----------|-------------------------------------------------------------------------------------------------------------------|------------------|
+| crop     | Key of the image crop used for the output. The first image crop is used by default.                               | -                |
+| docid    | Resource where the Image+ TV value is received from.                                                              | Current resource |
+| options  | phpThumb options for the options placeholder of the template chunk [^5].                                          | -                |
+| source   | Media source ID, if the value is passed with the value property (i.e. a MIGX value) [^7].                         | -                |
+| tpl      | Template chunk for the snippet output [^6]. Without a template chunk, the URL of the image crop file is returned. | ImagePlus.image  |
+| tvname   | Name of the Image+ TV.                                                                                            | -                |
+| value    | Image+ value, that is used instead of the TV value, i.e. a MIGX value.                                            | -                |
 
 !!! note "Media Source"
 
@@ -204,7 +204,7 @@ following properties can be set in the snippet call:
     Otherwise, the URLs of the image and its crop files can't be found and missing
     crop files can't be created.
 
-#### Example
+### Example
 
 ```html
 [[ImagePlus?
