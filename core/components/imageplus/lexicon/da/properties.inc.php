@@ -6,6 +6,8 @@
  * @subpackage lexicon
  */
 $_lang['imageplus.imageplus.docid'] = 'Ressource hvorfra Image+ TV værdien bliver modtaget.';
+$_lang['imageplus.imageplus.format'] = 'Billedformat for billedudsnitsfilerne. En udsnitsfil i et andet billedformat oprettes ved første output. Standard er formatet for udsnitsfilen.';
+$_lang['imageplus.imageplus.format_image'] = 'Formatet for udsnitsfilen';
 $_lang['imageplus.imageplus.options'] = 'phpThumb indstillinger til options-pladsholderen i skabelon-chunk\'en.';
 $_lang['imageplus.imageplus.source'] = 'Mediekilde-ID, hvis værdien overføres med value-egenskaben (dvs. en MIGX-værdi). Standard er standardmediekilden.';
 $_lang['imageplus.imageplus.tpl'] = 'Skabelonchunk som snippet skal anvende. Uden skabelonchunk returneres beskæringsfilens URL.';

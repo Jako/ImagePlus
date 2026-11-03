@@ -6,6 +6,8 @@
  * @subpackage lexicon
  */
 $_lang['imageplus.imageplus.docid'] = 'Resource where the Image+ TV value is received from.';
+$_lang['imageplus.imageplus.format'] = 'Image format of the image crop files. A crop file in another image format is created on the first output. Defaults to the format of the image crop file.';
+$_lang['imageplus.imageplus.format_image'] = 'Format of the image crop file';
 $_lang['imageplus.imageplus.options'] = 'phpThumb options for the options placeholder of the template chunk.';
 $_lang['imageplus.imageplus.source'] = 'Media source ID, if the value is passed with the value property (i.e. a MIGX value). Defaults to the default media source.';
 $_lang['imageplus.imageplus.tpl'] = 'Template chunk for the snippet output. Without a template chunk, the URL of the image crop file is returned.';

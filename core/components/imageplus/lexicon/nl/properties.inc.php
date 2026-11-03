@@ -6,6 +6,8 @@
  * @subpackage lexicon
  */
 $_lang['imageplus.imageplus.docid'] = 'Document waar de Image+ TV van geladen wordt.';
+$_lang['imageplus.imageplus.format'] = 'Afbeeldingsformaat van de uitsnedebestanden. Een uitsnedebestand in een ander formaat wordt bij de eerste uitvoer aangemaakt. Standaard wordt het formaat van het uitsnedebestand gebruikt.';
+$_lang['imageplus.imageplus.format_image'] = 'Formaat van het uitsnedebestand';
 $_lang['imageplus.imageplus.options'] = 'phpThumb opties voor de options placeholder van de template chunk.';
 $_lang['imageplus.imageplus.source'] = 'Mediabron-ID, als de waarde met de eigenschap value wordt doorgegeven (bijv. een MIGX-waarde). Standaard de standaard mediabron.';
 $_lang['imageplus.imageplus.tpl'] = 'Template chunk voor de snippet output. Zonder template chunk wordt de URL van het uitsnedebestand teruggegeven.';

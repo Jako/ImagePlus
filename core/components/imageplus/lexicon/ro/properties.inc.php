@@ -6,6 +6,8 @@
  * @subpackage lexicon
  */
 $_lang['imageplus.imageplus.docid'] = 'Resursa din care se preia valoarea TV-ului Image+.';
+$_lang['imageplus.imageplus.format'] = 'Formatul fișierelor de decupare a imaginii. Un fișier de decupare într-un alt format este creat la prima afișare. Implicit se folosește formatul fișierului de decupare.';
+$_lang['imageplus.imageplus.format_image'] = 'Formatul fișierului de decupare';
 $_lang['imageplus.imageplus.options'] = 'Opțiuni phpThumb pentru substituentul options din chunk-ul șablon.';
 $_lang['imageplus.imageplus.source'] = 'ID-ul sursei media, dacă valoarea este transmisă cu proprietatea value (de ex. o valoare MIGX). Implicit, sursa media implicită.';
 $_lang['imageplus.imageplus.tpl'] = 'Chunk-ul șablon pentru ieșirea snippet-ului. Fără chunk șablon, se returnează URL-ul fișierului decupat.';

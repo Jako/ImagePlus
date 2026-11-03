@@ -6,6 +6,8 @@
  * @subpackage lexicon
  */
 $_lang['imageplus.imageplus.docid'] = 'Dokument, odkud je přebírána hodnota Image+ TV.';
+$_lang['imageplus.imageplus.format'] = 'Formát souborů výřezů obrázku. Soubor výřezu v jiném formátu je vytvořen při prvním výstupu. Výchozí je formát souboru výřezu.';
+$_lang['imageplus.imageplus.format_image'] = 'Formát souboru výřezu';
 $_lang['imageplus.imageplus.options'] = 'Možnosti phpThumb pro zástupný symbol options v chunku šablony.';
 $_lang['imageplus.imageplus.source'] = 'ID zdroje médií, pokud je hodnota předána vlastností value (tj. hodnota MIGX). Výchozí je výchozí zdroj médií.';
 $_lang['imageplus.imageplus.tpl'] = 'Chunk pro výstup snippetu. Bez chunku se vrátí URL souboru výřezu.';

@@ -6,6 +6,8 @@
  * @subpackage lexicon
  */
 $_lang['imageplus.imageplus.docid'] = 'Recurso desde el que se recibe el valor de Image+ TV.';
+$_lang['imageplus.imageplus.format'] = 'Formato de imagen de los archivos de recorte. Un archivo de recorte en otro formato se crea en la primera salida. Por defecto se usa el formato del archivo de recorte.';
+$_lang['imageplus.imageplus.format_image'] = 'Formato del archivo de recorte';
 $_lang['imageplus.imageplus.options'] = 'Opciones de phpThumb para el marcador de posición options del chunk de plantilla.';
 $_lang['imageplus.imageplus.source'] = 'ID de la fuente de medios, si el valor se pasa con la propiedad value (p. ej., un valor de MIGX). Por defecto, la fuente de medios por defecto.';
 $_lang['imageplus.imageplus.tpl'] = 'Trozo de plantilla para la salida del fragmento. Sin trozo de plantilla, se devuelve la URL del archivo de recorte.';

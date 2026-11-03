@@ -32,6 +32,8 @@ ImagePlus.combo.UploadCropBrowser = function (config) {
         // The minimal size of the selected or uploaded image
         minWidth: 0,
         minHeight: 0,
+        // The image format of the crop files, the format of the image is used by default
+        format: '',
         // Show the image and its crops in one line, if the field is at least inlinePreviewWidth wide
         allowInlinePreview: true,
         inlinePreviewWidth: 700,
@@ -59,6 +61,7 @@ Ext.extend(ImagePlus.combo.UploadCropBrowser, ImagePlus.combo.UploadBrowser, {
             record: value,
             resourceId: this.resourceId,
             tvId: this.tvId,
+            format: this.format,
             // The reloaded image has to have the minimal size too
             minWidth: this.minWidth,
             minHeight: this.minHeight,
@@ -763,6 +766,7 @@ Ext.extend(ImagePlus.window.CropImage, MODx.Window, {
                 action: 'mgr/image/crop',
                 resource_id: this.resourceId,
                 tv_id: this.tvId,
+                format: this.format || '',
                 wctx: this.wctx,
                 source: this.source,
                 image: this.cropperRecord.image,

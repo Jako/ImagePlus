@@ -27,6 +27,17 @@ name and one of the following constraints:
 
 If this option is empty, one image crop without constraints is created.
 
+#### Image Format
+
+The image format of the image crop files: WebP, JPEG, PNG, GIF, AVIF or the
+format of the image. The default is WebP, if the GD library of the server
+supports it, otherwise the format of the image is used. Transparent parts of an
+image get a white background in a JPEG crop file. The image format must be
+supported by the GD library of the server, otherwise the crop window shows an
+error message. A changed image format is used for the image crops, that are
+saved afterwards. Missing crop files, that are created on the first output, get
+this image format too.
+
 #### Minimal Image Width/Height
 
 The selected or uploaded image must have at least this width and/or height in
@@ -119,9 +130,10 @@ the first image crop. If an image crop has no crop file (i.e. a value created
 before Image+ 3.0), the crop file is created on the first output. Use an image
 crop with the needed size for each output size.
 
-For further image processing, i.e. for different sizes or image formats, use the
-pThumb output filter with the `source.src` and the `options` or `crop.options`
-placeholders in the output chunk:
+The `format` property of the ImagePlus snippet creates the crop files in another
+image format on the first output. For further image processing, i.e. for
+different sizes, use the pThumb output filter with the `source.src` and the
+`options` or `crop.options` placeholders in the output chunk:
 
 ```html
 <img src="[[+source.src:pthumb=`[[+crop.options]]&w=640&f=webp`]]" alt="[[+alt:htmlent]]">
@@ -185,6 +197,7 @@ following properties can be set in the snippet call:
 |----------|-------------------------------------------------------------------------------------------------------------------|------------------|
 | crop     | Key of the image crop used for the output. The first image crop is used by default.                               | -                |
 | docid    | Resource where the Image+ TV value is received from.                                                              | Current resource |
+| format   | Image format of the image crop files: `jpg`, `png`, `gif`, `webp` or `avif` [^10].                                | -                |
 | options  | phpThumb options for the options placeholder of the template chunk [^5].                                          | -                |
 | source   | Media source ID, if the value is passed with the value property (i.e. a MIGX value) [^7].                         | -                |
 | tpl      | Template chunk for the snippet output [^6]. Without a template chunk, the URL of the image crop file is returned. | ImagePlus.image  |
@@ -353,3 +366,4 @@ Remove them afterwards:
 [^7]: Without the source property, the media source of an Image+ 2.x value or the default media source is used. The media source of the template variable is used with the tvname property.
 [^8]: `{key}` must be replaced with the key of the image crop. An image path or an Image+ 2.x value contains one image crop with the key of the **Image Crop** output option or the key `crop`.
 [^9]: `crop.url` contains only the URL of an image crop file stored in the Image+ value and is empty otherwise. `url`, `width` and `height` contain the URL and the size of the image crop file, which is created if it is missing. They contain the URL and the size of the image, if the image crop is the unchanged image or if the image crop file could not be created.
+[^10]: Without a value, the image crop files, that were saved in the manager, are used. With another image format, the image crop files are created in that format on the first output.

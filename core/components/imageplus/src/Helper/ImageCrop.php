@@ -22,6 +22,12 @@ class ImageCrop
     /** The extensions of the images, that can be cropped */
     const EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
+    /** The image formats of the crop files */
+    const FORMATS = ['jpg', 'png', 'gif', 'webp', 'avif'];
+
+    /** The image format of the crop files, if the image format input option is empty */
+    const DEFAULT_FORMAT = 'webp';
+
     /**
      * A reference to the modX instance
      * @var modX $modx
@@ -93,16 +99,77 @@ class ImageCrop
      * @param string $filename The path of the image in the media source
      * @param array $crop
      * @param string $version The modification time or the md5 hash of the image
+     * @param string $format The image format of the crop file, the format of the image is used by default
      * @return string
      */
-    public static function getCropName(string $filename, array $crop, string $version): string
+    public static function getCropName(string $filename, array $crop, string $version, string $format = ''): string
     {
         $pathinfo = pathinfo($filename);
         $imageHash = implode('-', [
             $crop['cropWidth'], $crop['cropHeight'], $crop['x'], $crop['y'], $crop['scaleX'], $crop['scaleY'],
             $crop['targetWidth'], $crop['targetHeight'], $version
         ]);
-        return $pathinfo['filename'] . '-' . md5($imageHash) . '.' . ($pathinfo['extension'] ?? '');
+        return $pathinfo['filename'] . '-' . md5($imageHash) . '.' . self::getCropExtension($filename, $format);
+    }
+
+    /**
+     * Get the extension of the crop file. The extension of the image is kept, if it has the image format.
+     *
+     * @param string $filename The path of the image in the media source
+     * @param string $format The image format of the crop file
+     * @return string
+     */
+    public static function getCropExtension(string $filename, string $format = ''): string
+    {
+        $extension = (string)pathinfo($filename, PATHINFO_EXTENSION);
+        $format = self::normalizeFormat($format);
+        if ($format === '' || $format === self::normalizeFormat($extension)) {
+            return $extension;
+        }
+        return $format;
+    }
+
+    /**
+     * Normalize an image format. An unknown format is returned as empty string, so the format of the image is used.
+     *
+     * @param string $format
+     * @return string
+     */
+    public static function normalizeFormat(string $format): string
+    {
+        $format = strtolower(trim($format));
+        $format = ($format === 'jpeg') ? 'jpg' : $format;
+        return in_array($format, self::FORMATS, true) ? $format : '';
+    }
+
+    /**
+     * Get the image format of the crop files of a template variable. Without an image format input option, the
+     * default format is used, if the GD library supports it. The value image keeps the format of the image.
+     *
+     * @param array|mixed $properties The input properties of the template variable
+     * @return string The image format or an empty string for the format of the image
+     */
+    public static function getTVFormat($properties): string
+    {
+        $format = (is_array($properties)) ? (string)($properties['format'] ?? '') : '';
+        if ($format === '') {
+            return (self::isFormatSupported(self::DEFAULT_FORMAT)) ? self::DEFAULT_FORMAT : '';
+        }
+        return self::normalizeFormat($format);
+    }
+
+    /**
+     * Check if the GD library can create crop files in an image format.
+     *
+     * @param string $format
+     * @return bool
+     */
+    public static function isFormatSupported(string $format): bool
+    {
+        $types = ['jpg' => IMG_JPG, 'png' => IMG_PNG, 'gif' => IMG_GIF, 'webp' => IMG_WEBP, 'avif' => IMG_AVIF];
+        $format = self::normalizeFormat($format);
+        return $format !== '' && (imagetypes() & $types[$format]) &&
+            function_exists('image' . (($format === 'jpg') ? 'jpeg' : $format));
     }
 
     /**
@@ -157,9 +224,10 @@ class ImageCrop
      * @param array $crop The crop data
      * @param int $resourceId The resource for the placeholders of the crop path
      * @param int $tvId The template variable for the placeholders of the crop path
+     * @param string $format The image format of the crop file, the format of the image is used by default
      * @return array The path of the crop file in image, its width and height or the error message in error
      */
-    public function create($source, string $filename, array $crop, int $resourceId = 0, int $tvId = 0): array
+    public function create($source, string $filename, array $crop, int $resourceId = 0, int $tvId = 0, string $format = ''): array
     {
         $crop = self::normalizeCrop($crop);
         if (!$crop['cropWidth'] || !$crop['cropHeight']) {
@@ -169,6 +237,11 @@ class ImageCrop
         if (!in_array($imageExtension, self::EXTENSIONS, true)) {
             return ['error' => $this->modx->lexicon('imageplus.cropimage.error_image_not_valid')];
         }
+        $format = self::normalizeFormat($format);
+        if ($format !== '' && !self::isFormatSupported($format)) {
+            return ['error' => $this->modx->lexicon('imageplus.cropimage.error_format', ['format' => strtoupper($format)])];
+        }
+        $outputFormat = ($format !== '') ? $format : self::normalizeFormat($imageExtension);
 
         // Try to load the image
         $file = $source->getObjectContents($filename);
@@ -178,7 +251,7 @@ class ImageCrop
         }
 
         $imagePath = $this->getCropFolder($filename, $resourceId, $tvId);
-        $cropName = self::getCropName($filename, $crop, self::getVersion($source, $filename, $file));
+        $cropName = self::getCropName($filename, $crop, self::getVersion($source, $filename, $file), $format);
 
         $imageSize = getimagesizefromstring($file);
         if (!$imageSize) {
@@ -218,9 +291,15 @@ class ImageCrop
         }
         imagealphablending($sourceImage, true);
 
-        imagealphablending($targetImage, false);
-        imagesavealpha($targetImage, true);
-        imagefill($targetImage, 0, 0, imagecolorallocatealpha($targetImage, 0, 0, 0, 127));
+        if ($outputFormat === 'jpg' && $imageSize['mime'] !== 'image/jpeg') {
+            // JPEG has no transparency, so the transparent pixels of a converted image get a white background
+            imagealphablending($targetImage, true);
+            imagefill($targetImage, 0, 0, imagecolorallocate($targetImage, 255, 255, 255));
+        } else {
+            imagealphablending($targetImage, false);
+            imagesavealpha($targetImage, true);
+            imagefill($targetImage, 0, 0, imagecolorallocatealpha($targetImage, 0, 0, 0, 127));
+        }
 
         // Copy the part of the crop area that is inside the source image directly into the target image.
         // Parts of the crop area outside the source image stay transparent.
@@ -240,7 +319,7 @@ class ImageCrop
         unset($sourceImage);
 
         ob_start();
-        switch ($imageExtension) {
+        switch ($outputFormat) {
             case 'png':
                 imagepng($targetImage);
                 break;
@@ -251,6 +330,9 @@ class ImageCrop
                 break;
             case 'webp':
                 imagewebp($targetImage);
+                break;
+            case 'avif':
+                imageavif($targetImage);
                 break;
             default:
                 imagejpeg($targetImage);

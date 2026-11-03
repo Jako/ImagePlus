@@ -6,6 +6,8 @@
  * @subpackage lexicon
  */
 $_lang['imageplus.imageplus.docid'] = 'Az erőforrás, ahonnan az Image+ TV értéket kapja.';
+$_lang['imageplus.imageplus.format'] = 'A képkivágás-fájlok képformátuma. Más képformátumú kivágásfájl az első megjelenítéskor jön létre. Alapértelmezés szerint a kivágásfájl formátuma.';
+$_lang['imageplus.imageplus.format_image'] = 'A kivágásfájl formátuma';
 $_lang['imageplus.imageplus.options'] = 'phpThumb beállítások a sablon chunk options helyőrzőjéhez.';
 $_lang['imageplus.imageplus.source'] = 'Médiaforrás-azonosító, ha az érték a value tulajdonsággal kerül átadásra (pl. egy MIGX érték). Alapértelmezés szerint az alapértelmezett médiaforrás.';
 $_lang['imageplus.imageplus.tpl'] = 'Sablondarab a snippet kimenethez. Sablondarab nélkül a kivágott fájl URL-je jelenik meg.';

@@ -6,6 +6,8 @@
  * @subpackage lexicon
  */
 $_lang['imageplus.imageplus.docid'] = 'ID ресурса, из которого берется значение Image+ TV.';
+$_lang['imageplus.imageplus.format'] = 'Формат файлов обрезки изображения. Файл обрезки в другом формате создаётся при первом выводе. По умолчанию используется формат файла обрезки.';
+$_lang['imageplus.imageplus.format_image'] = 'Формат файла обрезки';
 $_lang['imageplus.imageplus.options'] = 'Параметры phpThumb для плейсхолдера options в чанке шаблона.';
 $_lang['imageplus.imageplus.source'] = 'ID источника файлов, если значение передается свойством value (например, значение MIGX). По умолчанию источник файлов по умолчанию.';
 $_lang['imageplus.imageplus.tpl'] = 'Чанк для оформления вывода сниппета. Без чанка возвращается URL файла обрезки.';

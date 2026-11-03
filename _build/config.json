@@ -55,6 +55,37 @@
               "value": ""
             },
             {
+              "name": "format",
+              "type": "list",
+              "options": [
+                {
+                  "text": "imageplus.imageplus.format_image",
+                  "value": ""
+                },
+                {
+                  "text": "JPEG",
+                  "value": "jpg"
+                },
+                {
+                  "text": "PNG",
+                  "value": "png"
+                },
+                {
+                  "text": "GIF",
+                  "value": "gif"
+                },
+                {
+                  "text": "WebP",
+                  "value": "webp"
+                },
+                {
+                  "text": "AVIF",
+                  "value": "avif"
+                }
+              ],
+              "value": ""
+            },
+            {
               "name": "tpl",
               "value": "ImagePlus.image"
             }

@@ -20,7 +20,9 @@ use xPDO;
  *
  * Uses the image crop files in the media source without phpThumb. The url, width and height are the ones of the crop
  * file of the image crop in the crop option or of the first image crop. A missing crop file (i.e. of a value created
- * before Image+ 3.0) is created on the first output. The phpThumb parameters are only used in the options placeholders of the
+ * before Image+ 3.0) is created on the first output. With a format option (i.e. the format property of the ImagePlus
+ * snippet), a crop file in another image format is created on the first output. A missing crop file gets the image format
+ * input option of the template variable. The phpThumb parameters are only used in the options placeholders of the
  * output chunk, i.e. for a pthumb output filter. The output chunk gets the url, width and height of every image crop in
  * the crops.<key>.url, crops.<key>.width and crops.<key>.height placeholders.
  *
@@ -84,7 +86,10 @@ class CropFile extends AbstractCropEngine
         $src = (string)$data->sourceImg->src;
         $resourceId = (int)$this->modx->getOption('docid', $opts, 0);
         $tvId = ($tv) ? (int)$tv->get('id') : 0;
-        [$url, $width, $height] = $this->getOutputImage($data, $source, $resourceId, $tvId);
+        $format = ImageCrop::normalizeFormat((string)$this->modx->getOption('format', $opts, ''));
+        // A missing crop file gets the image format of the template variable or the default format
+        $defaultFormat = ImageCrop::getTVFormat(($tv) ? $tv->get('input_properties') : []);
+        [$url, $width, $height] = $this->getOutputImage($data, $source, $resourceId, $tvId, $format, $defaultFormat);
 
         // If an output chunk is selected, parse that
         $outputChunk = $this->modx->getOption('outputChunk', $opts, '');
@@ -94,7 +99,7 @@ class CropFile extends AbstractCropEngine
             foreach ((array)($opts['crops.values'] ?? []) as $key => $cropJson) {
                 $cropData = json_decode((string)$cropJson);
                 if ($cropData) {
-                    [$crops['crops.' . $key . '.url'], $crops['crops.' . $key . '.width'], $crops['crops.' . $key . '.height']] = $this->getOutputImage($cropData, $source, $resourceId, $tvId);
+                    [$crops['crops.' . $key . '.url'], $crops['crops.' . $key . '.width'], $crops['crops.' . $key . '.height']] = $this->getOutputImage($cropData, $source, $resourceId, $tvId, $format, $defaultFormat);
                 }
             }
             unset($opts['crops.values']);
@@ -127,15 +132,17 @@ class CropFile extends AbstractCropEngine
 
     /**
      * Get the url, width and height of the crop file of an image crop. The original image is used, if the image crop
-     * is the unchanged image or if its crop file could not be created.
+     * is the unchanged image in the image format or if its crop file could not be created.
      *
      * @param object $data The crop engine value
      * @param modMediaSource $source The initialized media source
      * @param int $resourceId
      * @param int $tvId
+     * @param string $format The image format of the crop file, the format of the stored crop file is used by default
+     * @param string $defaultFormat The image format of a missing crop file without a format
      * @return array The url, width and height
      */
-    protected function getOutputImage($data, $source, int $resourceId, int $tvId): array
+    protected function getOutputImage($data, $source, int $resourceId, int $tvId, string $format = '', string $defaultFormat = ''): array
     {
         $src = (string)$data->sourceImg->src;
         $crop = ImageCrop::normalizeCrop([
@@ -152,10 +159,17 @@ class CropFile extends AbstractCropEngine
         $width = (int)$data->sourceImg->width;
         $height = (int)$data->sourceImg->height;
 
-        // The unchanged image needs no crop file, unless it was created in the manager
+        // The unchanged image needs no crop file, unless it was created in the manager or has another image format
         $cropImage = (string)($data->crop->image ?? '');
-        if ($cropImage !== '' || !$this->isOriginal($crop, $width, $height)) {
-            $cropImage = $this->getCropImage($source, $src, $crop, $cropImage, $resourceId, $tvId);
+        if ($cropImage !== '' && $format !== '' && ImageCrop::normalizeFormat(pathinfo($cropImage, PATHINFO_EXTENSION)) !== $format) {
+            // The stored crop file has another image format
+            $cropImage = '';
+            $convert = true;
+        } else {
+            $convert = $format !== '' && ImageCrop::getCropExtension($src, $format) !== pathinfo($src, PATHINFO_EXTENSION);
+        }
+        if ($cropImage !== '' || ($convert && $crop['cropWidth'] && $crop['cropHeight']) || !$this->isOriginal($crop, $width, $height)) {
+            $cropImage = $this->getCropImage($source, $src, $crop, $cropImage, $resourceId, $tvId, ($format !== '') ? $format : $defaultFormat);
             if ($cropImage !== '') {
                 $url = $this->imageplus->getSourceObjectUrl($source, $cropImage);
                 $width = $crop['targetWidth'];
@@ -241,9 +255,10 @@ class CropFile extends AbstractCropEngine
      * @param string $cropImage The crop file in the value
      * @param int $resourceId
      * @param int $tvId
+     * @param string $format The image format of the crop file
      * @return string The path of the crop file in the media source or an empty string, if it could not be created
      */
-    protected function getCropImage($source, string $src, array $crop, string $cropImage, int $resourceId, int $tvId): string
+    protected function getCropImage($source, string $src, array $crop, string $cropImage, int $resourceId, int $tvId, string $format = ''): string
     {
         $basePath = (string)$source->getBasePath($src);
         if ($cropImage !== '' && ($basePath === '' || is_file($basePath . $cropImage))) {
@@ -255,7 +270,7 @@ class CropFile extends AbstractCropEngine
         // of remote media sources are not checked. The cache partition is not removed by clearing the MODX cache.
         // The modification time of a local image is part of the key, so that a changed image gets a new crop file.
         $version = ($basePath !== '' && is_file($basePath . $src)) ? filemtime($basePath . $src) : '';
-        $cacheKey = 'cropfile/' . md5(json_encode([$source->get('id'), $src, $crop, $version]));
+        $cacheKey = 'cropfile/' . md5(json_encode(array_merge([$source->get('id'), $src, $crop, $version], ($format !== '') ? [$format] : [])));
         $cacheOptions = [xPDO::OPT_CACHE_KEY => 'imageplus'];
         $cached = $this->modx->cacheManager->get($cacheKey, $cacheOptions);
         if (is_array($cached) && !empty($cached['error'])) {
@@ -269,13 +284,13 @@ class CropFile extends AbstractCropEngine
         $imageCrop = new ImageCrop($this->modx, $this->imageplus);
         if ($version !== '') {
             // The crop file of a local image could exist, if the cache entry is lost
-            $cropImage = $imageCrop->getCropFolder($src, $resourceId, $tvId) . ImageCrop::getCropName($src, $crop, (string)$version);
+            $cropImage = $imageCrop->getCropFolder($src, $resourceId, $tvId) . ImageCrop::getCropName($src, $crop, (string)$version, $format);
             if (is_file($basePath . $cropImage)) {
                 $this->modx->cacheManager->set($cacheKey, $cropImage, 0, $cacheOptions);
                 return $cropImage;
             }
         }
-        $result = $imageCrop->create($source, $src, $crop, $resourceId, $tvId);
+        $result = $imageCrop->create($source, $src, $crop, $resourceId, $tvId, $format);
         if (isset($result['error'])) {
             $this->modx->log(xPDO::LOG_LEVEL_ERROR, 'The crop file of ' . $src . ' in the media source ' . $source->get('id') . ' could not be created: ' . $result['error'], '', 'Image+');
             $this->modx->cacheManager->set($cacheKey, ['error' => true], 3600, $cacheOptions);

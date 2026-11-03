@@ -49,7 +49,7 @@
         }, {
             layout: 'column',
             items: [{
-                columnWidth: 0.5,
+                columnWidth: 0.33,
                 layout: 'form',
                 labelAlign: 'top',
                 items: [{
@@ -70,7 +70,7 @@
                     cls: 'desc-under'
                 }]
             }, {
-                columnWidth: 0.5,
+                columnWidth: 0.33,
                 layout: 'form',
                 labelAlign: 'top',
                 items: [{
@@ -88,6 +88,38 @@
                     xtype: MODx.expandHelp ? 'label' : 'hidden',
                     forId: 'inopt_minHeight{/literal}{$tv}{literal}',
                     html: _('imageplus.minHeight_desc'),
+                    cls: 'desc-under'
+                }]
+            }, {
+                columnWidth: 0.34,
+                layout: 'form',
+                labelAlign: 'top',
+                items: [{
+                    xtype: 'combo',
+                    fieldLabel: _('imageplus.format'),
+                    description: MODx.expandHelp ? '' : _('imageplus.format_desc'),
+                    name: 'inopt_format',
+                    hiddenName: 'inopt_format',
+                    id: 'inopt_format{/literal}{$tv}{literal}',
+                    store: [
+                        ['image', _('imageplus.format_image')],
+                        ['jpg', 'JPEG'],
+                        ['png', 'PNG'],
+                        ['gif', 'GIF'],
+                        ['webp', 'WebP'],
+                        ['avif', 'AVIF']
+                    ],
+                    mode: 'local',
+                    triggerAction: 'all',
+                    editable: false,
+                    forceSelection: true,
+                    value: params['format'] || 'webp',
+                    anchor: '100%',
+                    listeners: oc
+                }, {
+                    xtype: MODx.expandHelp ? 'label' : 'hidden',
+                    forId: 'inopt_format{/literal}{$tv}{literal}',
+                    html: _('imageplus.format_desc'),
                     cls: 'desc-under'
                 }]
             }]

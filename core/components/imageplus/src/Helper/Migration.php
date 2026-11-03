@@ -197,6 +197,7 @@ class Migration
                 $sizes = $this->imageplus->getDefaultCropSizes();
             }
             $cropKey = (string)array_keys($sizes)[0];
+            $format = ImageCrop::getTVFormat($properties);
 
             $c = $this->modx->newQuery('modTemplateVarResource');
             $c->leftJoin('modResource', 'Resource', ['Resource.id = modTemplateVarResource.contentid']);
@@ -239,7 +240,7 @@ class Migration
                 $newValue = ($convert) ? $this->imageplus->prepareTvValue($oldValue, ['crop' => $cropKey], $tv) : $oldValue;
                 if ($newValue !== '' && $source) {
                     $data = json_decode($newValue, true);
-                    if (is_array($data) && $this->createCropFiles($data, $source, $tvName, (int)$tvResource->get('contentid'), (int)$tv->get('id'))) {
+                    if (is_array($data) && $this->createCropFiles($data, $source, $tvName, (int)$tvResource->get('contentid'), (int)$tv->get('id'), $format)) {
                         $newValue = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
                     }
                 }
@@ -282,9 +283,10 @@ class Migration
      * @param string $tvName The template variable and the resource for the log messages
      * @param int $resourceId
      * @param int $tvId
+     * @param string $format The image format of the crop files
      * @return bool True, if a crop file was added to the value
      */
-    protected function createCropFiles(array &$data, $source, string $tvName, int $resourceId, int $tvId): bool
+    protected function createCropFiles(array &$data, $source, string $tvName, int $resourceId, int $tvId, string $format = ''): bool
     {
         if (empty($data['image']) || empty($data['sizes']) || !is_array($data['sizes'])) {
             return false;
@@ -305,7 +307,7 @@ class Migration
                 $this->countCropFiles++;
                 continue;
             }
-            $result = $imageCrop->create($source, (string)$data['image'], $size, $resourceId, $tvId);
+            $result = $imageCrop->create($source, (string)$data['image'], $size, $resourceId, $tvId, $format);
             if (isset($result['error'])) {
                 $this->log(xPDO::LOG_LEVEL_ERROR, 'Could not create ' . $cropName . ': ' . $result['error'] . ' Image: ' . $data['image'], true);
                 $this->countCropErrors++;

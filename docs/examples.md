@@ -17,6 +17,7 @@ field. The following properties are possible:
     "sizes":"",
     "minWidth":"",
     "minHeight":"",
+    "format":"",
     "thumbnailHeight":"",
     "inlinePreview":"",
     "allowAltTag":"",

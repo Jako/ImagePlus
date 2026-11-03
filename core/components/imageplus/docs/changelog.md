@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Image crop output option/snippet property and crop.url placeholder
 - Placeholders with the url, width and height of every image crop in the output chunk
 - Media source snippet property for MIGX values
+- Image format input option/snippet property for the image crop files
 - Minimal image width/height input options
 - Show all images in one line input option
 - Setup option to skip the 2.x migration and ImagePlusMigration snippet with a dry run

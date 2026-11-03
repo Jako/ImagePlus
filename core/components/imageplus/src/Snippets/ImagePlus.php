@@ -26,6 +26,7 @@ class ImagePlus extends Snippet
             'source::int' => 0,
             'docid::int' => (isset($this->modx->resource)) ? $this->modx->resource->get('id') : 0,
             'options' => '',
+            'format' => '',
             'tpl::allowEmpty' => 'ImagePlus.image',
             'debug::bool' => $this->imageplus->getOption('debug')
         ];

@@ -44,7 +44,7 @@ class ImagePlusImageCropProcessor extends Processor
             'scaleY' => $this->getProperty('scaleY'),
             'targetWidth' => $this->getProperty('targetWidth'),
             'targetHeight' => $this->getProperty('targetHeight'),
-        ], (int)$this->getProperty('resource_id'), (int)$this->getProperty('tv_id'));
+        ], (int)$this->getProperty('resource_id'), (int)$this->getProperty('tv_id'), (string)$this->getProperty('format'));
         if (isset($result['error'])) {
             return $this->failure($result['error']);
         }
