@@ -45,13 +45,13 @@ before updating from Image+ 2.x.
 
 ### Fixed
 
-- The ImagePlus snippet did not use the imageplus.debug system setting
-- PHP warning in the ImagePlus snippet for template variables without output options
-- The check type of the ImagePlus snippet returned noimage for image path values
-- Wrong media source for template variable values of resources in another context
-- Broken grid thumbnails of image path values in media sources outside the site root
-- Wrong crops and thumbnails of photos with an EXIF orientation
-- Unescaped template variable value in the manager form and alt text in the default chunks
+- Debug system setting not used by the ImagePlus snippet
+- PHP warning in the ImagePlus snippet without output options
+- Check type of the ImagePlus snippet failed for image paths
+- Wrong media source for resources in another context
+- Broken grid thumbnails outside the site root
+- Wrong crops of photos with an EXIF orientation
+- Unescaped values in the manager form and default chunks
 
 ## [2.9.5] - 2023-09-07
 
