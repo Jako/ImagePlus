@@ -4,7 +4,7 @@
   "description": "Advanced Image Template Variable",
   "author": "Thomas Jakobi <office@treehillstudio.com>",
   "private": true,
-  "version": "3.0.0-b3",
+  "version": "3.0.0",
   "phpversion": "8.2",
   "modxversion": "2.8",
   "startYear": "2015",
