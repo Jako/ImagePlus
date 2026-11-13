@@ -1,6 +1,18 @@
 @use "sass:color";
+@use "cropimage";
 
 $treehillstudio-color: #cbd842;
+
+.imageplus-panel-input {
+  .imageplus-image-field {
+    position: relative;
+  }
+
+  .imageplus-image-fields-inline {
+    display: flex;
+    gap: 10px;
+  }
+}
 
 #modx-input-props, #modx-widget-props {
   &.imageplus-props {
@@ -93,36 +105,6 @@ $treehillstudio-color: #cbd842;
   }
 }
 
-.x-form-field-wrap {
-  .x-form-triple-triggers {
-    border: 0;
-    border-radius: 0 3px 3px 0;
-    box-shadow: none;
-    height: 100% !important;
-    padding: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 90px;
-    .x-form-trigger {
-      display: inline-block;
-      position: relative;
-      top: auto;
-      vertical-align: top;
-      &.x-form-clear-trigger {
-        &:before {
-          content: "\f00d";
-        }
-      }
-      &.x-form-crop-trigger {
-        &:before {
-          content: "\f125";
-        }
-      }
-    }
-  }
-}
-
 .imageplus-hidden-textarea {
   display: none;
 }
@@ -159,5 +141,3 @@ $treehillstudio-color: #cbd842;
     }
   }
 }
-
-@import "jquery.jcrop";

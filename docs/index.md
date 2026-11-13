@@ -7,9 +7,9 @@ tool can be used to resize the image to the desired dimensions/proportions.
 
 ### Requirements
 
-* MODX Revolution 2.6+
-* PHP 7.1+
-* MODX Cropping Engine i.e. [pThumb](https://modx.com/extras/package/pthumb)
+* MODX Revolution 2.8+
+* PHP 8.2+
+* Optional: [pThumb](https://modx.com/extras/package/pthumb) for further image processing in the output chunk
 
 ### Features
 
@@ -17,7 +17,7 @@ tool can be used to resize the image to the desired dimensions/proportions.
 * Option to restrict minimum width and/or height for uploaded image.
 * User image cropping can be forced to stay at preset ratio.
 * Use chunk as output mask and fill placeholders with url, height, width, alt
-  tag, phpthumb options etc. of cropped uploaded image.
+  tag etc. of the image crop file.
 
 ### License
 

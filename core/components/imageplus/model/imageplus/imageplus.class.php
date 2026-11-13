@@ -3,7 +3,7 @@
  * Image+
  *
  * Copyright 2013-2015 by Alan Pich <alan.pich@gmail.com>
- * Copyright 2015-2023 by Thomas Jakobi <office@treehillstudio.com>
+ * Copyright 2015-2026 by Thomas Jakobi <office@treehillstudio.com>
  *
  * @package imageplus
  * @subpackage classfile

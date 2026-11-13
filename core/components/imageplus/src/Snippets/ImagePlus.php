@@ -23,11 +23,12 @@ class ImagePlus extends Snippet
         return [
             'value' => '',
             'tvname' => '',
+            'source::int' => 0,
             'docid::int' => (isset($this->modx->resource)) ? $this->modx->resource->get('id') : 0,
-            'type' => '',
             'options' => '',
-            'tpl' => 'ImagePlus.image',
-            'input::bool' => $this->imageplus->getOption('debug')
+            'format' => '',
+            'tpl::allowEmpty' => 'ImagePlus.image',
+            'debug::bool' => $this->imageplus->getOption('debug')
         ];
     }
 
@@ -41,10 +42,10 @@ class ImagePlus extends Snippet
         $value = $this->getProperty('value');
         $tvname = $this->getProperty('tvname');
         $docid = $this->getProperty('docid');
-        $type = $this->getProperty('type');
         $options = $this->getProperty('options');
         $tpl = $this->getProperty('tpl');
         $debug = $this->getProperty('debug');
+        $source = $this->getProperty('source');
 
         if ($value) {
             // Value is set by snippet property
@@ -55,7 +56,10 @@ class ImagePlus extends Snippet
                     return 'Unable to decode JSON in snippet property';
                 }
             }
-            // No TV is used
+            // No TV is used, the media source is set by the snippet property or by the value before Image+ 3.0
+            if (!$source && isset($data->sourceImg->source)) {
+                $source = (int)$data->sourceImg->source;
+            }
             $tv = null;
             $tvOutputProperties = [];
         } else {
@@ -66,7 +70,7 @@ class ImagePlus extends Snippet
                 // Get the raw content of the TV
                 $value = $tv->getValue($docid);
                 $value = $tv->processBindings($value, $docid);
-                $tvOutputProperties = $tv->get('output_properties');
+                $tvOutputProperties = (array)$tv->get('output_properties');
                 foreach ($tvOutputProperties as &$tvOutputProperty) {
                     switch ($tvOutputProperty) {
                         case 'true' :
@@ -86,36 +90,12 @@ class ImagePlus extends Snippet
             }
         }
 
-        // Render output
-        switch ($type) {
-            case 'check':
-                $data = json_decode($value);
-                $output = ($data && $data->sourceImg->src) ? 'image' : 'noimage';
-                break;
-            case 'tpl':
-                $data = json_decode($value);
-                $output = ($value) ? $this->imageplus->getImageURL($value, array_merge($tvOutputProperties, $this->getProperties(), [
-                    'docid' => $docid,
-                    'phpThumbParams' => $options,
-                    'outputChunk' => $tpl,
-                    'caption' => ($data && isset($data->caption)) ? $data->caption : '',
-                    'credits' => ($data && isset($data->credits)) ? $data->credits : ''
-                ]), $tv) : '';
-                break;
-            case 'thumb':
-                $output = ($value) ? $this->imageplus->getImageURL($value, array_merge($tvOutputProperties, $this->getProperties(), [
-                    'docid' => $docid,
-                    'phpThumbParams' => $options,
-                    'outputChunk' => '',
-                ]), $tv) : '';
-                break;
-            default:
-                $output = ($value) ? $this->imageplus->getImageURL($value, array_merge($tvOutputProperties, $this->getProperties(), [
-                    'docid' => $docid,
-                    'phpThumbParams' => $options,
-                ]), $tv) : '';
-                break;
-        }
-        return $output;
+        // Render the template chunk or return the url of the image crop file without a template chunk
+        return ($value) ? $this->imageplus->getImageURL($value, array_merge($tvOutputProperties, $this->getProperties(), [
+            'docid' => $docid,
+            'source' => $source,
+            'phpThumbParams' => $options,
+            'outputChunk' => $tpl,
+        ]), $tv) : '';
     }
 }

@@ -1,33 +1,78 @@
 ## Input Options
 
 In *Image+* you can control the final size and aspect ratio of selected
-images. For an *Image+* TV, several advanced input options are available:
+images. The image can be selected in the media browser, uploaded or entered as
+path. After selecting an image, the crop window opens and the image crops can
+be created. For an *Image+* TV, several advanced input options are available:
 
-#### Target Height/Width
+#### Image Crops
 
-Images can be constrained to a minimum height and/or width with **Target
-Height** and **Target Width**. If both values are set, the target aspect ratio
-of the output image will be calculated with these values. Both fields must be
-filled with an integer value.
+A JSON encoded object with the image crops of the image. Each crop has a key, a
+name and one of the following constraints:
 
-#### Target Aspect Ratio
+| Constraint | Description                                     | Example     |
+|------------|-------------------------------------------------|-------------|
+| size       | The target size of the crop (width x height)    | `1000x500`  |
+| proportion | The aspect ratio of the crop (width x height)   | `16x9`      |
+| ratio      | Alias of proportion                             | `16x9`      |
+| width      | The target width of the crop                    | `800`       |
+| height     | The target height of the crop                   | `600`       |
 
-The aspect ratio for the output image can be restricted with **Target aspect
-ratio**. If target height and target width are specified, this value is ignored
-and the calculated aspect ratio of target height and target width is used. The
-field must be filled with a float value.
+```json
+{
+    "desktop": {"name": "Desktop", "size": "1600x800"},
+    "mobile": {"name": "Mobile", "proportion": "4x3"}
+}
+```
 
-If you specify only a value for **Target Height** or **Target Width** and leave
-**Target Aspect Ratio** blank, the size of the crop is not constrained to any
-aspect ratio.
+If this option is empty, one image crop without constraints is created.
 
-!!! note "How to calculate the aspect ratio"
+#### Image Format
 
-    The aspect ratio contains a floating point value: this value can be easily
-    determined by dividing any width with the desired aspect ratio by the
-    corresponding height. For example, suppose you want all your crops to have the
-    same aspect ratio as an image of size "1600x1000", then simply divide "1600" by
-    "1000", which gives the value "1.6". This is the value for your aspect ratio.
+The image format of the image crop files: WebP, JPEG, PNG, GIF, AVIF or the
+format of the image. The default is WebP, if the GD library of the server
+supports it, otherwise the format of the image is used. Transparent parts of an
+image get a white background in a JPEG crop file. The image format must be
+supported by the GD library of the server, otherwise the crop window shows an
+error message. A changed image format is used for the image crops, that are
+saved afterwards. Missing crop files, that are created on the first output, get
+this image format too.
+
+| Option              | Value   |
+|---------------------|---------|
+| WebP                | `webp`  |
+| JPEG                | `jpg`   |
+| PNG                 | `png`   |
+| GIF                 | `gif`   |
+| AVIF                | `avif`  |
+| Format of the image | `image` |
+
+The values are used in the `format` property of a MIGX configuration. An empty
+value uses the default.
+
+#### Upload Path
+
+The path in the media source for images, that are uploaded with the upload
+trigger of the TV. It overrides the `imageplus.upload_path` system setting. If
+both are empty, the images are uploaded into the root of the media source. The
+path can contain the same placeholders as the system setting (see
+[Context/System Settings](#contextsystem-settings)), i.e.
+`images/[[+year]]/[[+month]]/`.
+
+#### Minimal Image Width/Height
+
+The selected or uploaded image must have at least this width and/or height in
+pixels. Smaller images are rejected with an error message.
+
+#### Thumbnail Height
+
+The height of the preview image in the template variable panel. The default is
+250 pixels.
+
+#### Show All Images in One Line
+
+Show the image crops and the original image also in one line, when the
+template variable panel is at least 700 pixels wide. The default is enabled.
 
 #### Show Alt Tag Field
 
@@ -64,26 +109,29 @@ template chunk in the snippet's call options. The credits are inserted into the
 
 ### Context/System Settings
 
-Each *Image+* TV **Input Option** can be replaced by a context or system
-setting. And context/system settings can be defined for a single TV.
+The **Thumbnail Height**, **Show Alt Tag Field**, **Show Caption Field** and
+**Show Credits Field** input options can be set by a context or system setting.
+The setting is used, if the input option of the TV is empty. And
+context/system settings can be defined for a single TV.
 
-There are predefined system settings in the `imageplus` namespace which are
-empty or zero. If you activate one of them or fill it with a value, this setting
-will override the input options of all image+ TVs. Context settings must be
-created before they can be used.
+There are predefined system settings in the `imageplus` namespace. Context
+settings must be created before they can be used.
 
-| Key                       | Name                                      | Description                                                                                     | Default |
-|---------------------------|-------------------------------------------|-------------------------------------------------------------------------------------------------|---------|
-| imageplus.allow_alt_tag   | Show Alt Tag Field                        | Allow user to enter a title/alt-tag for the image.                                              | No      |
-| imageplus.allow_caption   | Show Caption Field                        | Allow user to enter a caption for the image.                                                    | No      |
-| imageplus.allow_credits   | Show Credits Field                        | Allow user to enter a credit for the image.                                                     | No      |
-| imageplus.debug           | Debug                                     | Log debug information in the MODX error log.                                                    | No      |
-| imageplus.force_config    | Force predefined crop sizes/aspect ratios | Force the usage of predefined crop size/aspect ratios.                                          | No      |
-| imageplus.select_config   | Predefined crop sizes/aspect ratios       | Create predefined crop size/aspect ratios that are selectable in the template variable options. | []      |
-| imageplus.target_height   | Target Height                             | Constrain the target images to a minimal height.                                                | -       |
-| imageplus.target_ratio    | Target Aspect Ratio                       | Restrict the target images to a aspect ratio.                                                   | -       |
-| imageplus.target_width    | Target Width                              | Constrain the target images to a minimal width.                                                 | -       |
-| imageplus.thumbnail_width | Thumbnail Width                           | The thumbnail width of the image in the template variable panel.                                | -       |
+| Key                        | Name               | Description                                                                                             | Default |
+|----------------------------|--------------------|---------------------------------------------------------------------------------------------------------|---------|
+| imageplus.allow_alt_tag    | Show Alt Tag Field | Allow user to enter a title/alt-tag for the image.                                                      | No      |
+| imageplus.allow_caption    | Show Caption Field | Allow user to enter a caption for the image.                                                            | No      |
+| imageplus.allow_credits    | Show Credits Field | Allow user to enter a credit for the image.                                                             | No      |
+| imageplus.crop_path        | Crop Path          | The path in the media source for the image crop files.                                                  | crop/   |
+| imageplus.debug            | Debug              | Log debug information in the MODX error log.                                                            | No      |
+| imageplus.thumbnail_height | Thumbnail Height   | The thumbnail height of the image in the template variable panel. Without a value, 250 pixels are used. | -       |
+| imageplus.upload_path      | Upload Path        | The path in the media source for uploaded images.                                                       | -       |
+
+The upload path and the crop path can contain the placeholders `[[+year]]`,
+`[[+month]]`, `[[+day]]`, `[[+user]]`, `[[+username]]`, `[[+resource_id]]` and
+`[[+tv_id]]`. The upload path of a single TV is set with the
+[Upload Path](#upload-path) input option. The TV name based settings below are
+not available for the upload path and the crop path.
 
 The global context/system settings have the prefix `imageplus.` and the
 individual TV context/system settings have the prefix `imageplus.{tvname}.`.
@@ -96,10 +144,23 @@ The order for these settings is [^1].
 - context setting
 - system setting
 
-In the `imageplus.select_config` system setting, you can create predefined
-internal forces/aspect ratios with an auxiliary grid. To force the use of the
-predefined sizes/ratios, you can activate the system setting
-`imageplus.force_config`.
+## Image Output
+
+The output uses the image crop files, that are created in the manager. A phpThumb
+extra is not needed. The URL, the width and the height of the output are the
+ones of the crop file of the image crop in the **Image Crop** output option or of
+the first image crop. If an image crop has no crop file (i.e. a value created
+before Image+ 3.0), the crop file is created on the first output. Use an image
+crop with the needed size for each output size.
+
+The `format` property of the ImagePlus snippet creates the crop files in another
+image format on the first output. For further image processing, i.e. for
+different sizes, use the pThumb output filter with the `source.src` and the
+`options` or `crop.options` placeholders in the output chunk:
+
+```html
+<img src="[[+source.src:pthumb=`[[+crop.options]]&w=640&f=webp`]]" alt="[[+alt:htmlent]]">
+```
 
 ## Output Options
 
@@ -107,10 +168,15 @@ Several advanced output options are available for an *Image+* TV:
 
 #### Additional phpThumb Parameters
 
-By default, an *Image+* TV returns a relative URL to a cropped (and possibly
-constrained) image scaled by phpThumb. This output option allows you to assign
-several additional phpThumb parameters that will be generated to create the
-thumbnail image.
+These phpThumb parameters are added to the `options` placeholder of the output
+chunk [^5]. They replace the target size of the image crop in this placeholder and
+can be used with a pthumb output filter in the output chunk. They don't change
+the URL of the image crop file.
+
+#### Image Crop
+
+The key of the image crop that is used for the output. If it is empty, the first
+image crop is used.
 
 #### Output Chunk
 
@@ -118,76 +184,209 @@ When you select an **Output Chunk**, the TV output is rendered using that chunk.
 Select the name of the chunk from the drop-down menu. Multiple placeholders are
 possible in this chunk to customize the output:
 
-| Placeholder   | Description                                                    |
-|---------------|----------------------------------------------------------------|
-| alt           | Alt text                                                       |
-| crop.height   | Crop height of the thumbnail image                             |
-| crop.options  | Crop engine crop option string to generate the thumbnail image |
-| crop.width    | Crop width of the thumbnail image                              |
-| crop.x        | Crop x position of the thumbnail image                         |
-| crop.y        | Crop y position of the thumbnail image                         |
-| height        | Minimal height of the thumbnail image                          |
-| options       | Crop engine full option string to generate the thumbnail image |
-| source.height | Height of the source image                                     |
-| source.src    | Full path of the source image on the server (not a URL)        |
-| source.width  | Width of the source image                                      |
-| url           | URL of the thumbnail image                                     |
-| width         | Minimal width of the thumbnail image                           |
+| Placeholder        | Description                                                  |
+|--------------------|--------------------------------------------------------------|
+| alt                | Alt text                                                     |
+| caption            | Caption                                                      |
+| credits            | Credits                                                      |
+| crop.height        | Crop height of the thumbnail image                           |
+| crop.options       | phpThumb crop option string to generate the thumbnail image  |
+| crop.url           | URL of the image crop file stored in the value [^9]          |
+| crop.width         | Crop width of the thumbnail image                            |
+| crop.x             | Crop x position of the thumbnail image                       |
+| crop.y             | Crop y position of the thumbnail image                       |
+| crops.{key}.height | Height of the image crop file of the image crop {key} [^8]   |
+| crops.{key}.url    | URL of the image crop file of the image crop {key} [^8]      |
+| crops.{key}.width  | Width of the image crop file of the image crop {key} [^8]    |
+| height             | Height of the image crop file or the image [^9]              |
+| options            | phpThumb full option string to generate the thumbnail image  |
+| source.height      | Height of the source image                                   |
+| source.src         | Full path of the source image on the server (not a URL)      |
+| source.width       | Width of the source image                                    |
+| url                | URL of the image crop file or the image [^9]                 |
+| width              | Width of the image crop file or the image [^9]               |
 
-All these placeholders can be used in the Snippet too.
+All these placeholders can be used in the Snippet too. The `crops` placeholders
+are explained in [Multiple Image Crops](#multiple-image-crops).
 
-#### Generate Thumb URL
-
-If you create the thumbnail in the output chunk, i.e. through a pthumb output
-filter, you can disable the generation of the internal thumb URL.
-
-!!! warning "Caution"
-
-    You must enable this option if you do not specify an output chunk in the output
-    options or if you use the `[[+url]]` placeholder in the specified output chunk.
-    Otherwise, the image will not be cropped/truncated and the original image path
-    will be returned.
-
-#### Thumb URL Issues
-
-If you use Image+ in a multiple language site with different base URL context
-settings, you have to set the system setting `phpthumbof.cache_url` to `/`.
-Otherwise, the generated thumbnail path will contain the `{base_url}` prefix.
-
-## Snippet
+## ImagePlus Snippet
 
 The snippet gives you a second way to display the TV value. With template
 variable output you are limited to one output chunk per template variable, with
 the snippet you can be more flexible and use different output chunks. The
 following properties can be set in the snippet call:
 
-| Property | Description                                                                           | Default         |
-|----------|---------------------------------------------------------------------------------------|-----------------|
-| docid    | Resource where the Image+ TV value is received from.                                  | -               |
-| options  | Extended phpThumb options for the image.                                              | -               |
-| tpl      | Template chunk for the snippet output.                                                | ImagePlus.image |
-| tvname   | Name of the Image+ TV.                                                                | -               |
-| type     | Type of the snippet output. Could be set to <i>check</i> <i>tpl</i> and <i>thumb</i>. | -               |
+| Property | Description                                                                                                       | Default          |
+|----------|-------------------------------------------------------------------------------------------------------------------|------------------|
+| crop     | Key of the image crop used for the output. The first image crop is used by default.                               | -                |
+| docid    | Resource where the Image+ TV value is received from.                                                              | Current resource |
+| format   | Image format of the image crop files: `jpg`, `png`, `gif`, `webp` or `avif` [^10].                                | -                |
+| options  | phpThumb options for the options placeholder of the template chunk [^5].                                          | -                |
+| source   | Media source ID, if the value is passed with the value property (i.e. a MIGX value) [^7].                         | -                |
+| tpl      | Template chunk for the snippet output [^6]. Without a template chunk, the URL of the image crop file is returned. | ImagePlus.image  |
+| tvname   | Name of the Image+ TV.                                                                                            | -                |
+| value    | Image+ value, that is used instead of the TV value, i.e. a MIGX value.                                            | -                |
 
-#### Example
+!!! note "Media Source"
+
+    An Image+ value does not contain the media source of the image. The image
+    path and the paths of the crop files are relative to the media source of the
+    template variable. With the `tvname` property, the snippet uses the media
+    source of the template variable in the context of the resource.
+
+    A value passed with the `value` property (i.e. a MIGX value) has no template
+    variable, so the snippet can't know the media source. In this case it can be set
+    with the `source` property, when it is not using the default media source.
+    Otherwise, the URLs of the image and its crop files can't be found and missing
+    crop files can't be created.
+
+### Example
 
 ```html
 [[ImagePlus?
 &tvname=`imageplus`
 &docid=`1`
 &options=`w=100`
-&type=`tpl`
 &tpl=`ImagePlus.demo`
 ]]
 ```
 
 This snippet call returns the contents of the template variable named
-`imageplus` of resource `1` and the extended phpThumb option `&w=100` (width:
-100px) in the parsed `ImagePlus.demo` chunk.
+`imageplus` of resource `1` in the parsed `ImagePlus.demo` chunk. The phpThumb
+option `w=100` (width: 100px) is added to the `options` placeholder.
+
+To check if the template variable contains an image, use an output modifier with
+an empty template chunk:
+
+```
+[[ImagePlus:notempty=`image`:default=`noimage`?
+&tvname=`imageplus`
+&tpl=``
+]]
+```
+
+## Multiple Image Crops
+
+An image can be cropped in several image crops, i.e. for different screen sizes
+or for a responsive image with different resolutions. The image crops are
+defined in the [Image Crops](#image-crops) input option of the TV:
+
+```json
+{
+    "desktop": {"name": "Desktop", "size": "1600x800"},
+    "mobile": {"name": "Mobile", "size": "800x800"}
+}
+```
+
+Each image crop is created in the crop window and saved as its own crop file.
+In the output chunk of the TV and in the template chunk of the snippet, every
+image crop is available with the `crops.{key}.url`, `crops.{key}.width` and
+`crops.{key}.height` placeholders. `{key}` must be replaced with the key of the
+image crop. The `url`, `width` and `height` placeholders contain the image crop
+of the **Image Crop** output option or the `crop` snippet property.
+
+#### Picture Element
+
+Different image crops for different screen sizes:
+
+```html
+<picture>
+    <source media="(max-width: 767px)" srcset="[[+crops.mobile.url]]" width="[[+crops.mobile.width]]" height="[[+crops.mobile.height]]">
+    <img src="[[+crops.desktop.url]]" width="[[+crops.desktop.width]]" height="[[+crops.desktop.height]]" alt="[[+alt:htmlent]]">
+</picture>
+```
+
+#### Responsive Image
+
+Image crops with the same aspect ratio in different sizes, i.e.
+`{"small": {"name": "Small", "size": "640x360"}, "large": {"name": "Large", "size": "1280x720"}}`:
+
+```html
+<img src="[[+crops.large.url]]"
+     srcset="[[+crops.small.url]] 640w, [[+crops.large.url]] 1280w"
+     sizes="(max-width: 767px) 100vw, 50vw"
+     width="[[+crops.large.width]]" height="[[+crops.large.height]]" alt="[[+alt:htmlent]]">
+```
+
+#### Snippet
+
+Use one of these chunks as template chunk of the snippet:
+
+```
+[[ImagePlus?
+&tvname=`imageplus`
+&tpl=`ImagePlus.picture`
+]]
+```
+
+The URL of a single image crop file is returned with an empty `tpl` property
+and the `crop` property:
+
+```
+[[ImagePlus?
+&tvname=`imageplus`
+&tpl=``
+&crop=`mobile`
+]]
+```
+
+!!! note
+
+    A value contains only the image crops, that were saved in the crop window.
+    If an image crop is added to the input option later, its placeholders are
+    empty, until the image crop is saved in the resource. An image path or an
+    Image+ 2.x value contains one image crop [^8].
+
+## ImagePlusCleanup Snippet
+
+This snippet removes the unused image crop files. Every changed crop is saved as
+a new file and removed images don't remove their crop files, so the crop folder
+grows over time.
+
+The crop paths in the values and in the default values of all template variables
+are used, also in the values of MIGX template variables. The crop files, that the
+output creates for image crops without a crop file, are used too. All other crop
+files in the crop folder of the media sources are unused. Only files with the
+name of a crop file (`<image name>-<32 character hash>.<extension>`) are
+regarded. Folders below the crop folder, that are empty afterwards, are removed
+too. Remote media sources can't be cleaned up.
+
+The snippet output is only shown to manager users, that are sudo users or
+members of the Administrator user group. All messages are logged in
+`core/cache/logs/imageplus_cleanup.log`.
+
+!!! warning
+
+    Crop paths, that are only referenced outside the template variable values
+    (i.e. in a chunk, in a custom database table or in another extra) are not
+    known to the snippet. Check the list of the dry run before removing the files.
+
+| Property | Description                                                                                                       | Default                                                                         |
+|----------|-------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| dryRun   | Report the unused crop files without removing them. An empty value keeps the dry run.                             | 1                                                                               |
+| minAge   | Skip crop files, that are newer than this number of hours, because a crop is saved before the resource is saved. | 24                                                                              |
+| path     | Crop folder in the media sources.                                                                                 | The part of the imageplus.crop_path system setting before the first placeholder |
+| source   | Comma-separated list of media source IDs.                                                                         | The media sources of the Image+ template variables and the default media source |
+
+#### Example
+
+Call the snippet uncached on a page, that is only visible for administrators.
+First check the unused files:
+
+```
+[[!ImagePlusCleanup]]
+```
+
+Remove them afterwards:
+
+```
+[[!ImagePlusCleanup? &dryRun=`0`]]
+```
 
 [^1]: The first entry supercedes the second entry in the list etc.
-[^2]: Outputs *image* if the Image+ TV contains an image, otherwise *noimage*.
-[^3]: Outputs the parsed template set by **tpl** property for retreived Image+ TV value (with additional options set by the **options** property)
-[^4]: Outputs the thumbnail URL for retreived Image+ TV value (with additional options set by the **options** property)
-[^5]: See [phpThumb readme](http://phpthumb.sourceforge.net/demo/docs/phpthumb.readme.txt) for possible options. Maybe not all options are valid in your installation (because of crop engine limitations or server restricions).
+[^5]: See [phpThumb readme](https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt) for possible options. Maybe not all options are valid in your installation (because of server restrictions).
 [^6]: The template chunk placeholder are the same as in the output chunk of the template variable.
+[^7]: Without the source property, the media source of an Image+ 2.x value or the default media source is used. The media source of the template variable is used with the tvname property.
+[^8]: `{key}` must be replaced with the key of the image crop. An image path or an Image+ 2.x value contains one image crop with the key of the **Image Crop** output option or the key `crop`.
+[^9]: `crop.url` contains only the URL of an image crop file stored in the Image+ value and is empty otherwise. `url`, `width` and `height` contain the URL and the size of the image crop file, which is created if it is missing. They contain the URL and the size of the image, if the image crop is the unchanged image or if the image crop file could not be created.
+[^10]: Without a value, the image crop files, that were saved in the manager, are used. With another image format, the image crop files are created in that format on the first output.

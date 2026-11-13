@@ -1,0 +1,535 @@
+/**
+ * Image+ UploadCropBrowser Component
+ *
+ * @package imageplus
+ * @subpackage style
+ */
+
+@use "sass:color";
+@use "../../../node_modules/cropperjs/src/css/cropper" with ($cropper-image-path: "../../img/mgr");
+
+// The colors of the primary buttons in the MODX 2 manager (a gradient) and in the MODX 3 manager
+$modx2-primary1: #32ab9a;
+$modx2-primary2: #00948e;
+$modx3-green: #6cb24a;
+$modx3-green-darken: #528738;
+
+// The size of the bar below the preview images
+$preview-bar-padding-y: 4px;
+$preview-bar-padding-x: 6px;
+$preview-bar-line-height: 16px;
+$preview-bar-height: $preview-bar-line-height + 2 * $preview-bar-padding-y;
+
+.x-form-field-wrap {
+  .x-form-trigger {
+    &.x-form-clear-trigger {
+      &:before {
+        content: "\f00d";
+      }
+    }
+
+    &.x-form-crop-trigger {
+      &:before {
+        content: "\f125";
+      }
+    }
+
+    &.x-form-upload-trigger {
+      &:before {
+        content: "\f093";
+      }
+    }
+  }
+
+  .x-form-triple-triggers {
+    border: 0;
+    border-radius: 0 3px 3px 0;
+    box-shadow: none;
+    height: 100% !important;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 90px;
+
+    .x-form-trigger {
+      display: inline-block;
+      position: relative;
+      top: auto;
+      vertical-align: top;
+    }
+  }
+
+  .x-form-quadruple-triggers {
+    border: 0;
+    border-radius: 0 3px 3px 0;
+    box-shadow: none;
+    height: 100% !important;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 120px;
+
+    .x-form-trigger {
+      display: inline-block;
+      position: relative;
+      top: auto;
+      vertical-align: top;
+    }
+  }
+}
+
+.x-window-imageplus-cropimage {
+  .imageplus-cropimage {
+    display: flex;
+    gap: 15px;
+    box-sizing: border-box;
+    height: 100%;
+    padding: 15px;
+    color: #555555;
+    font-size: 13px;
+  }
+
+  .imageplus-cropimage-sidebar {
+    flex: 0 0 300px;
+    overflow-y: auto;
+  }
+
+  .imageplus-cropimage-title {
+    font-weight: bold;
+  }
+
+  .imageplus-cropimage-sets {
+    margin: 10px 0;
+  }
+
+  .imageplus-cropimage-set {
+    display: block;
+    margin-bottom: 10px;
+    cursor: pointer;
+
+    input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .imageplus-cropimage-preview-image {
+      height: 120px;
+      border: 1px solid #e4e4e4;
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC');
+      box-sizing: border-box;
+      box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+
+      img {
+        position: relative;
+        top: 50%;
+        left: 50%;
+        display: block;
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 100%;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    .imageplus-cropimage-preview-label {
+      padding: 7px 0;
+    }
+
+    input:checked + .imageplus-cropimage-preview-image {
+      border-color: #3697cd;
+      box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    input:focus-visible + .imageplus-cropimage-preview-image {
+      outline: 2px solid #3697cd;
+    }
+
+    &:has(input:disabled) {
+      cursor: default;
+      opacity: .4;
+    }
+  }
+
+  .imageplus-cropimage-toolbar {
+    display: flex;
+    gap: 5px;
+  }
+
+  .imageplus-cropimage-button {
+    // The buttons share the width of the sidebar, a long label wraps inside its button
+    flex: 1 1 auto;
+
+    &[hidden] {
+      display: none;
+    }
+    padding: 8px 10px;
+    border: 0;
+    border-radius: 3px;
+    background: #e4e4e4;
+    color: #555555;
+    font-size: 13px;
+    cursor: pointer;
+
+    &:hover {
+      background: #d4d4d4;
+    }
+
+    &.imageplus-cropimage-button-primary {
+      background: $modx2-primary1 linear-gradient($modx2-primary1, $modx2-primary2);
+      color: #ffffff;
+
+      &:hover,
+      &:focus {
+        background: color.adjust($modx2-primary1, $lightness: -6%) linear-gradient(color.adjust($modx2-primary1, $lightness: -6%), color.adjust($modx2-primary2, $lightness: -6%));
+      }
+
+      &:active {
+        background: color.adjust($modx2-primary1, $lightness: -12%) linear-gradient(color.adjust($modx2-primary1, $lightness: -12%), color.adjust($modx2-primary2, $lightness: -12%));
+      }
+    }
+  }
+
+  .imageplus-cropimage-state {
+    margin: 10px 0;
+
+    // The success message has the color of the primary buttons in MODX 2, the green class of MODX 3 is used otherwise
+    &.green {
+      color: $modx2-primary2 !important;
+    }
+
+    &[hidden] {
+      display: none;
+    }
+
+    &.loading {
+      position: relative;
+      padding: 0 0 0 25px;
+
+      &:after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        content: '';
+        width: 20px;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: radial-gradient(farthest-side, #1a7fb8 95%, #0000) top / 3px 3px no-repeat, conic-gradient(#0000 30%, #1a7fb8);
+        mask: radial-gradient(farthest-side, #0000 calc(100% - 3px), #000 0);
+        animation: rotate-loading 1s infinite linear;
+      }
+
+      @keyframes rotate-loading {
+        100% {
+          transform: rotate(1turn)
+        }
+      }
+    }
+  }
+
+  .imageplus-cropimage-main {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 15px;
+    min-width: 0;
+  }
+
+  .imageplus-cropimage-image {
+    flex: 1 1 auto;
+    min-height: 0;
+    background: #e4e4e4;
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+  }
+
+  .imageplus-cropimage-values {
+    display: flex;
+    gap: 15px;
+  }
+
+  .imageplus-cropimage-fieldset {
+    display: flex;
+    flex: 2 1 0;
+    flex-wrap: wrap;
+    gap: 0 10px;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+
+    &.crop {
+      flex-grow: 5;
+    }
+
+    // A floated legend becomes a regular flex item, so it can take its own row
+    legend {
+      float: left;
+      width: 100%;
+      padding: 0;
+      margin: 0 0 5px;
+      font-weight: bold;
+    }
+  }
+
+  .imageplus-cropimage-field {
+    flex: 1 1 0;
+    min-width: 0;
+
+    label {
+      display: block;
+      padding: 0 0 4px;
+    }
+
+    // Background, border, padding and focus color come from the x-form-text style of the manager theme.
+    // The fixed ExtJS height would include padding and border with border-box, so the height follows the line height.
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      height: auto;
+
+      &:disabled {
+        border-color: #f0f0f0;
+        background: #ffffff;
+      }
+    }
+  }
+
+  .cropper-container {
+    overflow: hidden;
+
+    // The browser shows the image upright by its EXIF orientation, Cropper.js only does this with checkOrientation
+    img {
+      image-orientation: from-image;
+    }
+  }
+
+  &.modx3 .imageplus-cropimage-state.green {
+    color: $modx3-green !important;
+  }
+
+  &.modx3 .imageplus-cropimage-button.imageplus-cropimage-button-primary {
+    background: $modx3-green;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background: $modx3-green-darken;
+    }
+  }
+}
+
+.x-form-imageplus-preview {
+  position: relative;
+  margin: 7px 0 0;
+  overflow: hidden;
+
+  // The main image is shown on the left and has the width of the image, so that the download icon is placed on the image
+  .x-form-imageplus-preview-main {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    max-width: 100%;
+    height: auto;
+    margin: 0;
+    overflow: hidden;
+
+    img {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+    }
+
+    .crop {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      cursor: pointer;
+    }
+
+    .download {
+      position: absolute;
+      right: 5px;
+      bottom: 3px;
+      color: white;
+      text-shadow: 0 0 10px black;
+      opacity: 0.5;
+
+      &:hover {
+        opacity: 1
+      }
+    }
+  }
+
+  // Shown above the bar of the main image
+  .x-form-imageplus-preview-thumbnails {
+    position: absolute;
+    left: 20px;
+    bottom: $preview-bar-height + 5px;
+    // The line has the width of the thumbnails, so that it covers as little of the main image as possible
+    width: fit-content;
+    max-width: calc(100% - 40px);
+    box-sizing: border-box;
+    padding-bottom: 5px;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    gap: 20px;
+  }
+
+  // The crops have the same structure as the main image: the image, a crop link above it and the bar below the image
+  .x-form-imageplus-preview-image {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    overflow: hidden;
+    border: 1px solid #fff;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+    opacity: 0;
+    transition: all ease-in-out 0.3s;
+
+    img {
+      display: block;
+      width: auto;
+      max-width: 100%;
+      object-fit: cover;
+    }
+
+    .crop {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      cursor: pointer;
+    }
+  }
+
+  &:hover {
+    // The visible thumbnails are shown in one line with a scrollbar
+    .x-form-imageplus-preview-thumbnails {
+      overflow-x: auto;
+    }
+
+    .x-form-imageplus-preview-image {
+      opacity: 1;
+      bottom: 0 !important;
+    }
+  }
+
+  // The bar shows the name and the pixel dimensions of an image in two lines
+  .x-form-imageplus-preview-bar {
+    display: flex;
+    flex-direction: column;
+    // Space for the download link
+    &:has(.download) {
+      padding-right: 24px;
+    }
+    // The bar doesn't widen the image
+    width: 0;
+    min-width: 100%;
+    box-sizing: border-box;
+    padding: $preview-bar-padding-y $preview-bar-padding-x;
+    color: #fff;
+    font-size: 12px;
+    line-height: $preview-bar-line-height;
+    white-space: nowrap;
+    // 60% black on the white panel background, the bar is not transparent
+    background: color.mix(#000, #fff, 60%);
+
+    .x-form-imageplus-preview-bar-name {
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .x-form-imageplus-preview-bar-dimensions {
+      flex-shrink: 0;
+      // A color instead of an opacity, so that the dimensions are not placed above the crop link
+      color: rgba(#fff, 0.8);
+    }
+
+    // The download link is placed above the crop link
+    .download {
+      position: absolute;
+      right: $preview-bar-padding-x;
+      bottom: $preview-bar-padding-y;
+      z-index: 1;
+      color: #fff;
+      text-shadow: none;
+      opacity: 0.7;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  // The bar of the main image and all bars in one line show the name and the pixel dimensions in one line
+  .x-form-imageplus-preview-main .x-form-imageplus-preview-bar,
+  &.x-form-imageplus-preview-inline .x-form-imageplus-preview-bar {
+    flex-direction: row;
+    gap: 10px;
+    justify-content: space-between;
+
+    &:has(.download) {
+      padding-right: $preview-bar-padding-x;
+    }
+
+    .download {
+      position: relative;
+      right: auto;
+      bottom: auto;
+    }
+  }
+
+  // The image and its crops are shown in one line on wide fields
+  &.x-form-imageplus-preview-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    .x-form-imageplus-preview-main {
+      display: flex;
+      flex-direction: column;
+      flex: 0 1 auto;
+      min-width: 0;
+    }
+
+    .x-form-imageplus-preview-thumbnails {
+      position: static;
+      flex: 0 1 auto;
+      width: auto;
+      min-width: 0;
+      max-width: none;
+      flex-wrap: nowrap;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 0;
+      overflow: visible;
+    }
+
+    // The images in one line shrink instead of scrolling
+    .x-form-imageplus-preview-image {
+      flex: 0 1 auto;
+      min-width: 0;
+      border: none;
+      box-shadow: none;
+      opacity: 1;
+    }
+  }
+}

@@ -82,19 +82,18 @@
                 }]
             }]
         }, {
-            xtype: 'combo-boolean',
-            fieldLabel: _('imageplus.generateUrl'),
-            description: MODx.expandHelp ? '' : _('imageplus.generateUrl_desc') + '<br><span class="red">' + _('imageplus.generateUrl_desc_warning') + '</span>',
-            name: 'prop_generateUrl',
-            hiddenName: 'prop_generateUrl',
-            id: 'prop_generateUrl{/literal}{$tv}{literal}',
-            value: (params['generateUrl'] === 1 || params['generateUrl'] === 'true'),
+            xtype: 'textfield',
+            fieldLabel: _('imageplus.crop'),
+            description: MODx.expandHelp ? '' : _('imageplus.crop_desc'),
+            name: 'prop_crop',
+            id: 'prop_crop{/literal}{$tv}{literal}',
+            value: params['crop'] || '',
             anchor: '100%',
             listeners: oc
         }, {
             xtype: MODx.expandHelp ? 'label' : 'hidden',
-            forId: 'prop_generateUrl{/literal}{$tv}{literal}',
-            html: _('imageplus.generateUrl_desc') + '<br><span class="red">' + _('imageplus.generateUrl_desc_warning') + '</span>',
+            forId: 'prop_crop{/literal}{$tv}{literal}',
+            html: _('imageplus.crop_desc'),
             cls: 'desc-under'
         }, {
             cls: "treehillstudio_about",
@@ -104,7 +103,7 @@
                     component.getEl().select('img').on('click', function () {
                         var msg = '<span style="display: inline-block; text-align: center;">&copy; 2013-2015 by Alan Pich <a href="https://github.com/alanpich" target="_blank">github.com/alanpich</a><br>' +
                             '<img src="' + ImagePlus.config.assetsUrl + 'img/mgr/treehill-studio.png" srcset="' + ImagePlus.config.assetsUrl + 'img/mgr/treehill-studio@2x.png 2x" alt="Treehill Studio" style="margin-top: 10px"><br>' +
-                            '&copy; 2015-2023 by <a href="https://treehillstudio.com" target="_blank">treehillstudio.com</a></span>';
+                            '&copy; 2015-2026 by <a href="https://treehillstudio.com" target="_blank">treehillstudio.com</a></span>';
                         Ext.Msg.show({
                             title: _('imageplus') + ' ' + ImagePlus.config.version,
                             msg: msg,

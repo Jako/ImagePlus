@@ -11,9 +11,11 @@ copyright = """
 nav = [
     "index.md",
     "installation.md",
+    "update.md",
     "getting-started.md",
     "usage.md",
     "examples.md",
+    "legacy.md",
     "changelog.md",
     "contributors.md"
 ]

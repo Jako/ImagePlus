@@ -1,10 +1,10 @@
-**Image+* can be used for various purposes. On this page you will find some
-*examples of how it can be used:
+*Image+* can be used for various purposes. On this page you will find some
+examples of how it can be used:
 
 ### Collections
 
 You can display the *Image+* thumbnail in a column of the Collections grid by
-setting the column's renderer to *ImagePlus.MIGX_Renderer*.
+setting the column's renderer to *ImagePlus.ColumnRenderer*.
 
 ### MIGX
 
@@ -14,10 +14,13 @@ field. The following properties are possible:
 
 ```json
 {
-    "targetWidth":"",
-    "targetHeight":"",
-    "targetRatio":"",
-    "thumbnailWidth":"",
+    "sizes":"",
+    "minWidth":"",
+    "minHeight":"",
+    "format":"",
+    "uploadPath":"",
+    "thumbnailHeight":"",
+    "inlinePreview":"",
     "allowAltTag":"",
     "allowCaption":"",
     "allowCredits":""
@@ -27,15 +30,17 @@ field. The following properties are possible:
 You also need to change the *Input TV Type* to `imageplus`.
 
 You can display the thumbnail in the grid column by setting the renderer to
-*ImagePlus.MIGX_Renderer*. In earlier versions of MIGX, you need to edit a MIGX
+*ImagePlus.ColumnRenderer*. In earlier versions of MIGX, you need to edit a MIGX
 configuration to do this.
 
 To use this *Image+* MIGX field in the frontend, call the *ImagePlus Snippet*
-where the value parameter is the name of the MIGX field:
+where the value parameter is the name of the MIGX field. If the MIGX field does
+not use the default media source, set its ID with the source parameter:
 
 ```html
 [[ImagePlus? 
 &value=`[[+migxImagePlusField]]`
+&source=`2`
 ]]
 ```
 
@@ -45,8 +50,8 @@ JSON object.
 ### getResources/pdoResources
 
 In order for the TV to be parsed using the *getResources/pdoResources snippet*,
-you need to add the following lines to your *getResources/pdoResources* call
-Snippet* call:
+you need to add the following lines to your *getResources/pdoResources Snippet*
+call:
 
 ```html
 &includeTVs=`name_of_your_tv`
@@ -96,7 +101,6 @@ Here is an example of a call and configuration, where *image* is your Image+ TV:
 
     [[ImagePlus? 
         &tvname=`image` 
-        &type=`tpl` 
         &docid=`[[+id]]`
         &tpl=`tplBlogIntroImg`
     ]] 
@@ -117,7 +121,7 @@ Here is an example of a call and configuration, where *image* is your Image+ TV:
 
 ```html
 <div class="feature" style="margin-bottom:1rem">
-    <a href="[[+caption]]"><img src="[[+source.src:pthumb=`w=320`]]" alt="[[+alt]]" /></a>
+    <a href="[[~[[+docid]]]]"><img src="[[+source.src:pthumb=`w=320`]]" alt="[[+alt:htmlent]]" /></a>
 </div>
 ```
 
@@ -130,7 +134,6 @@ the *ImagePlus Snippet*.
 ```
 [[ImagePlus? 
 &tvname=`yourtvname` 
-&type=`tpl` 
 &options=`&w=320`
 &tpl=`tplResponsiveImage`
 &pagetitle=`[[*pagetitle]]`
@@ -147,6 +150,30 @@ the *ImagePlus Snippet*.
             sizes="33.3vw"/>
     <source srcset="[[+source.src:pthumb=`[[+crop.options]]&w=640`]] 2x,
                 [[+source.src:pthumb=`[[+crop.options]]&w=320`]] 1x"/>
-    <img src="[[+url]]" alt="[[+alt:default=`[[+pagetitle]]`]]"/>
+    <img src="[[+url]]" alt="[[+alt:default=`[[+pagetitle]]`:htmlent]]"/>
 </picture>
 ```
+
+### Image formats
+
+The image crops are saved in the image format of the **Image Format** input
+option of the TV (WebP by default). With the `format` property of the *ImagePlus
+Snippet*, the crop files can be created in other image formats too, i.e. for a
+picture element with a fallback for older browsers. With an empty `tpl`
+property, the snippet returns the URL of the crop file.
+
+**Picture element**
+```html
+<picture>
+    <source type="image/avif" srcset="[[ImagePlus? &tvname=`yourtvname` &tpl=`` &format=`avif`]]"/>
+    <source type="image/webp" srcset="[[ImagePlus? &tvname=`yourtvname` &tpl=`` &format=`webp`]]"/>
+    <img src="[[ImagePlus? &tvname=`yourtvname` &tpl=`` &format=`jpg`]]" alt="[[*pagetitle:htmlent]]"/>
+</picture>
+```
+
+The crop files in the other image formats are created on the first output. The
+AVIF format needs a GD library with AVIF support on the server. Otherwise, the
+snippet returns the URL of the image and the AVIF source has to be removed.
+
+In a MIGX configuration, the image format of the crop files is set with the
+`format` property, i.e. `"format":"jpg"`.

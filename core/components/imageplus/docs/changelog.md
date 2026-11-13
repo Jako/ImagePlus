@@ -5,6 +5,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-11-13
+
+**Important:** Image+ 3.0 changes the template variable value format and removes
+some options and settings. Please read the [update information](https://jako.github.io/ImagePlus/update/)
+before updating from Image+ 2.x.
+
+### Added
+
+- Image upload in the template variable
+- Multiple image crops per image, saved as files in the media source
+- Upload path input option/system setting and crop path system setting
+- Image crop output option/snippet property and crop.url placeholder
+- Placeholders with the url, width and height of every image crop in the output chunk
+- Media source snippet property for MIGX values
+- Image format input option/snippet property for the image crop files with WebP as default
+- Minimal image width/height input options
+- Show all images in one line input option
+- Setup option to skip the 2.x migration and ImagePlusMigration snippet with a dry run
+- ImagePlusCleanup snippet to remove unused crop files
+- Reload image button in the crop window to create the image crops of a replaced image again
+
+### Changed
+
+- Replace Jcrop and jQuery with Cropper.js
+- Full width template variable input, images and text fields are shown in one line in wide panels
+- Replace the thumbnail width with a thumbnail height input option/system setting
+- New template variable value format without the media source, previous values are converted
+- Rename ImagePlus.MIGX_Renderer to ImagePlus.ColumnRenderer
+- Require PHP 8.2 or later
+
+### Removed
+
+- Target width/height/aspect ratio options and settings, migrated to the minimal image size and image crops options (MIGX configs have to be changed manually)
+- Predefined crop sizes system settings (select_config and force_config)
+- phpThumbOf, phpThumbsUp and phpThumbOn crop engines, the output uses the image crop files (pThumb is still usable in the output chunk)
+- Generate thumb URL output option, the url placeholder always contains the url of the image crop file
+- Type property of the ImagePlus snippet, the snippet returns the url of the image crop file with an empty tpl property
+
+### Fixed
+
+- Debug system setting not used by the ImagePlus snippet
+- PHP warning in the ImagePlus snippet without output options
+- Check type of the ImagePlus snippet failed for image paths
+- Wrong media source for resources in another context
+- Broken grid thumbnails outside the site root
+- Wrong crops of photos with an EXIF orientation
+- Unescaped values in the manager form and default chunks
+
 ## [2.9.5] - 2023-09-07
 
 ### Fixed

@@ -11,35 +11,27 @@ var imagePlus = function (config) {
 };
 
 Ext.extend(imagePlus, Ext.Component, {
-    page: {}, window: {}, grid: {}, tree: {}, panel: {}, combo: {}, config: {}, jquery: {}, form: {},
+    page: {}, window: {}, grid: {}, tree: {}, panel: {}, combo: {}, config: {}, form: {}, util: {},
 
     generateThumbUrl: function (params) {
         return this.generatePhpThumbUrl(params);
     },
 
     generatePhpThumbUrl: function (params) {
-        var url = MODx.config.connectors_url + 'system/phpthumb.php?';
-        var defaults = {
+        var query = new URLSearchParams(Ext.apply({
             wctx: 'mgr',
             w: 150,
             source: 1
-        };
-        for (var i in params) {
-            defaults[i] = params[i]
-        }
-        var qs = '';
-        for (i in defaults) {
-            qs += encodeURIComponent(i) + '=' + encodeURIComponent(defaults[i]) + '&';
-        }
-        if (qs.length > 0) {
-            qs = qs.substring(0, qs.length - 1);
-            url = url + "?" + qs;
-        }
-        return url;
-
+        }, params));
+        return MODx.config.connectors_url + 'system/phpthumb.php?' + query.toString();
     },
 
     warnAboutUnmetDependencies: function () {
+        // The warning is shown once, also if the page contains several Image+ template variables
+        if (this.unmetDependenciesWarned) {
+            return;
+        }
+        this.unmetDependenciesWarned = true;
         var warningWindow = MODx.load({
             xtype: 'modx-window',
             title: 'Image+ Warning – Unmet Dependencies',
@@ -55,9 +47,9 @@ Ext.extend(imagePlus, Ext.Component, {
                     L.ownerCt.ownerCt.close();
                 }
             }],
-            html: '<h3>You don\'t have any crop engines!</h3>' +
-            '<p>Before you can use Image+, you need at least one Crop Engine installed to handle image manipulation.</p>' +
-            '<p>A quick fix is to install either pThumb, phpThumbOf, phpThumbsUp or phpThumbOn from the MODX Package Repository</p>'
+            html: '<h3>The crop engine is not available!</h3>' +
+            '<p>The PHP GD extension is missing. It is needed to create the image crop files.</p>' +
+            '<p>Enable the PHP GD extension on the server.</p>'
         });
         warningWindow.show();
     }

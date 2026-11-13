@@ -6,7 +6,14 @@
  * @subpackage lexicon
  */
 $_lang['imageplus.imageplus.docid'] = 'Document waar de Image+ TV van geladen wordt.';
-$_lang['imageplus.imageplus.options'] = 'Uitgebreide phpThumb opties voor de afbeelding.';
-$_lang['imageplus.imageplus.tpl'] = 'Template chunk voor de snippet output.';
+$_lang['imageplus.imageplus.format'] = 'Afbeeldingsformaat van de uitsnedebestanden. Een uitsnedebestand in een ander formaat wordt bij de eerste uitvoer aangemaakt. Standaard wordt het formaat van het uitsnedebestand gebruikt.';
+$_lang['imageplus.imageplus.format_image'] = 'Formaat van het uitsnedebestand';
+$_lang['imageplus.imageplus.options'] = 'phpThumb opties voor de options placeholder van de template chunk.';
+$_lang['imageplus.imageplus.source'] = 'Mediabron-ID, als de waarde met de eigenschap value wordt doorgegeven (bijv. een MIGX-waarde). Standaard de standaard mediabron.';
+$_lang['imageplus.imageplus.tpl'] = 'Template chunk voor de snippet output. Zonder template chunk wordt de URL van het uitsnedebestand teruggegeven.';
 $_lang['imageplus.imageplus.tvname'] = 'Naam van de Image+ TV.';
-$_lang['imageplus.imageplus.type'] = 'Type van de snippet output. Dit kan een van de volgende waarden zijn: <i>check</i>, <i>tpl</i> of <i>thumb</i>.';
+$_lang['imageplus.imagepluscleanup.dryRun'] = 'De ongebruikte uitsnedebestanden melden zonder ze te verwijderen.';
+$_lang['imageplus.imagepluscleanup.minAge'] = 'Uitsnedebestanden overslaan die nieuwer zijn dan dit aantal uren, omdat een uitsnede wordt opgeslagen voordat het document wordt opgeslagen.';
+$_lang['imageplus.imagepluscleanup.path'] = 'Uitsnedemap in de mediabronnen. Standaard het deel van de systeeminstelling imageplus.crop_path vóór de eerste placeholder.';
+$_lang['imageplus.imagepluscleanup.source'] = 'Kommagescheiden lijst van mediabron-ID\'s. Standaard de mediabronnen van de Image+ template variabelen en de standaard mediabron.';
+$_lang['imageplus.imageplusmigration.dryRun'] = 'De wijzigingen van de migratie melden zonder ze op te slaan.';

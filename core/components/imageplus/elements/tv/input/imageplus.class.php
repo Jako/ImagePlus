@@ -43,7 +43,6 @@ class ImagePlusInputRender extends modTemplateVarInputRender
         $imageplus = $this->modx->getService('imageplus', 'ImagePlus', $corePath . 'model/imageplus/', [
             'core_path' => $corePath
         ]);
-        $version = $this->modx->getVersionData();
         $imageplus->includeScriptAssets();
 
         // Get Media Source
@@ -66,40 +65,39 @@ class ImagePlusInputRender extends modTemplateVarInputRender
 
         // Prepare TV config
         $tvConfig = new stdClass();
-        $tvConfig->allowBlank = !($params['allowBlank'] === 'false' || $params['allowBlank'] === 0 || $params['allowBlank'] === false);
-        if (!empty($params['targetWidth']) || !empty($params['targetHeight']) || !empty($params['targetRatio'])) {
-            $tvConfig->targetWidth = !empty($params['targetWidth']) ? (int)$params['targetWidth'] : null;
-            $tvConfig->targetHeight = !empty($params['targetHeight']) ? (int)$params['targetHeight'] : null;
-            if (!$tvConfig->targetWidth || !$tvConfig->targetHeight) {
-                $targetRatio = !empty($params['targetRatio']) ? (float)$params['targetRatio'] : null;
-            } else {
-                $targetRatio = $tvConfig->targetWidth / $tvConfig->targetHeight;
-            }
-        } else {
-            $targetWidth = $this->getTVConfig('target_width', $tvName, $contextSettings, isset($params['targetWidth']) && $params['targetWidth'] !== '' ? $params['targetWidth'] : null);
-            $tvConfig->targetWidth = ($targetWidth) ? (int)$targetWidth : null;
-            $targetHeight = $this->getTVConfig('target_height', $tvName, $contextSettings, isset($params['targetHeight']) && $params['targetHeight'] !== '' ? $params['targetHeight'] : null);
-            $tvConfig->targetHeight = ($targetHeight) ? (int)$targetHeight : null;
-            if (!$tvConfig->targetWidth || !$tvConfig->targetHeight) {
-                $targetRatio = $this->getTVConfig('target_width', $tvName, $contextSettings, isset($params['targetRatio']) && $params['targetRatio'] !== '' ? $params['targetRatio'] : null);
-                $targetRatio = ($targetRatio) ? (float)$targetRatio : null;
-            } else {
-                $targetRatio = $tvConfig->targetWidth / $tvConfig->targetHeight;
-            }
-        }
-        $tvConfig->targetRatio = $targetRatio;
-        $tvConfig->thumbnailWidth = (int)$this->getTVConfig('thumbnail_width', $tvName, $contextSettings, (!empty($params['thumbnailWidth'])) ? $params['thumbnailWidth'] : (($version['major_version'] >= 3) ? 400 : 150));
+        $allowBlank = $params['allowBlank'] ?? true;
+        $tvConfig->allowBlank = !($allowBlank === 'false' || $allowBlank === 0 || $allowBlank === false);
+        $tvConfig->minWidth = (int)($params['minWidth'] ?? 0);
+        $tvConfig->minHeight = (int)($params['minHeight'] ?? 0);
+        $tvConfig->uploadPath = trim((string)($params['uploadPath'] ?? ''));
+        $tvConfig->format = \TreehillStudio\ImagePlus\Helper\ImageCrop::getTVFormat($params);
+        $tvConfig->thumbnailHeight = (int)$this->getTVConfig('thumbnail_height', $tvName, $contextSettings, (!empty($params['thumbnailHeight'])) ? $params['thumbnailHeight'] : null) ?: 250;
+        $tvConfig->inlinePreview = !(isset($params['inlinePreview']) && in_array($params['inlinePreview'], ['false', '0', 0, false], true));
         $tvConfig->altTagOn = (bool)$this->getTVConfig('allow_alt_tag', $tvName, $contextSettings, $params['allowAltTag'] ?? null);
         $tvConfig->captionOn = (bool)$this->getTVConfig('allow_caption', $tvName, $contextSettings, $params['allowCaption'] ?? null);
         $tvConfig->creditsOn = (bool)$this->getTVConfig('allow_credits', $tvName, $contextSettings, $params['allowCredits'] ?? null);
+        // The image crops are set by the crop sizes option
+        $sizes = json_decode($params['sizes'] ?? '', true);
+        if (!is_array($sizes) || empty($sizes)) {
+            $sizes = $imageplus->getDefaultCropSizes();
+        }
+        $tvConfig->sizes = $sizes;
         $tvConfig->mediaSource = $source->get('id');
         $tvConfig->tvId = $this->tv->get('id');
         $tvConfig->tvParams = $this->getInputOptions();
 
-        $this->setPlaceholder('tvConfig', json_encode($tvConfig, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        $this->setPlaceholder('tvConfig', json_encode($tvConfig, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG));
 
-        // Prepare value
-        $this->tv->value = $imageplus->prepareTvValue($this->tv->value, $params, $this->tv);
+        // Prepare value, a converted crop is used for the first image crop
+        $value = $imageplus->prepareTvValue($this->tv->value, array_merge($params, [
+            'crop' => array_keys($sizes)[0]
+        ]), $this->tv);
+        $data = json_decode($value, true);
+        if (is_array($data)) {
+            // The stored urls are replaced, because they are outdated after a site move
+            $value = json_encode($imageplus->updateValueUrls($data, $source), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        }
+        $this->tv->value = $value;
     }
 
     /**

@@ -13,6 +13,10 @@
             <td>[[+url]]</td>
         </tr>
         <tr>
+            <td>[[%imageplus.placeholder.crop.url? &namespace=`imageplus`]]</td>
+            <td>[[+crop.url]]</td>
+        </tr>
+        <tr>
             <td>[[%imageplus.placeholder.alt? &namespace=`imageplus`]]</td>
             <td>[[+alt]]</td>
         </tr>
@@ -66,25 +70,29 @@
     <h4>Default image output</h4>
 
     <div>
-        <img src="[[+url]]" alt="[[+alt]]"/>
+        <img src="[[+url]]" alt="[[+alt:htmlent]]"/>
         [[+caption:notempty=`<p class="caption">[[+caption]]</p>`]]
         [[+credits:notempty=`<p class="credits">[[+credits]]</p>`]]
     </div>
 
-    <h4>Responsive image output (different crops for different viewports)</h4>
+    [[- The following responsive image output needs the pThumb extra. Install pThumb and remove the brackets of this
+    comment to use it.
+
+    <h4>Responsive image output with pThumb (different sizes for different viewports)</h4>
 
     <p>
         <picture>
             <source media="(min-width: 36em)"
-                    srcset="[[+source.src:pthumb=`w=1024`]] 1024w,
-                        [[+source.src:pthumb=`w=640`]] 640w,
-                        [[+source.src:pthumb=`w=320`]] 320w"
+                    srcset="[[+source.src:pthumb=`ar=x&w=1024`]] 1024w,
+                        [[+source.src:pthumb=`ar=x&w=640`]] 640w,
+                        [[+source.src:pthumb=`ar=x&w=320`]] 320w"
                     sizes="33.3vw"/>
             <source srcset="[[+source.src:pthumb=`[[+crop.options]]&w=640`]] 2x,
                         [[+source.src:pthumb=`[[+crop.options]]&w=320`]] 1x"/>
-            <img src="[[+url]]" alt="[[+alt]]"/>
+            <img src="[[+url]]" alt="[[+alt:htmlent]]"/>
         </picture>
     </p>
     [[+caption:notempty=`<p class="caption">[[+caption]]</p>`]]
     [[+credits:notempty=`<p class="credits">[[+credits]]</p>`]]
+    ]]
 </div>
