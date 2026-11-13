@@ -728,7 +728,9 @@ name and the size of the image. The bar of the original image contains a
 download link. Click on a preview to open the cropping window with that image
 crop (the original image opens the first image crop). If the TV is less than 700
 pixels wide, only the first image crop is shown and the other images are shown,
-when you hover over it.</p>
+when you hover over it. This compact display can be enabled permanently for
+each TV by disabling the <a href="../usage/#show-all-images-in-one-line">Show All Images in One Line</a>
+input option.</p>
 <p>The alt text, caption and credits fields are shown below the previews, if they
 are enabled in the input options of the TV.</p>
 <h2 id="the-cropping-tool">The cropping tool</h2>
@@ -737,11 +739,13 @@ with a regular <em>Image</em> TV. Once an image is selected, a cropping window w
 appear where you can select the area of the image to use. The original image is
 not changed. So you can upload a single image and reuse it in multiple places on
 the website at different sizes.</p>
-<p>The image crops are saved as crop files in the media source. They get the image
-format of the <a href="../usage/#image-format">Image Format</a> input option of the TV:
-WebP (the default), JPEG, PNG, GIF, AVIF or the format of the image.</p>
-<p>If you want to change the cropping area, you need to click the crop trigger of
-the Image+ TV.</p>
+<p>The image crops are saved as crop files in the media source. By default they are
+saved in the <code>crop/</code> folder, which can be changed with the
+<a href="../usage/#contextsystem-settings">imageplus.crop_path</a> system setting. They get
+the image format of the <a href="../usage/#image-format">Image Format</a> input option of
+the TV: WebP (the default), JPEG, PNG, GIF, AVIF or the format of the image.</p>
+<p>You can also open the cropping window with the crop trigger (the crop icon) in
+the image field of the Image+ TV.</p>
 <p><a class="glightbox" data-type="image" href="../img/cropping-tool.jpg"><img alt="Cropping tool window" src="../img/cropping-tool.jpg" /></a></p>
 <p>In the cropping window you need to drag the handles of the box to change the
 cropping area. If the TV has been configured with size constraints or an aspect
