@@ -117,15 +117,15 @@ context/system settings can be defined for a single TV.
 There are predefined system settings in the `imageplus` namespace. Context
 settings must be created before they can be used.
 
-| Key                       | Name                                      | Description                                                                                     | Default |
-|---------------------------|-------------------------------------------|-------------------------------------------------------------------------------------------------|---------|
-| imageplus.allow_alt_tag   | Show Alt Tag Field                        | Allow user to enter a title/alt-tag for the image.                                              | No      |
-| imageplus.allow_caption   | Show Caption Field                        | Allow user to enter a caption for the image.                                                    | No      |
-| imageplus.allow_credits   | Show Credits Field                        | Allow user to enter a credit for the image.                                                     | No      |
-| imageplus.crop_path       | Crop Path                                 | The path in the media source for the image crop files.                                          | crop/   |
-| imageplus.debug           | Debug                                     | Log debug information in the MODX error log.                                                    | No      |
-| imageplus.thumbnail_height | Thumbnail Height                         | The thumbnail height of the image in the template variable panel. Without a value, 250 pixels are used. | -       |
-| imageplus.upload_path     | Upload Path                               | The path in the media source for uploaded images.                                               | -       |
+| Key                        | Name               | Description                                                                                             | Default |
+|----------------------------|--------------------|---------------------------------------------------------------------------------------------------------|---------|
+| imageplus.allow_alt_tag    | Show Alt Tag Field | Allow user to enter a title/alt-tag for the image.                                                      | No      |
+| imageplus.allow_caption    | Show Caption Field | Allow user to enter a caption for the image.                                                            | No      |
+| imageplus.allow_credits    | Show Credits Field | Allow user to enter a credit for the image.                                                             | No      |
+| imageplus.crop_path        | Crop Path          | The path in the media source for the image crop files.                                                  | crop/   |
+| imageplus.debug            | Debug              | Log debug information in the MODX error log.                                                            | No      |
+| imageplus.thumbnail_height | Thumbnail Height   | The thumbnail height of the image in the template variable panel. Without a value, 250 pixels are used. | -       |
+| imageplus.upload_path      | Upload Path        | The path in the media source for uploaded images.                                                       | -       |
 
 The upload path and the crop path can contain the placeholders `[[+year]]`,
 `[[+month]]`, `[[+day]]`, `[[+user]]`, `[[+username]]`, `[[+resource_id]]` and
