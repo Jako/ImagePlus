@@ -12,9 +12,13 @@
         <meta name="author" content="Treehill Studio">
       
       
-        <link rel="canonical" href="https://jako.github.io/ImagePlus/testing-imageplus-3/">
+        <link rel="canonical" href="https://jako.github.io/ImagePlus/update/">
       
       
+        <link rel="prev" href="../installation/">
+      
+      
+        <link rel="next" href="../getting-started/">
       
       
         
@@ -25,7 +29,7 @@
     
     
       
-        <title>Testing Image+ 3.0 - Image+</title>
+        <title>Update to Image+ 3.x - Image+</title>
       
     
     
@@ -95,7 +99,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#testing-image-30" class="md-skip">
+        <a href="#update-to-image-3x" class="md-skip">
           Skip to content
         </a>
       
@@ -161,7 +165,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Testing Image+ 3.0
+              Update to Image+ 3.x
             
           </span>
         </div>
@@ -330,6 +334,101 @@
       
   
   
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Update to Image+ 3.x
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Update to Image+ 3.x
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#imageplusmigration-snippet" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ImagePlusMigration Snippet
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#photos-with-an-exif-orientation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Photos with an EXIF Orientation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
   
   
     <li class="md-nav__item">
@@ -393,6 +492,32 @@
     
   
   Examples
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../legacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Legacy Image+ 2.x
 
     
   </span>
@@ -497,10 +622,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-is-new-in-30" class="md-nav__link">
+  <a href="#imageplusmigration-snippet" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        What is new in 3.0
+        ImagePlusMigration Snippet
       </span>
     </span>
   </a>
@@ -508,126 +633,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#before-you-start" class="md-nav__link">
+  <a href="#photos-with-an-exif-orientation" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Before you start
-      </span>
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-to-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        What to test
-      </span>
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="What to test">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-update-from-image-2x-highest-priority" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        1. Update from Image+ 2.x (highest priority)
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-template-variable-input-high-priority" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        2. Template variable input (high priority)
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-crop-window-high-priority" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        3. Crop window (high priority)
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-image-format-new" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        4. Image format (new)
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-frontend-output" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        5. Frontend output
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-migx-collections-and-media-sources" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        6. MIGX, Collections and media sources
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#7-imagepluscleanup-snippet" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        7. ImagePlusCleanup snippet
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#8-manager-environments" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        8. Manager environments
-      </span>
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-to-report-a-problem" class="md-nav__link">
-    <span class="md-ellipsis">
-      <span class="md-typeset">
-        How to report a problem
+        Photos with an EXIF Orientation
       </span>
     </span>
   </a>
@@ -660,186 +669,49 @@
   
 
 
-<h1 id="testing-image-30">Testing Image+ 3.0</h1>
-<p><em>Image+ 3.0.0-b3 · beta</em></p>
-<p>Thank you for helping to test the next major version of Image+. This page
-explains what has changed, how to set up a test site and which parts need
-testing the most.</p>
-<h2 id="what-is-new-in-30">What is new in 3.0</h2>
-<p>Image+ 3.0 is a rewrite of the template variable input and of the image output.</p>
-<ul>
-<li>The crop window uses Cropper.js instead of Jcrop and jQuery. The crop area can
-  also be set with the Left, Top, Width and Height inputs below the image.</li>
-<li>An image can have several <strong>image crops</strong> (i.e. desktop and mobile). Each crop
-  is saved as its own crop file in the media source.</li>
-<li>Images can be uploaded directly in the template variable.</li>
-<li>The crop files get an <strong>image format</strong>: WebP by default, JPEG, PNG, GIF, AVIF
-  or the format of the image.</li>
-<li>The output uses these crop files. phpThumb, phpThumbOf, phpThumbsUp or
-  phpThumbOn are no longer needed. pThumb can still be used in an output chunk.</li>
-<li>The template variable value has a new format without the media source. Image+
-  2.x values are converted by the setup or on their first output.</li>
-<li>New snippets: <code>ImagePlusMigration</code> (with a dry run) and <code>ImagePlusCleanup</code>
-  (removes unused crop files).</li>
-</ul>
-<p>The full list of changes is in the changelog of the beta package
-(<code>core/components/imageplus/docs/changelog.md</code>).</p>
-<h2 id="before-you-start">Before you start</h2>
-<div class="admonition warning">
-<p class="admonition-title">Use a copy of your site, never a live site</p>
-<p>The update converts template variable values, changes template variable
-options and removes legacy system settings. Back up the database and the
-files of the media sources first.</p>
-</div>
+<h1 id="update-to-image-3x">Update to Image+ 3.x</h1>
+<p>The template variable values of Image+ 2.x are converted to the format of
+Image+ 3.0 by the setup or on their first output.</p>
+<p>The setup option <strong>Migrate the Image+ 2.x template variables and settings</strong> is
+enabled by default. The migration converts the template variable values to the
+new value format. It also converts the target width/height input options and
+settings to the minimal image size input options and to the size of the image
+crop. At least it converts the target ratio to the ratio of the image crop and
+removes the legacy settings. The crop files of the image crops are created.
+Values and crop files, that could not be converted or created, are logged in
+<code>core/cache/logs/imageplus_migration.log</code>.</p>
+<h2 id="imageplusmigration-snippet">ImagePlusMigration Snippet</h2>
+<p>If you want to check the migration first, disable the setup option and call the
+ImagePlusMigration snippet uncached on a page, that is only visible for
+administrators. The snippet output is only shown to manager users, that are sudo
+users or members of the Administrator user group.</p>
 <table>
 <thead>
 <tr>
-<th>Requirement</th>
-<th>Version</th>
+<th>Property</th>
+<th>Description</th>
+<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>PHP</td>
-<td>8.2 or later</td>
-</tr>
-<tr>
-<td>MODX</td>
-<td>2.8+ or 3.x</td>
-</tr>
-<tr>
-<td>Image library</td>
-<td>GD, with WebP support</td>
+<td>dryRun</td>
+<td>Report the changes of the migration without saving them.</td>
+<td>1</td>
 </tr>
 </tbody>
 </table>
-<p>Install the beta package as usual in the package manager, either on a fresh MODX
-installation or as an update of Image+ 2.x. Both ways are important to test.
-AVIF crop files need a GD library with AVIF support, which is often missing.</p>
-<h2 id="what-to-test">What to test</h2>
-<p>The areas are sorted by priority. You don't have to test everything: pick the
-areas that match your sites.</p>
-<h3 id="1-update-from-image-2x-highest-priority">1. Update from Image+ 2.x (highest priority)</h3>
-<p>Most problems are expected here, because every site uses Image+ a bit
-differently.</p>
-<ul>
-<li>Update a copy of a real site with the setup option <em>Migrate the Image+ 2.x
-  template variables and settings</em> enabled. Check that all images on the
-  frontend still look the same.</li>
-<li>On a second copy, disable the setup option and run <code>[[!ImagePlusMigration]]</code>
-  on a page only administrators can see. Check the dry run report, then run it
-  with <code>&amp;dryRun=`0`</code>.</li>
-<li>Check <code>core/cache/logs/imageplus_migration.log</code> for values or crop files, that
-  could not be converted or created.</li>
-<li>Check the converted template variable options: target width/height should
-  become the minimal image size and the size of the image crop, the target ratio
-  should become the ratio of the image crop.</li>
-<li>Open resources in the manager and check that the crops are the same as before.</li>
-<li>Values in MIGX are converted too. MIGX configs (<code>targetWidth</code>, <code>targetRatio</code> …)
-  have to be changed manually.</li>
-</ul>
-<h3 id="2-template-variable-input-high-priority">2. Template variable input (high priority)</h3>
-<ul>
-<li>Create an Image+ TV with several image crops in the <strong>Image Crops</strong> input
-  option, i.e.
-  <code>{"desktop": {"name": "Desktop", "size": "1600x800"}, "mobile": {"name": "Mobile", "proportion": "4x3"}}</code>.
-  Also try <code>width</code>, <code>height</code> and a crop without constraints.</li>
-<li>Select an image with the browse trigger, upload one with the upload trigger
-  and type or paste an image path into the field.</li>
-<li>Clear the image, use the TV reset button of the resource and save the
-  resource.</li>
-<li>Set a minimal image width/height and try a smaller image.</li>
-<li>Check the previews in a wide and in a narrow panel (below 700 pixels, the
-  other images are shown on hover), the thumbnail height option and the <em>Show
-  All Images in One Line</em> option.</li>
-<li>Enable the alt text, caption and credits fields and check that they are saved.</li>
-<li>Check the <code>imageplus.upload_path</code> and <code>imageplus.crop_path</code> system settings
-  with placeholders like <code>[[+year]]</code> or <code>[[+resource_id]]</code>.</li>
-</ul>
-<h3 id="3-crop-window-high-priority">3. Crop window (high priority)</h3>
-<ul>
-<li>Change the crop area with the handles and with the Left, Top, Width and Height
-  inputs. With an aspect ratio, a changed width should change the height too.</li>
-<li>Switch between the image crops, save, reset and close the window with unsaved
-  changes.</li>
-<li>Replace an image with a changed image with the same filename and click
-  <strong>Reload image</strong>.</li>
-<li>Crop portrait photos of a phone (photos with an EXIF orientation). The crop
-  window and the crop files should show them upright.</li>
-<li>Crop transparent PNG and GIF images and very large images. A too large image
-  should show a clear error message instead of a blank result.</li>
-</ul>
-<h3 id="4-image-format-new">4. Image format (new)</h3>
-<ul>
-<li>Without a value in the <strong>Image Format</strong> input option, new crop files should be
-  WebP files.</li>
-<li>Try every format and <em>Format of the image</em>. A transparent PNG saved as JPEG
-  should get a white background.</li>
-<li>Select AVIF on a server without AVIF support: the crop window should show an
-  error message.</li>
-<li>Change the format of a TV with existing crops. Old crop files keep their
-  format until the crop is saved again.</li>
-</ul>
-<h3 id="5-frontend-output">5. Frontend output</h3>
-<ul>
-<li>Set the output type of the TV to Image+ and check the plain output (the URL of
-  the crop file) and an output chunk.</li>
-<li>Check the placeholders in the output chunk: <code>url</code>, <code>width</code>, <code>height</code>, <code>alt</code>,
-  <code>caption</code>, <code>credits</code>, <code>crop.url</code>, <code>source.src</code> and <code>crops.{key}.url/width/height</code>
-  for every image crop.</li>
-<li>Select another image crop with the <strong>Image Crop</strong> output option.</li>
-<li>Use the ImagePlus snippet with <code>tvname</code>, <code>docid</code>, <code>crop</code>, <code>format</code> and an
-  empty <code>tpl</code> (returns the URL).</li>
-<li>Use the snippet in a getResources/pdoResources template chunk with
-  <code>&amp;docid=`[[+id]]`</code>.</li>
-<li>If you use pThumb, check <code>[[+source.src:pthumb=`[[+crop.options]]&amp;w=640`]]</code>
-  in an output chunk.</li>
-</ul>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>[[ImagePlus?
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>&amp;tvname=`image`
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>&amp;crop=`mobile`
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>&amp;format=`jpg`
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>&amp;tpl=``
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>]]
+<p>First check the changes:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>[[!ImagePlusMigration]]
 </span></code></pre></div>
-<h3 id="6-migx-collections-and-media-sources">6. MIGX, Collections and media sources</h3>
-<ul>
-<li>Use Image+ in a MIGX formtab with a JSON config (<code>sizes</code>, <code>minWidth</code>,
-  <code>format</code> …) and output it with <code>[[ImagePlus? &amp;value=`[[+field]]` &amp;source=`2`]]</code>.</li>
-<li>Show the thumbnail in a MIGX or Collections grid column with the
-  <code>ImagePlus.ColumnRenderer</code> renderer.</li>
-<li>Use a media source other than the default one, context specific media sources
-  and, if available, a remote media source (i.e. Amazon S3).</li>
-</ul>
-<h3 id="7-imagepluscleanup-snippet">7. ImagePlusCleanup snippet</h3>
-<ul>
-<li>Run <code>[[!ImagePlusCleanup]]</code> on a copy and check the list of unused crop files
-  in the dry run. No crop file, that is still used on the site, should be
-  listed.</li>
-<li>Remove the files with <code>&amp;dryRun=`0`</code> and check the frontend afterwards.
-  Check <code>core/cache/logs/imageplus_cleanup.log</code>.</li>
-</ul>
-<h3 id="8-manager-environments">8. Manager environments</h3>
-<ul>
-<li>Test in MODX 2.8 and in MODX 3, in different browsers and with different
-  manager languages (the lexicons exist in 11 languages).</li>
-<li>Check the TV input options panel and the crop window with the manager themes
-  you use.</li>
-</ul>
-<h2 id="how-to-report-a-problem">How to report a problem</h2>
-<p>Please send your report directly by email to
-<a href="mailto:office@treehillstudio.com">office@treehillstudio.com</a> and add:</p>
-<ol>
-<li>The versions of Image+, MODX and PHP, and the browser.</li>
-<li>The steps to reproduce the problem, what you expected and what happened.</li>
-<li>The input options of the TV (i.e. the Image Crops JSON) and the raw value of
-   the TV, if the problem is about a single resource.</li>
-<li>Entries from <code>core/cache/logs/error.log</code>, <code>imageplus_migration.log</code> or
-   <code>imageplus_cleanup.log</code>.</li>
-<li>A screenshot, if the problem is visible in the manager.</li>
-</ol>
-<p>Feedback that something works on your site is welcome too, especially for
-updates of larger sites.</p>
+<p>Migrate afterwards:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[[!ImagePlusMigration? &amp;dryRun=`0`]]
+</span></code></pre></div>
+<p>An empty <code>dryRun</code> property keeps the dry run.</p>
+<h2 id="photos-with-an-exif-orientation">Photos with an EXIF Orientation</h2>
+<p>Browsers before 2020 showed photos without their EXIF orientation, so crops of
+these photos, that were set in such a browser, refer to the photo lying on its
+side. These crops have to be cropped again.</p>
 
 
 
@@ -848,9 +720,6 @@ updates of larger sites.</p>
 
 
 
-
-  
-  
 
 
 
