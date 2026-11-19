@@ -214,7 +214,7 @@ class ImagePlus
             $this->modx->controller->addCss($cssUrl . 'imageplus.min.css?v=v' . $this->version);
         }
         $this->modx->controller->addHtml('<script type="text/javascript">' .
-            'ImagePlus.config = ' . json_encode(array_merge($this->options, [
+            'ImagePlus.config = ' . json_encode(array_merge($this->getManagerOptions(), [
                 // The urls of the media sources are only needed by the manager scripts
                 'sources' => $this->loadSourceMap()
             ]), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) . ';' .
@@ -551,6 +551,24 @@ class ImagePlus
             '[[+tv_id]]' => (int)$tvId,
         ];
         return str_replace(array_keys($placeholders), array_values($placeholders), (string)$path);
+    }
+
+    /**
+     * Get the options used by the manager scripts, so that no server paths are output in the manager
+     *
+     * @param array|null $options Options to filter instead of the class options
+     * @return array
+     */
+    public function getManagerOptions(?array $options = null): array
+    {
+        return array_intersect_key($options ?? $this->options, array_flip([
+            'assetsUrl',
+            'connectorUrl',
+            'debug',
+            'hasUnmetDependencies',
+            'modxversion',
+            'version',
+        ]));
     }
 }
 
