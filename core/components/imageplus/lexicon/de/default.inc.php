@@ -34,7 +34,7 @@ $_lang['imageplus.allowCredits'] = 'Bildnachweis Feld anzeigen';
 $_lang['imageplus.allowCredits_desc'] = 'Ermöglicht die Eingabe eines Bildnachweises für das Bild.';
 /** Output options render **/
 $_lang['imageplus.phpThumbParams'] = 'Zusätzliche phpThumb Parameter';
-$_lang['imageplus.phpThumbParams_desc'] = '(Optional) phpThumb Parameter für den options Platzhalter im Ausgabe Chunk, z.B. für einen pThumb Output Filter. Mehr Informationen zu phpThumb Parametern erhalten Sie <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">hier</a>.';
+$_lang['imageplus.phpThumbParams_desc'] = '(Optional) phpThumb Parameter für den options Platzhalter im Ausgabe Chunk, z. B. für einen pThumb Output Filter. Mehr Informationen zu phpThumb Parametern erhalten Sie <a href="https://raw.githubusercontent.com/JamesHeinrich/phpThumb/master/docs/phpthumb.readme.txt" target="_blank">hier</a>.';
 $_lang['imageplus.outputChunk'] = 'Ausgabe Chunk';
 $_lang['imageplus.outputChunk_desc'] = '(Optional) Wählen Sie einen Ausgabe Chunk aus. Wenn kein Wert angebeben ist wird der Bildpfad ausgegeben.';
 /** Placeholder descriptions */
@@ -57,7 +57,7 @@ $_lang['imageplus.error.image_not_found.title'] = 'Bild nicht gefunden';
 $_lang['imageplus.error.image_not_found.msg'] = 'Das Bild wurde nicht gefunden und kann nicht zugeschnitten werden. Bitte wählen Sie ein anderes Bild.';
 /** Image crops **/
 $_lang['imageplus.sizes'] = 'Bildausschnitte';
-$_lang['imageplus.sizes_desc'] = '(Optional, JSON) Ein JSON-kodiertes Objekt für die Bildausschnitte, z.B. {"desktop": {"name": "Desktop", "size": "1000x500"}, "mobile": {"name": "Mobil", "proportion": "4x3"}}. Jeder Bildausschnitt kann eine Größe (size), ein Seitenverhältnis (proportion), eine Breite (width) oder eine Höhe (height) haben. Ist dieser Wert leer, wird ein Bildausschnitt ohne Vorgaben verwendet.';
+$_lang['imageplus.sizes_desc'] = '(Optional, JSON) Ein JSON-kodiertes Objekt für die Bildausschnitte, z. B. {"desktop": {"name": "Desktop", "size": "1000x500"}, "mobile": {"name": "Mobil", "proportion": "4x3"}}. Jeder Bildausschnitt kann eine Größe (size), ein Seitenverhältnis (proportion), eine Breite (width) oder eine Höhe (height) haben. Ist dieser Wert leer, wird ein Bildausschnitt ohne Vorgaben verwendet.';
 $_lang['imageplus.crop'] = 'Bildausschnitt';
 $_lang['imageplus.crop_desc'] = '(Optional) Der Schlüssel des Bildausschnitts für die Ausgabe. Leer lassen, um den ersten Bildausschnitt zu verwenden.';
 $_lang['imageplus.placeholder.crop.url'] = 'URL der im Manager erstellten Datei des Bildausschnitts';
@@ -89,7 +89,7 @@ $_lang['imageplus.cropimage.original.download'] = 'Originalbild herunterladen';
 $_lang['imageplus.cropimage.original.height'] = 'Höhe';
 $_lang['imageplus.cropimage.original.width'] = 'Breite';
 $_lang['imageplus.cropimage.reload'] = 'Bild neu laden';
-$_lang['imageplus.cropimage.reload.content'] = 'Das Bild wird neu geladen und alle gespeicherten Bildausschnitte werden daraus neu erstellt, z.B. wenn das Bild durch ein geändertes Bild mit dem gleichen Dateinamen ersetzt wurde. Nicht gespeicherte Änderungen werden verworfen. Möchten Sie fortfahren?';
+$_lang['imageplus.cropimage.reload.content'] = 'Das Bild wird neu geladen und alle gespeicherten Bildausschnitte werden daraus neu erstellt, z. B. wenn das Bild durch ein geändertes Bild mit dem gleichen Dateinamen ersetzt wurde. Nicht gespeicherte Änderungen werden verworfen. Möchten Sie fortfahren?';
 $_lang['imageplus.cropimage.reload.title'] = 'Bild neu laden';
 $_lang['imageplus.cropimage.reload_ratio.content'] = 'Das Seitenverhältnis des Bildes hat sich geändert. Bitte prüfen Sie die Bildausschnitte und speichern Sie diese bei Bedarf erneut.';
 $_lang['imageplus.cropimage.reload_ratio.title'] = 'Warnung';
